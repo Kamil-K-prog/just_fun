@@ -17,3 +17,4 @@ from .models.quiz_table import Quiz
 from .models.safety_training_table import SafetyTraining
 from .models.video_table import Video
 from .models.work_condition_table import WorkCondition
+from .models.sout_table import Sout

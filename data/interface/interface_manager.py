@@ -1,6 +1,6 @@
-from .all_interface import название
+from .all_interface import lobby
 
 
 
 def global_interface_init(app):
-    app.register_blueprint(название.blueprint)
+    app.register_blueprint(lobby.blueprint)

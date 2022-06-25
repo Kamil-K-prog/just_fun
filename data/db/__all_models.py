@@ -1,6 +1,5 @@
 # from .models.название import название модели
 from .models.role_table import Role
-from .models.SqlAlchemyBase_maker import SqlAlchemyBase
 from .models.user_table import User
 from .models.answer_table import Answer
 from .models.collective_agreement_table import CollectiveAgreement
@@ -17,3 +16,4 @@ from .models.quiz_table import Quiz
 from .models.safety_training_table import SafetyTraining
 from .models.video_table import Video
 from .models.work_condition_table import WorkCondition
+from .models.sout_table import Sout

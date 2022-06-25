@@ -9,7 +9,7 @@ class Sout(SqlAlchemyBase):
     __tablename__ = 'souts'
 
     passport_id = Column(Integer, ForeignKey('passports.id'), primary_key=True, nullable=False, autoincrement=True,
-                             unique=True)  # id организации
+                         unique=True)  # id организации
     special_test = Column(Integer, nullable=False)  # Специальная оценка проведена да/нет/частично
 
     report_date = Column(Date, nullable=False)  # Дата внесения отчета СОУТ и

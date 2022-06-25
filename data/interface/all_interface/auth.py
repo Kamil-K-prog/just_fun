@@ -1,5 +1,5 @@
 from tkinter.messagebox import NO
-from black import err
+#from black import err
 from flask import Blueprint, session, jsonify, render_template, redirect
 from flask_login import (
     LoginManager,

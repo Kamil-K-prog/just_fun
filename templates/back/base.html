@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon"  href="static/back/img/monitor_back.png" type="image/x-icon">
+    <title>{{ title }}</title>
+
+    <link rel="stylesheet"  href="static/back/css/normalize.min.css">
+    <link rel='stylesheet' href='static/css/font-awesome.min.css'>
+
+    <link rel="stylesheet"  href="static/back/css/chartist.min.css">
+    <link rel="stylesheet"  href="static/back/css/nouislider.min.css">
+    <link rel="stylesheet"  href="static/back/css/bootstrap.min.css">
+    <link rel="stylesheet"  href="static/back/css/datatables.min.css">
+    <script src="static/back/js/jquery-3.6.0.min.js"></script>
+    <script src="static/back/js/prefixfree.min.js"></script>
+    <script src="static/back/js/chartist.min.js"></script>
+    <script src="static/back/js/nouislider.min.js"></script>
+    <link rel="stylesheet"  href="static/back/css/main.css">
+
+</head>
+
+<body>
+    <header role="banner">
+        <h1><img src="static/back/img/monitor_back.png" alt="">
+            Личный кабинет
+            {% if user.role_id == 1 %}
+            пользователя
+            {% else %}
+            администратора
+            {% endif %}
+        </h1>
+        <ul class="utilities">
+            <li class="users">{{ user.login }}</li>
+            <li class="logout warn"><a  href="/logout">/logout</a></li>
+        </ul>
+    </header>
+
+    <div class="container">
+        <div class="col">
+            <nav role="navigation">
+                <ul class="main">
+                    <li class="dashboard"><a  href="">Организации</a></li>
+                    <li class="question"><a  href="">Сбор информации</a></li>
+                    <li class="achievement"><a  href="">Золотой знак</a></li>
+                </ul>
+            </nav>
+
+
+        </div>
+
+        <div class="col">
+            <main role="main">
+                {% block content %}{% endblock %}
+            </main>
+        </div>
+    </div>
+
+
+    <footer role="contentinfo">© Команда Just Fun (Университетский колледж ОГУ); E-mail: begun.aleksey@mail.ru
+    </footer>
+
+    <script src="static/back/js/bootstrap.min.js"></script>
+    <script src="static/back/js/datatables.min.js"></script>
+    <script src="static/back/js/main.js"></script>
+    <script src="static/back/js/jquery.maskedinput.min.js"></script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,35 @@
+{% extends "front/base.html" %}
+
+{% block content %}
+<div class="inner">
+    <div class="left">
+        <a href="/"><img src="static/front/img/logo/logo_black.png" alt="CompleteUI Logo" class="logo"></a>
+
+        <div class="content">
+            <h1>Мониторинг по охране труда Оренбургской области</h1>
+
+            <p>It-инструмент для сбора информации (общие сведения, анкетные данные, статистические и пр.
+                информацию) об условиях труда в организациях Оренбургской области, предоставляемых и обновляемых
+                самими организациями.
+                Мониторинг проводится с целью формирования объективных отчетных
+                данных для последующего отображения на тепловой карте и анализа</p>
+            <p class="light">Разработано командой Just Fun</p>
+        </div>
+    </div>
+    <div class="right">
+        <p class="form_title">Система предполагает регистрацию</p>
+        <a href="/login">
+            <button class="sign_in">Вход</button>
+        </a>
+
+        <a href="/register">
+            <button class="registration">Регистрация</button>
+        </a>
+
+        <div class="attention">
+            <img src="static/front/img/logo/monitor.png" alt="logo" class="me">
+            <img src="static/front/img/front/arrow_copy.svg" alt="Arrow pointing to sign in" class="arrow">
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends "front/base.html" %}
+
+{% block content %}
+<div class="inner">
+    <div class="left">
+        <a href="/"><img src="static/front/img/logo/logo_black.png" alt="CompleteUI  Logo" class="logo"></a>
+
+        <div class="content">
+            <h1>Мониторинг по охране труда Оренбургской области</h1>
+
+            <p>It-инструмент для сбора информации (общие сведения анкетные данные статистические и пр.
+                информацию) об условиях труда в организациях Оренбургской области предоставляемых и обновляемых
+                самими организациями.
+                Мониторинг проводится с целью формирования объективных отчетных
+                данных для последующего отображения на тепловой карте и анализа</p>
+            <p class="light">Разработано командой Just Fun</p>
+        </div>
+    </div>
+    <div class="right">
+        <p class="form_title">Вход в систему мониторинга</p>
+        <div>
+            <form action="" method="POST">
+                {{ form.hidden_tag() }}
+                <!--  <input  type="text"  name="login"  id="login"  placeholder="ваш  логин">  -->
+                {{ form.login(type="text", id="login", placeholder="ваш логин") }}   
+                <!--  <input  type="password"  name="pass"  id="pass"  placeholder="ваш  пароль">  -->
+                {{ form.password(type="password", id="pass", placeholder="ваш пароль") }}
+                {% if message %}
+                <p class="error_mes">{{ message }}</p>
+                {% endif %}
+                <button class="signin">Войти</button>
+            </form>
+        </div>
+
+        <div class="attention">
+            <img src="static/front/img/logo/monitor.png" alt="logo" class="me">
+            <img src="static/front/img/front/arrow_copy.svg" alt="Arrow  pointing  to  sign  in" class="arrow">
+        </div>
+    </div>
+</div>
+{% endblock %}

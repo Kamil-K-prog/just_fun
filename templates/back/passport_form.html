@@ -61,8 +61,8 @@
                     <input class="form-control" type="email" id="email" name="email" required>
                 </div>
 
-                <label for="formFile" class="form-label">Населенный пункт</label>
-                <select class="form-select" name="city" id="organizatin">
+                <label for="locality" class="form-label">Населенный пункт</label>
+                <select class="form-select" name="locality" id="locality">
                     <!-- <option selected>Населенный пункт</option> -->
                     <option value=""></option>
                     <option value="1">Оренбург</option>
@@ -72,6 +72,9 @@
                     <option value="3">Бугуруслан</option>
                     <option value="3">Гай</option>
                 </select>
+                <script>
+                    $('#locality').select2();
+                </script>
             </section>
 
             <section>

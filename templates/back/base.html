@@ -13,10 +13,12 @@
     <link rel="stylesheet"  href="static/back/css/nouislider.min.css">
     <link rel="stylesheet"  href="static/back/css/bootstrap.min.css">
     <link rel="stylesheet"  href="static/back/css/datatables.min.css">
+    <link rel="stylesheet" href="static/back/css/select2.min.css">
     <script src="static/back/js/jquery-3.6.0.min.js"></script>
     <script src="static/back/js/prefixfree.min.js"></script>
     <script src="static/back/js/chartist.min.js"></script>
     <script src="static/back/js/nouislider.min.js"></script>
+    <script src="static/back/js/select2.min.js"></script>
     <link rel="stylesheet"  href="static/back/css/main.css">
 
 </head>
@@ -33,7 +35,7 @@
         </h1>
         <ul class="utilities">
             <li class="users">{{ user.login }}</li>
-            <li class="logout warn"><a  href="/logout">/logout</a></li>
+            <li class="logout warn"><a  href="/logout">logout</a></li>
         </ul>
     </header>
 
@@ -41,9 +43,15 @@
         <div class="col">
             <nav role="navigation">
                 <ul class="main">
-                    <li class="dashboard"><a  href="">Организации</a></li>
-                    <li class="question"><a  href="">Сбор информации</a></li>
-                    <li class="achievement"><a  href="">Золотой знак</a></li>
+                    {% if user.role_id == 1 %}
+                    <li class="dashboard"><a href="">Организации</a></li>
+                    <li class="question"><a href="">Сбор информации</a></li>
+                    <li class="achievement"><a href="">Золотой знак</a></li>
+                    {% else %}
+                    <li class="dashboard"><a href="#">Паспорта</a></li>
+                    <li class="question"><a href="#">Сбор информации</a></li>
+                    <li class="achievement"><a href="#">Золотые знаки</a></li>
+                    {% endif %}
                 </ul>
             </nav>
 

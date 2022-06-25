@@ -11,6 +11,7 @@ from flask_login import (
 from data.db import db_sessionmaker
 
 from ...db.__all_models import User
+from ...db.__all_models import Role
 
 from ..flask_wtf_forms import LoginForm, RegisterForm   # формы FlaskWTF
 
@@ -72,7 +73,8 @@ def register():
         if not err_mes:
             user = User(login=form.login.data.strip(),
                             passwd_hash='',
-                            email=form.email.data.strip())
+                            email=form.email.data.strip(),
+                            role_id=db_sess.query(Role).filter_by(name='User').first().id)
             user.set_password(form.password.data.strip())
             db_sess.add(user)
             db_sess.commit()

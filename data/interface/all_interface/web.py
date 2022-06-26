@@ -388,3 +388,14 @@ def Passport_Change(id):
     return render_template('back/golden_badge.html',
                            user=user,
                            title='Золотой знак')
+
+
+@blueprint.route('/delete_organizaton/<id>')
+@login_required
+@is_user
+def delete(id):
+    sess = db_sessionmaker.create_session()
+    i = sess.query(Passport).filter(Passport.id == id).first()
+    sess.delete(i)
+    sess.commit()
+    return redirect('/account')

@@ -1,0 +1,52 @@
+{% extends "back/base.html" %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col">
+        <h2>Файлы для скачивания</h2>
+        <table id="pasportsTable" class="display">
+            <thead>
+                <tr>
+                    <th>Ссылки на видеоролики</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in videos %}
+                <tr>
+                    <td><a href="{{ i.link }}">{{ i.link }}</a></td>
+                </tr>
+                {% endfor %}
+
+            </tbody>
+        </table>
+
+        <table id="pasportsTable" class="display">
+            <thead>
+                <tr>
+                    <th>Ссылки на фотографии</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in photos %}
+                <tr>
+                    <td><a href="/download/{{ i.filename }}">{{ i.filename }}</a></td>
+                </tr>
+                {% endfor %}
+
+            </tbody>
+        </table>
+
+        <script>
+            $(document).ready(function () {
+                $('#passpotrtsTable').DataTable();
+            });
+
+
+        </script>
+    </div>
+</div>
+
+
+
+{% endblock %}

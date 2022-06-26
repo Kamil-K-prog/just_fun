@@ -29,3 +29,8 @@ class RegisterForm(FlaskForm):  # форма регистрации пользо
     )
     confirm = PasswordField("Повторите пароль:")
     submit = SubmitField("Зарегистрироваться")
+
+
+class AdminAddForm(FlaskForm):
+    name = StringField('Название:', validators=[DataRequired()])
+    submit = SubmitField("Создать")

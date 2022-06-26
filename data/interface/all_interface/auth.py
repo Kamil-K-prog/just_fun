@@ -1,5 +1,5 @@
+from black import err
 from tkinter.messagebox import NO
-#from black import err
 from flask import Blueprint, session, jsonify, render_template, redirect
 from flask_login import (
     LoginManager,
@@ -31,7 +31,13 @@ blueprint = Blueprint('auth', __name__, template_folder='templates')
 def login():
     user = current_user
     if not user.is_anonymous:
+        if hasattr(user, 'role_id'):
+            if user.role_id == 1:
+                return redirect('/account')
+            elif user.role_id == 2:
+                return redirect('/admin')
         return redirect("/")
+
     form = LoginForm()
     form_name = 'front/LoginForm.html'
 
@@ -45,6 +51,11 @@ def login():
             error_mes = 'Неправильный пароль'
         if not error_mes:
             login_user(user, remember=form.remember_me.data)
+            if hasattr(user, 'role_id'):
+                if user.role_id == 1:
+                    return redirect('/account')
+                elif user.role_id == 2:
+                    return redirect('/admin')
             return redirect('/')
         else:
             return render_template(form_name, form=form, message=error_mes)
@@ -56,6 +67,10 @@ def login():
 def register():
     user = current_user
     if not user.is_anonymous:
+        if hasattr(user, 'role_id'):
+            if user.role_id == 1:
+                return redirect('/account')
+            elif user.role_id == 2:
         return redirect("/")
     form = RegisterForm()
     form_name = 'front/RegisterForm.html'  #TODO:Прикрепить форму логина
@@ -76,6 +91,11 @@ def register():
             user.set_password(form.password.data.strip())
             db_sess.add(user)
             db_sess.commit()
+            if hasattr(user, 'role_id'):
+                if user.role_id == 1:
+                    return redirect('/account')
+                elif user.role_id == 2:
+                    return redirect('/admin')
             return redirect('/')
         else:
             return render_template(form_name, form=form, message=err_mes)

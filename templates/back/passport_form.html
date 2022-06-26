@@ -1,0 +1,243 @@
+{% extends "back/base.html" %}
+
+{% block content %}
+
+<div class="row">
+    <h1 class="text-center">Добавить паспорт организации</h1>
+    <div class="col progressbar_form">
+        <div id="svg_wrap"></div>
+
+        <form action="" method="post" enctype="multipart/form-data">
+            <section>
+                <h2>Основные</h2>
+
+                <div class="mb-3">
+                    <label for="legal_entity" class="form-label">Наименование ОПФ юрлица</label>
+                    <input class="form-control" type="text" id="legal_entity" name="legal_entity" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="full-name" class="form-label">Полное наименование организации (для ИП -
+                        ФИО)</label>
+                    <input class="form-control" type="text" id="full-name" name="full-name" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="short-name" class="form-label">Краткое наименование организации</label>
+                    <input class="form-control" type="text" id="short-name" name="short-name" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="formFile" class="form-label">Дата сбора информации</label>
+                    <input class="form-control" type="date" id="date" name="date">
+                </div>
+
+            </section>
+
+            <section>
+                <h2>Руководитель организации</h2>
+                <div class="mb-3">
+                    <label for="leader" class="form-label">ФИО руководителя</label>
+                    <input class="form-control" type="text" id="leader" name="leader" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="position" class="form-label">Должность руководителя</label>
+                    <input class="form-control" type="text" id="position" name="position" required>
+                </div>
+            </section>
+
+            <section>
+                <h2>Контакты</h2>
+
+                <div class="mb-3">
+                    <label for="phone" class="form-label">Телефон</label>
+                    <input class="form-control" type="tel" id="phone" name="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                        value="+7" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input class="form-control" type="email" id="email" name="email" required>
+                </div>
+
+                <label for="locality" class="form-label">Населенный пункт</label>
+                <select class="form-select" name="locality" id="locality">
+                    <!-- <option selected>Населенный пункт</option> -->
+                    <option value=""></option>
+                    <option value="1">Оренбург</option>
+                    <option value="2">Тюмень</option>
+                    <option value="3">Орск</option>
+                    <option value="3">Сорочинск</option>
+                    <option value="3">Бугуруслан</option>
+                    <option value="3">Гай</option>
+                </select>
+                <script>
+                    $('#locality').select2();
+                </script>
+            </section>
+
+            <section>
+                <h2>Адреса</h2>
+
+                <div class="mb-3">
+                    <label for="actual_address" class="form-label">Фактический адрес</label>
+                    <input class="form-control" type="text" id="actual_address" name="actual_address" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="legal_address" class="form-label">Юридический адрес</label>
+                    <input class="form-control" type="text" id="legal_address" name="legal_address" required>
+                </div>
+
+            </section>
+
+            <section>
+                <h2>Общие сведения</h2>
+
+                <div class="mb-3">
+                    <label for="IIN" class="form-label">ИНН</label>
+                    <input class="form-control" type="text" id="IIN" name="IIN" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="IIN" class="form-label">ОКТМО</label>
+                    <input class="form-control" type="text" id="IIN" name="IIN" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="IIN" class="form-label">Основной вид деятельности по ОКВЭД</label>
+                    <input class="form-control" type="text" id="IIN" name="IIN" required>
+                </div>
+            </section>
+
+            <section>
+                <h2>Среднесписочная численность работников на дату проведения мониторинга</h2>
+                <div class="mb-3">
+                    <label for="Count_man_workers" class="form-label">Колличество мужчин</label>
+                    <input class="form-control" type="number" id="Count_man_workers" name="Count_man_workers" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="Count_women_workers" class="form-label">Колличество женщин</label>
+                    <input class="form-control" type="number" id="Count_women_workers" name="Count_women_workers"
+                        required>
+                </div>
+            </section>
+
+            <section>
+                <h2>Специалист по охране труда или ответственный за охрану труда</h2>
+
+                <div class="mb-3">
+                    <label for="protection_specialist" class="form-label">ФИО</label>
+                    <input class="form-control" type="text" id="protection_specialist" name="protection_specialist"
+                        required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="protection_specialist_phone" class="form-label">Телефон</label>
+                    <input class="form-control" type="tel" id="protection_specialist_phone"
+                        name="protection_specialist_phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" value="+7" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="protection_specialist_mail" class="form-label">Email</label>
+                    <input class="form-control" type="email" id="protection_specialist_mail"
+                        name="protection_specialist_mail" required>
+                </div>
+
+            </section>
+
+            <section>
+                <h2>Добавление фотографии</h2>
+
+                <div class="mb-3">
+                    <label for="photo" class="form-label">Поддерживаемые форматы: jpeg, jpg, png,
+                        gif</label>
+                    <input class="form-control" type="file" id="photo" name="photo">
+                </div>
+
+            </section>
+
+            <section>
+                <h2>Добавление видео</h2>
+
+                <div class="mb-3">
+                    <label for="video-link" class="form-label">Проверьте ссылку на работоспособность
+                        перед отправкой</label>
+                    <input class="form-control" type="text" id="video-link" name="video-link">
+                </div>
+
+            </section>
+
+            <div id="agree" class="text-center m-2">
+                <label for="agree_checkbox">Даю свое согласие на участие, ознакомление с порядком
+                    проведения мониторинга по охране труда, которая гарантирует достоверность
+                    представленных сведений.</label>
+                <input id="agree_checkbox" type="checkbox" name="agree">
+            </div>
+
+
+            <div class="text-center">
+                <span class="btn btn-primary button" id="prev">&larr; Назад</span>
+                <span class="btn btn-primary button" id="next">Далее &rarr;</span>
+                <button type="submit" id="submit" name="add_achievement" class="btn btn-primary">Отправить</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <h2>Зарегистрированные вами организации</h2>
+        <table id="bindsTable" class="display">
+            <thead>
+                <tr>
+                    <th>Организация</th>
+                    <th>Статус</th>
+                    <th>Просморр паспорта</th>
+                    <th>Редактировать паспорт</th>
+                    <th>Удалить организацию</th>
+                    <th>Злотой знак</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>ОГУ</td>
+                    <td>На модерации</td>
+                    <td><a class="btn btn-primary" href="#">Паспорт</a></td>
+                    <td><a class="btn btn-primary" href="#">Редактировать</a></td>
+                    <td><a class="btn btn-primary" href="#">Удалить организацию</a></td>
+                    <td><img src="img/gold_brand_small.png" alt="золотой знак"></td>
+                </tr>
+
+                <tr>
+                    <td>Газпром</td>
+                    <td>Отклонено</td>
+                    <td><a class="btn btn-primary" href="#">Паспорт</a></td>
+                    <td><a class="btn btn-primary" href="#">Редактировать</a></td>
+                    <td><a class="btn btn-primary" href="#">Удалить организацию</a></td>
+                    <td></td>
+                </tr>
+
+                <tr>
+                    <td>Магнит</td>
+                    <td>Подтверждено</td>
+                    <td><a class="btn btn-primary" href="#">Паспорт</a></td>
+                    <td><a class="btn btn-primary" href="#">Редактировать</a></td>
+                    <td><a class="btn btn-primary" href="#">Удалить организацию</a></td>
+                    <td><img src="img/gold_brand_small.png" alt="золотой знак"></td>
+                </tr>
+
+            </tbody>
+        </table>
+        <script>
+            $(document).ready(function () {
+                $('#bindsTable').DataTable();
+            });
+        </script>
+    </div>
+</div>
+
+{% endblock %}

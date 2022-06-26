@@ -1,4 +1,3 @@
-# from .models.название import название модели
 from .models.role_table import Role
 from .models.user_table import User
 from .models.answer_table import Answer

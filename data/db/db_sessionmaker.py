@@ -1,8 +1,7 @@
 import sqlalchemy
 import sqlalchemy.orm as orm
 import sqlalchemy.ext.declarative as declarative
-
-SqlAlchemyBase = declarative.declarative_base()
+from .models.SqlAlchemyBase_maker import SqlAlchemyBase
 
 __factory = None
 

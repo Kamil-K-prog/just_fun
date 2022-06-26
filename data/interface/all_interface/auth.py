@@ -1,5 +1,5 @@
-
 from black import err
+from tkinter.messagebox import NO
 from flask import Blueprint, session, jsonify, render_template, redirect
 from flask_login import (
     LoginManager,
@@ -17,7 +17,6 @@ from ..flask_wtf_forms import LoginForm, RegisterForm   # формы FlaskWTF
 
 def register_login_manager(app):
     login_manager = LoginManager(app)
-
     @login_manager.user_loader
     def load_user(user_id: int):
         db_sess = db_sessionmaker.create_session()
@@ -37,6 +36,8 @@ def login():
                 return redirect('/account')
             elif user.role_id == 2:
                 return redirect('/admin')
+        return redirect("/")
+
     form = LoginForm()
     form_name = 'front/LoginForm.html'
 
@@ -55,6 +56,7 @@ def login():
                     return redirect('/account')
                 elif user.role_id == 2:
                     return redirect('/admin')
+            return redirect('/')
         else:
             return render_template(form_name, form=form, message=error_mes)
     return render_template(form_name, form=form)
@@ -69,7 +71,7 @@ def register():
             if user.role_id == 1:
                 return redirect('/account')
             elif user.role_id == 2:
-                return redirect('/admin')
+        return redirect("/")
     form = RegisterForm()
     form_name = 'front/RegisterForm.html'  #TODO:Прикрепить форму логина
     err_mes = None
@@ -94,6 +96,7 @@ def register():
                     return redirect('/account')
                 elif user.role_id == 2:
                     return redirect('/admin')
+            return redirect('/')
         else:
             return render_template(form_name, form=form, message=err_mes)
 

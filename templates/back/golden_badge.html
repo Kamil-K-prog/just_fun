@@ -1,0 +1,70 @@
+{% extends "back/base.html" %}
+
+{% block content %}
+
+        </div>
+        <div class="col">
+            <main role="main">
+                <h1 class="text-center">Заявки на получение золотого знака</h1>
+                
+                <div class="row justify-content-center">
+                    <div class="col-6">
+                        <h2>Отправить заявку</h2>
+                        <form method="post" enctype="multipart/form-data">
+                            <div class="mb-3">
+                                <label for="formFile" class="form-label">Дата заявки</label>
+                                <input class="form-control" type="date" id="date" name="date">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="files" class="form-label">Арзив документов</label>
+                                <input class="form-control" type="file" id="files" name="files">
+                            </div>
+
+                            <div class="mb-3">
+                                <button type="submit" name="send_bind" class="btn btn-primary">Отправить</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <h2>Заявки на золотые знаки</h2>
+                        <table id="bindsTable" class="display">
+                            <thead>
+                                <tr>
+                                    <th>Организация</th>
+                                    <th>Дата</th>
+                                    <th>Файлы</th>
+                                    <th>Статус</th>
+                                    <th>Действия</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in '0123456789ропонген' %}
+                                <tr>
+                                    <td>ОГУ</td>
+                                    <td>25.06.2022</td>
+                                    <td><a bnt btn-primary href="#">Скачать</a></td>
+                                    <td>На модерации</td>
+                                    <td><a class="btn btn-primary" href="#">Удалить заявку</a></td>
+                                </tr>
+                                {% endfor %}
+
+                            </tbody>
+                        </table>
+                        <script>
+                            $(document).ready(function () {
+                                $('#bindsTable').DataTable();
+                            });
+                        </script>
+                    </div>
+                </div>
+                
+
+            </main>
+        </div>
+
+{% endblock %}

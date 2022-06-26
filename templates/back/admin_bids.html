@@ -2,37 +2,32 @@
 
 {% block content %}
 
-
 <div class="col">
     <main role="main">
 
         <div class="row">
             <div class="col">
-                <h2>Паспорта организаций</h2>
+                <h2>Заявки на получение золотого знака</h2>
                 <table id="passpotrtsTable" class="display">
                     <thead>
                     <tr>
                         <th>Организация</th>
                         <th>Дата</th>
-                        <th>Просморр паспорта</th>
+                        <th>Документы</th>
                         <th>Статус</th>
                         <th>Подтвердить</th>
                         <th>Отклонить</th>
-                        <th>Злотой знак</th>
-
                     </tr>
                     </thead>
                     <tbody>
                     {% for i in '0123456789ропонген' %}
-
                     <tr>
-                        <td>{{i}}</td>
+                        <td>ОГУ</td>
                         <td>21.01.2021</td>
-                        <td><a class="btn btn-primary" href="/passport_view">Паспорт</a></td>
+                        <td><a class="btn btn-primary" href="#">Скачать</a></td>
                         <td>На модерации</td>
                         <td><a class="btn btn-primary" href="#">Подтвердить</a></td>
                         <td><a class="btn btn-primary" href="#">Отклонить</a></td>
-                        <td><img src="img/gold_brand_xs.png" alt="золотой знак"></td>
                     </tr>
 
                     {% endfor %}

@@ -1,0 +1,80 @@
+{% extends "back/base.html" %}
+
+{% block content %}
+
+
+<div class="col">
+    <main role="main">
+        <h1>Страница редактирования формы сбора информации "Название"</h1>
+
+        <div class="row justify-content-center">
+            <div class="col-6">
+                <h2>Добавить поле</h2>
+                <form method="post">
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Название</label>
+                        <input class="form-control" type="text" id="title"
+                               name="title">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="type_field" class="form-label">Тип поля</label>
+                        <select class="form-select" name="type_field" id="type_field">
+                            <option value="text">Текстовое поле</option>
+                            <option value="date">Дата</option>
+                            <option value="number">Число</option>
+                            <option value="file">Загрузка файла</option>
+                        </select>
+
+                    </div>
+
+                    <div class="mb-3 text-center">
+                        <button type="submit" name="submit_form"
+                                class="btn btn-primary" >
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <h2>Поля формы "Название"</h2>
+                <table id="formTable" class="display">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Название поля</th>
+                        <th>Тип</th>
+                        <th>Удалить</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for i in '0123456789ропонген' %}
+                    <tr>
+                        <td>1</td>
+                        <td>Дата последней травмы</td>
+                        <td>Дата</td>
+                        <td><a class="btn btn-primary" href="">Удалить</a></td>
+                    </tr>
+
+                    {% endfor %}
+
+
+
+                    </tbody>
+                </table>
+                <script>
+                            $(document).ready(function () {
+                                $('#formTable').DataTable();
+                            });
+
+
+                </script>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+{% endblock %}

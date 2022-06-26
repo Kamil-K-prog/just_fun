@@ -71,7 +71,7 @@ def register():
             if user.role_id == 1:
                 return redirect('/account')
             elif user.role_id == 2:
-        return redirect("/")
+                return redirect("/")
     form = RegisterForm()
     form_name = 'front/RegisterForm.html'  #TODO:Прикрепить форму логина
     err_mes = None

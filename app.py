@@ -9,6 +9,9 @@ from data.db.models.user_table import User
 
 app = Flask(__name__)
 app.config.from_object(AppConfig)
+app.config['UPLOAD_FOLDER'] = "/upload/"
+app.config['LOAD_FOLDER'] = "/load/"
+
 
 if __name__ == '__main__':
     db_path = os.path.join(

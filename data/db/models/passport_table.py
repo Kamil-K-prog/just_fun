@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, Text, ForeignKey, Boolean, Date
 from sqlalchemy import orm
+import datetime
 from .SqlAlchemyBase_maker import SqlAlchemyBase
 
 
@@ -10,11 +11,18 @@ class Passport(SqlAlchemyBase):
 
     id = Column(Integer, primary_key=True, nullable=False, autoincrement=True, unique=True)  # id организации
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)  # кто зарегистрировал эту организацию
+    date_of_application_submission = Column(Text, nullable=False,
+                                            default=datetime.datetime.now().strftime(
+                                                '%d.%m.%Y'))  # дата создания паспорта
+
+    date_of_data_collection = Column(Text) # дата сбора информации
+
     name_of_the_legal_entity = Column(Text, nullable=False)  # Наименование ОПФ юрлица
 
     organization_full_name = Column(Text, nullable=False, unique=True)  # Полное наименование организации, для ИП - ФИО
     organization_short_name = Column(Text, nullable=False, unique=True)  # Краткое наименование организации
 
+    address_for_contact = Column(Text)  # контектный адрес
     legal_address = Column(Text, nullable=False, unique=True)  # Адрес юридический
     fact_address = Column(Text, nullable=True, unique=True)  # Адрес фактический
 
@@ -37,7 +45,7 @@ class Passport(SqlAlchemyBase):
     workers_protector_email = Column(Text, nullable=False, unique=True)  # email специалиста по охране труда
 
     golden_mark = Column(Boolean, nullable=False, default=0)  # Золотой знак организации(есть/нет)
-    golden_mark_date = Column(Date, nullable=False)  # когда выдан
+    golden_mark_date = Column(Text, nullable=True)  # когда выдан
 
     passport_status = Column(Integer, ForeignKey('password_statuses.id'))
 

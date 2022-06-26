@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import PasswordField, SubmitField, BooleanField
+from wtforms import PasswordField, SubmitField, BooleanField, DateField, IntegerField, FileField, SelectField
 from wtforms import EmailField, StringField
 from wtforms.validators import DataRequired, Length, EqualTo
 
@@ -29,3 +29,46 @@ class RegisterForm(FlaskForm):  # форма регистрации пользо
     )
     confirm = PasswordField("Повторите пароль:")
     submit = SubmitField("Зарегистрироваться")
+
+
+class PassportForm(FlaskForm):  # форма добавления/редактирования паспорта
+
+    opf = StringField("Наименование ОПФ юрлица", validators=[DataRequired()])
+    full_name = StringField("Полное наименование организации (для ИП - ФИО)", validators=[DataRequired()])
+    short_name = StringField("Краткое наименование организации (для ИП - ФИО)", validators=[DataRequired()])
+    information_date = DateField("Дата сбора информации", validators=[DataRequired()])
+
+    boss_fio = StringField("ФИО руководителя", validators=[DataRequired()])
+    boss_place = StringField("Должность руководителя", validators=[DataRequired()])
+
+    company_phone = StringField("Телефон", validators=[DataRequired()])
+    company_email = StringField("Email", validators=[DataRequired()])
+    location = SelectField("Населенный пункт", validators=[DataRequired()],
+                           choices=[
+                               ('Оренбург', 'Оренбург'),
+                               ('Тюмень', 'Тюмень'),
+                               ('Орск', 'Орск'),
+                               ('Сорочинск', 'Сорочинск'),
+                               ('Бугуруслан', 'Бугуруслан'),
+                               ('Гай', 'Гай')
+                           ])
+
+    address_fact = StringField("Фактический адрес", validators=[DataRequired()])
+    address_yur = StringField("Юридический адрес", validators=[DataRequired()])
+
+    inn = StringField("ИНН", validators=[DataRequired()])
+    oktmo = StringField("ОКТМО", validators=[DataRequired()])
+    main_activity_okved = StringField("Основной вид деятельности по ОКВЭД", validators=[DataRequired()])
+
+    workers_male_count = IntegerField('Колличество мужчин', validators=[DataRequired()])
+    workers_female_count = IntegerField('Колличество женщин', validators=[DataRequired()])
+
+    protector_fio = StringField("ФИО", validators=[DataRequired()])
+    protector_phone = StringField("Телефон", validators=[DataRequired()])
+    protector_email = StringField("Email", validators=[DataRequired()])
+
+    photo = FileField('Поддерживаемые форматы: jpeg, jpg, png, gif')
+
+    video_url = StringField("Проверьте ссылку на работоспособность перед отправкой")
+
+    submit = SubmitField("Отправить")

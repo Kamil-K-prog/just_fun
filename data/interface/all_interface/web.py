@@ -1,4 +1,5 @@
-from flask import Blueprint, session, jsonify, render_template, redirect, send_from_directory
+from flask import Blueprint, session, jsonify, render_template, redirect
+from flask import request as req
 from requests import request
 from ...interface.flask_wtf_forms import PassportForm
 from .middleware import is_admin, is_user
@@ -12,14 +13,14 @@ from flask_login import (
 from data.db import db_sessionmaker
 from werkzeug.utils import secure_filename
 import os
-from ...db.__all_models import User, Passport, PassportStatus, GoldenMarkApplication, Quiz, Video, Photo
+from ...db.__all_models import User, Passport, PassportStatus, GoldenMarkApplication, Quiz, Video, Photo, Field
 from ..flask_wtf_forms import AdminAddForm
 
 blueprint = Blueprint('web', __name__, template_folder='templates')
 login_manager = LoginManager()
 
 
-@blueprint.route('/admin', methods=['GET', 'POST'])
+@blueprint.route('/admin', methods=['GET', 'POST'])  # главная страница администратора. Управление паспортами
 @login_required
 @is_admin
 def Passports():
@@ -34,7 +35,7 @@ def Passports():
             'organization_short_name':
             pas.organization_short_name,
             'date':
-            'Доделат',
+            pas.date_of_data_collection,
             'golden_mark':
             pas.golden_mark,
             'status':
@@ -47,7 +48,7 @@ def Passports():
                            passports=passports_list)
 
 
-@blueprint.route('/admin_bids', methods=['GET', 'POST'])
+@blueprint.route('/admin_bids', methods=['GET', 'POST'])  
 @login_required
 @is_admin
 def Admin_Bids():
@@ -87,11 +88,6 @@ def AdminDownloadDock(pas_id):
                            title='Сбор информации', videos=vedeos, photos=photos)
 
 
-@blueprint.route('/download/<filename>', methods=['GET'])
-def download(filename):
-    return send_from_directory("/uploads/", filename)
-
-
 @blueprint.route('/admin_forms', methods=['GET', 'POST'])
 @login_required
 @is_admin
@@ -124,14 +120,48 @@ def Admin_Forms():
                            title='Золотые знаки', quizes=q_list)
 
 
-@blueprint.route('/admin_edit_form', methods=['GET', 'POST'])
+@blueprint.route('/admin_delete_form/<qz_id>', methods=['GET', 'POST'])
 @login_required
 @is_admin
-def Admin_Edit_Form():
+def Admin_Del_Form(qz_id):
     user = current_user
+    db_sess = db_sessionmaker.create_session()
+    db_sess.query(Quiz).filter_by(id=qz_id).delete()
+    db_sess.commit()
+    return redirect('/admin_forms')
+
+
+@blueprint.route('/admin_edit_form/<qz_id>', methods=['GET', 'POST'])
+@login_required
+@is_admin
+def Admin_Edit_Form(qz_id):
+    user = current_user
+    form = AdminAddForm()
+    db_sess = db_sessionmaker.create_session()
+    fields = db_sess.query(Field).filter_by(quiz_id=qz_id)
+    if form.validate_on_submit():
+        type = req.form.get("type_field")
+        f = Field(title=form.name.data,
+                  type=type,
+                  quiz_id=qz_id)
+        db_sess.add(f)
+        db_sess.commit()
+        return redirect(f'/admin_edit_form/{qz_id}')
+
     return render_template('back/admin_edit_form.html',
                            user=user,
-                           title='Страница редактирования')
+                           title='Страница редактирования', fields=fields, qz_id=qz_id, form=form)
+
+
+@blueprint.route('/admin_field_del/<f_id>/<qz_id>', methods=['GET', 'POST'])
+@login_required
+@is_admin
+def Admin_Del_Field(f_id, qz_id):
+    user = current_user
+    db_sess = db_sessionmaker.create_session()
+    db_sess.query(Field).filter_by(id=f_id).delete()
+    db_sess.commit()
+    return redirect(f'/admin_edit_form/{qz_id}')
 
 
 @blueprint.route('/admin_passport_confirm/<pass_id>', methods=['GET', 'POST'])

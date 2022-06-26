@@ -1,3 +1,4 @@
+from email.policy import default
 from sqlalchemy import Column, Integer, Text, ForeignKey, Boolean, Date
 from sqlalchemy import orm
 from .SqlAlchemyBase_maker import SqlAlchemyBase
@@ -47,7 +48,7 @@ class Passport(SqlAlchemyBase):
     golden_mark = Column(Boolean, nullable=False, default=0)  # Золотой знак организации(есть/нет)
     golden_mark_date = Column(Text, nullable=True)  # когда выдан
 
-    passport_status = Column(Integer, ForeignKey('password_statuses.id'))
+    passport_status = Column(Integer, ForeignKey('password_statuses.id'), default='1')
 
     status = orm.relation('PassportStatus')
     user = orm.relation('User')

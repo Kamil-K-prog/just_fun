@@ -621,4 +621,9 @@ td {
     margin-top: 0;
 }
 
+.image_list {
+    width: 50%;
+    height: 50%;
+}
+
 /* end  form with progressbar */

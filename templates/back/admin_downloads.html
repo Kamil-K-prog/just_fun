@@ -24,13 +24,13 @@
         <table id="pasportsTable" class="display">
             <thead>
                 <tr>
-                    <th>Ссылки на фотографии</th>
+                    <th>Фотографии</th>
                 </tr>
             </thead>
             <tbody>
                 {% for i in photos %}
                 <tr>
-                    <td><a href="/download/{{ i.filename }}">{{ i.filename }}</a></td>
+                    <td><img src="/upload/{{ i.filename }}" alt="{{ i.filename }}" class="image_list"></td>
                 </tr>
                 {% endfor %}
 

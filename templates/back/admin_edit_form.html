@@ -9,9 +9,10 @@
     <div class="col-6">
         <h2>Добавить поле</h2>
         <form method="post">
+            {{ form.hidden_tag() }}
             <div class="mb-3">
                 <label for="title" class="form-label">Название</label>
-                <input class="form-control" type="text" id="title" name="title">
+                {{ form.name(class="form-control",type="text", id="title") }}
             </div>
 
             <div class="mb-3">
@@ -46,12 +47,12 @@
                 </tr>
             </thead>
             <tbody>
-                {% for i in '0123456789ропонген' %}
+                {% for i in fields %}
                 <tr>
-                    <td>1</td>
-                    <td>Дата последней травмы</td>
-                    <td>Дата</td>
-                    <td><a class="btn btn-primary" href="">Удалить</a></td>
+                    <td>{{ i.id }}</td>
+                    <td>{{ i.title }}</td>
+                    <td>{{ i.type }}</td>
+                    <td><a class="btn btn-primary" href="/admin_field_del/{{ i.id }}/{{ qz_id }}">Удалить</a></td>
                 </tr>
 
                 {% endfor %}

@@ -1,0 +1,50 @@
+{% extends "back/base.html" %}
+
+{% block content %}
+
+
+                <div class="row">
+                    <h2>Заполненные формы сбора информации (опросы)</h2>
+                    
+                    <div class="col m-5">
+                        <table id="formsTable" class="display">
+                            <thead>
+                                <tr>
+                                    <th>Название</th>
+                                    <th>Организация</th>
+                                    <th>Дата</th>
+                                    <th>Мониторинг</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Что-то</td>
+                                    <td>ОГУ</td>
+                                    <td>27.06.2022</td>
+                                    <td><a class="btn btn-primary" href="#">Просмотр</a></td>
+                                </tr>
+                                <tr>
+                                    <td>Что-то</td>
+                                    <td>ОГУ</td>
+                                    <td>27.06.2022</td>
+                                    <td><a class="btn btn-primary" href="#">Просмотр</a></td>
+                                </tr>
+                                <tr>
+                                    <td>Что-то</td>
+                                    <td>ОГУ</td>
+                                    <td>27.06.2022</td>
+                                    <td><a class="btn btn-primary" href="#">Просмотр</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <script>
+                            $(document).ready(function () {
+                                $('#formsTable').DataTable();
+                            });
+                        </script>
+                    </div>
+                </div>
+                
+
+
+{% endblock %}

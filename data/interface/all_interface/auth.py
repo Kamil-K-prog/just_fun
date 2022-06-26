@@ -17,6 +17,7 @@ from ..flask_wtf_forms import LoginForm, RegisterForm   # формы FlaskWTF
 
 def register_login_manager(app):
     login_manager = LoginManager(app)
+
     @login_manager.user_loader
     def load_user(user_id: int):
         db_sess = db_sessionmaker.create_session()
@@ -31,7 +32,11 @@ blueprint = Blueprint('auth', __name__, template_folder='templates')
 def login():
     user = current_user
     if not user.is_anonymous:
-        return redirect("/account")
+        if hasattr(user, 'role_id'):
+            if user.role_id == 1:
+                return redirect('/account')
+            elif user.role_id == 2:
+                return redirect('/admin')
     form = LoginForm()
     form_name = 'front/LoginForm.html'
 
@@ -60,7 +65,11 @@ def login():
 def register():
     user = current_user
     if not user.is_anonymous:
-        return redirect("/")
+        if hasattr(user, 'role_id'):
+            if user.role_id == 1:
+                return redirect('/account')
+            elif user.role_id == 2:
+                return redirect('/admin')
     form = RegisterForm()
     form_name = 'front/RegisterForm.html'  #TODO:Прикрепить форму логина
     err_mes = None

@@ -1,6 +1,5 @@
 from flask import Blueprint, session, jsonify, render_template, redirect, send_from_directory
 from requests import request
-from flask import Blueprint, session, jsonify, render_template, redirect, request
 from ...interface.flask_wtf_forms import PassportForm
 from .middleware import is_admin, is_user
 from flask_login import (

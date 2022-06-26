@@ -45,7 +45,7 @@ class Passport(SqlAlchemyBase):
     workers_protector_email = Column(Text, nullable=False, unique=True)  # email специалиста по охране труда
 
     golden_mark = Column(Boolean, nullable=False, default=0)  # Золотой знак организации(есть/нет)
-    golden_mark_date = Column(Date, nullable=False)  # когда выдан
+    golden_mark_date = Column(Text, nullable=False)  # когда выдан
 
     passport_status = Column(Integer, ForeignKey('password_statuses.id'))
 

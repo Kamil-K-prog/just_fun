@@ -3,29 +3,29 @@
 
 <head>
     <meta charset="UTF-8">
-    <link rel="shortcut icon"  href="static/back/img/monitor_back.png" type="image/x-icon">
+    <link rel="shortcut icon"  href="/static/back/img/monitor_back.png" type="image/x-icon">
     <title>{{ title }}</title>
 
-    <link rel="stylesheet"  href="static/back/css/normalize.min.css">
-    <link rel='stylesheet' href='static/css/font-awesome.min.css'>
+    <link rel="stylesheet"  href="/static/back/css/normalize.min.css">
+    <link rel='stylesheet' href='/static/css/font-awesome.min.css'>
 
-    <link rel="stylesheet"  href="static/back/css/chartist.min.css">
-    <link rel="stylesheet"  href="static/back/css/nouislider.min.css">
-    <link rel="stylesheet"  href="static/back/css/bootstrap.min.css">
-    <link rel="stylesheet"  href="static/back/css/datatables.min.css">
-    <link rel="stylesheet" href="static/back/css/select2.min.css">
-    <script src="static/back/js/jquery-3.6.0.min.js"></script>
-    <script src="static/back/js/prefixfree.min.js"></script>
-    <script src="static/back/js/chartist.min.js"></script>
-    <script src="static/back/js/nouislider.min.js"></script>
-    <script src="static/back/js/select2.min.js"></script>
-    <link rel="stylesheet"  href="static/back/css/main.css">
+    <link rel="stylesheet"  href="/static/back/css/chartist.min.css">
+    <link rel="stylesheet"  href="/static/back/css/nouislider.min.css">
+    <link rel="stylesheet"  href="/static/back/css/bootstrap.min.css">
+    <link rel="stylesheet"  href="/static/back/css/datatables.min.css">
+    <link rel="stylesheet" href="/static/back/css/select2.min.css">
+    <script src="/static/back/js/jquery-3.6.0.min.js"></script>
+    <script src="/static/back/js/prefixfree.min.js"></script>
+    <script src="/static/back/js/chartist.min.js"></script>
+    <script src="/static/back/js/nouislider.min.js"></script>
+    <script src="/static/back/js/select2.min.js"></script>
+    <link rel="stylesheet"  href="/static/back/css/main.css">
 
 </head>
 
 <body>
     <header role="banner">
-        <h1><img src="static/back/img/monitor_back.png" alt="">
+        <h1><img src="/static/back/img/monitor_back.png" alt="">
             Личный кабинет
             {% if user.role_id == 1 %}
             пользователя
@@ -48,7 +48,7 @@
                     <li class="question"><a href="">Сбор информации</a></li>
                     <li class="achievement"><a href="">Золотой знак</a></li>
                     {% else %}
-                    <li class="dashboard"><a href="#">Паспорта</a></li>
+                    <li class="dashboard"><a href="/admin">Паспорта</a></li>
                     <li class="question"><a href="#">Сбор информации</a></li>
                     <li class="achievement"><a href="#">Золотые знаки</a></li>
                     {% endif %}
@@ -69,10 +69,10 @@
     <footer role="contentinfo">© Команда Just Fun (Университетский колледж ОГУ); E-mail: begun.aleksey@mail.ru
     </footer>
 
-    <script src="static/back/js/bootstrap.min.js"></script>
-    <script src="static/back/js/datatables.min.js"></script>
-    <script src="static/back/js/main.js"></script>
-    <script src="static/back/js/jquery.maskedinput.min.js"></script>
+    <script src="/static/back/js/bootstrap.min.js"></script>
+    <script src="/static/back/js/datatables.min.js"></script>
+    <script src="/static/back/js/main.js"></script>
+    <script src="/static/back/js/jquery.maskedinput.min.js"></script>
 
 
 </body>

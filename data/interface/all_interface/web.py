@@ -46,7 +46,7 @@ def Admin_Edit_Form():
     return render_template('back/admin_edit_form.html', user=user, title='Страница редактирования')
 
 
-@blueprint.route('/passport_view', methods=['GET', 'POST'])
+@blueprint.route('/passport_view/', methods=['GET', 'POST'])
 @login_required
 def Passport_View():
     user = current_user

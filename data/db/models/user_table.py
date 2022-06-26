@@ -16,7 +16,7 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
     email = Column(Text, unique=True, nullable=False)
     login = Column(Text, unique=True, nullable=False)
     passwd_hash = Column(Text, nullable=False)
-    role_id = Column(Integer, ForeignKey('roles.id'))
+    role_id = Column(Integer, ForeignKey('roles.id'), default=1)
 
     photo = orm.relation('Photo', back_populates='user')
     video = orm.relation('Video', back_populates='user')

@@ -93,12 +93,7 @@ def register():
             user.set_password(form.password.data.strip())
             db_sess.add(user)
             db_sess.commit()
-            if hasattr(user, 'role_id'):
-                if user.role_id == 1:
-                    return redirect('/account')
-                elif user.role_id == 2:
-                    return redirect('/admin')
-            return redirect('/')
+            return redirect('/login')
         else:
             return render_template(form_name, form=form, message=err_mes)
 

@@ -2,50 +2,49 @@
 
 {% block content %}
 
-<div class="col">
-    <main role="main">
+<div class="row">
+    <div class="col">
+        <h2>Заявки на получение золотого знака</h2>
+        <table id="passpotrtsTable" class="display">
+            <thead>
+                <tr>
+                    <th>Организация</th>
+                    <th>Дата</th>
+                    <th>Документы</th>
+                    <th>Статус</th>
+                    <th>Подтвердить</th>
+                    <th>Отклонить</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in apples %}
+                <tr>
+                    <td>{{ i.organization_short_name }}</td>
+                    <td>{{ i.date }}</td>
+                    <td><a class="btn btn-primary" href="/pasport_docs_download/{{ i.id }}">Скачать</a></td>
+                    {% if i.status %}
+                    <td>Выдано</td>
+                    {% else %}
+                    <td>На рассмотрении</td>
+                    {% endif %}
+                    <td><a class="btn btn-primary" href="/admin_gold_confirm/{{ i.id }}">Подтвердить</a></td>
+                    <td><a class="btn btn-primary" href="/admin_gold_decline/{{ i.id }}">Отклонить</a></td>
+                </tr>
 
-        <div class="row">
-            <div class="col">
-                <h2>Заявки на получение золотого знака</h2>
-                <table id="passpotrtsTable" class="display">
-                    <thead>
-                    <tr>
-                        <th>Организация</th>
-                        <th>Дата</th>
-                        <th>Документы</th>
-                        <th>Статус</th>
-                        <th>Подтвердить</th>
-                        <th>Отклонить</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for i in '0123456789ропонген' %}
-                    <tr>
-                        <td>ОГУ</td>
-                        <td>21.01.2021</td>
-                        <td><a class="btn btn-primary" href="#">Скачать</a></td>
-                        <td>На модерации</td>
-                        <td><a class="btn btn-primary" href="#">Подтвердить</a></td>
-                        <td><a class="btn btn-primary" href="#">Отклонить</a></td>
-                    </tr>
+                {% endfor %}
 
-                    {% endfor %}
-
-                    </tbody>
-                </table>
-                <script>
-                            $(document).ready(function () {
-                                $('#passpotrtsTable').DataTable();
-                            });
+            </tbody>
+        </table>
+        <script>
+            $(document).ready(function () {
+                $('#passpotrtsTable').DataTable();
+            });
 
 
-                </script>
-            </div>
-        </div>
-
-    </main>
+        </script>
+    </div>
 </div>
+
 
 
 {% endblock %}

@@ -3,52 +3,37 @@
 {% block content %}
 
 
-<div class="col">
-    <main role="main">
+<div class="row">
+    <h1>Паспорт организации</h1>
 
-        <div class="row">
-            <h1>Паспорт организации</h1>
-
-            <div class="col">
-                <ul>
-                    <li><strong>Наименование ОПФ юрлица</strong> - данные из БД</li>
-                    <li><strong>Полное наименование организации (для ИП -
-                        ФИО)</strong> - данные из БД
-                    </li>
-                    <li><strong>Краткое наименование организации</strong> - данные из
-                        БД
-                    </li>
-                    <li><strong>Адрес юридический</strong> - данные из БД</li>
-                    <li><strong>Адрес фактический</strong> - данные из БД</li>
-                    <li><strong>ФИО и должность руководителя</strong> - данные из БД
-                    </li>
-                    <li><strong>ИНН</strong> - данные из БД</li>
-                    <li><strong>ОКТМО</strong> - данные из БД</li>
-                    <li><strong>Основной вид деятельности по ОКВЭД</strong> - данные
-                        из БД
-                    </li>
-                    <li><strong>Численность работников</strong> - данные из БД</li>
-                    <li><strong>Численность мужчин</strong> - данные из БД</li>
-                    <li><strong>Численность женщин</strong> - данные из БД</li>
-                    <li><strong>Телефон</strong> - данные из БД</li>
-                    <li><strong>E-mail официальный</strong> - данные из БД</li>
-                    <li><strong>ФИО и должность специалиста по охране труда</strong> -
-                        данные из БД
-                    </li>
-                    <li><strong>Телефон специалиста по охране труда</strong> - данные
-                        из БД
-                    </li>
-                    <li><strong>E-mail специалиста по охране труда</strong> - данные
-                        из БД
-                    </li>
-                    <li><strong>«Золотой знак» </strong> - данные из БД</li>
-                    <li><strong>Уникальный номер организации</strong> - данные из БД
-                    </li>
-                </ul>
-            </div>
-        </div>
-
-    </main>
+    <div class="col">
+        <ul>
+            <li><strong>Наименование ОПФ юрлица: </strong>{{ passport.name_of_the_legal_entity }}</li>
+            <li><strong>Полное наименование организации (для ИП -ФИО): </strong>{{ passport.organization_full_name }}</li>
+            <li><strong>Краткое наименование организации: </strong>{{ passport.organization_short_name }}</li>
+            <li><strong>Адрес юридический: </strong>{{ passport.legal_address }}</li>
+            <li><strong>Адрес фактический: </strong>{{ passport.fact_address }}</li>
+            <li><strong>ФИО и должность руководителя: </strong>{{ passport.boss_full_name_n_position }}</li>
+            <li><strong>ИНН: </strong>{{ passport.INN }}</li>
+            <li><strong>ОКТМО: </strong>{{ passport.OKTMO }}</li>
+            <li><strong>Основной вид деятельности по ОКВЭД: </strong>{{ passport.main_activity_OKVED }}</li>
+            <li><strong>Численность работников: </strong>{{ passport.male_workers_count + passport.female_workers_count }}</li>
+            <li><strong>Численность мужчин</strong>{{ passport.male_workers_count }}</li>
+            <li><strong>Численность женщин: </strong>{{ passport.female_workers_count }}</li>
+            <li><strong>Телефон: </strong>{{ passport.phone_number }}</li>
+            <li><strong>E-mail официальный: </strong>{{ passport.email_oficcial }}</li>
+            <li><strong>ФИО и должность специалиста по охране труда: </strong>{{ passport.workers_protector_FIO_n_position }}</li>
+            <li><strong>Телефон специалиста по охране труда: </strong>{{ passport.workers_protector_phone_number }}</li>
+            <li><strong>E-mail специалиста по охране труда: </strong>{{ passport.workers_protector_email }}</li>
+            {% if passport.golden_mark %}
+            <li><strong>«Золотой знак»: </strong>Присвоен</li>
+            {% else %}
+            <li><strong>«Золотой знак»: </strong>Не присвоен</li>
+            {% endif %}
+            <li><strong>Уникальный номер организации: </strong>{{ passport.id }}</li>
+        </ul>
+    </div>
 </div>
+
 
 {% endblock %}

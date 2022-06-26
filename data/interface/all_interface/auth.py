@@ -13,7 +13,7 @@ from data.db import db_sessionmaker
 from ...db.__all_models import User
 from ...db.__all_models import Role
 
-from ..flask_wtf_forms import LoginForm, RegisterForm   # С„РѕСЂРјС‹ FlaskWTF
+from ..flask_wtf_forms import LoginForm, RegisterForm   # формы FlaskWTF
 
 
 def register_login_manager(app):
@@ -47,9 +47,9 @@ def login():
         error_mes = None
         user = db_sess.query(User).filter_by(login=form.login.data.strip()).first()
         if user is None:
-            error_mes = 'РќРµРїСЂР°РІРёР»СЊРЅС‹Р№ Р»РѕРіРёРЅ'
+            error_mes = 'Неправильный логин'
         elif not user.check_password(form.password.data.strip()):
-            error_mes = 'РќРµРїСЂР°РІРёР»СЊРЅС‹Р№ РїР°СЂРѕР»СЊ'
+            error_mes = 'Неправильный пароль'
         if not error_mes:
             login_user(user, remember=form.remember_me.data)
             if hasattr(user, 'role_id'):
@@ -74,17 +74,17 @@ def register():
             elif user.role_id == 2:
                 return redirect("/")
     form = RegisterForm()
-    form_name = 'front/RegisterForm.html'  #TODO:РџСЂРёРєСЂРµРїРёС‚СЊ С„РѕСЂРјСѓ Р»РѕРіРёРЅР°
+    form_name = 'front/RegisterForm.html'  #TODO:Прикрепить форму логина
     err_mes = None
 
     if form.validate_on_submit():
         db_sess = db_sessionmaker.create_session()
         user = db_sess.query(User).filter_by(login=form.login.data.strip()).first()
         if user is not None:
-            err_mes = 'РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ СЃ С‚Р°РєРёРј Р»РѕРіРёРЅРѕРј СѓР¶Рµ СЃСѓС‰РµСЃС‚РІСѓРµС‚!'
+            err_mes = 'Пользователь с таким логином уже существует!'
         user = db_sess.query(User).filter_by(email=form.email.data.strip()).first()
         if user is not None:
-            err_mes = 'РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ СЃ С‚Р°РєРѕР№ РїРѕС‡С‚РѕР№ СѓР¶Рµ СЃСѓС‰РµСЃС‚РІСѓРµС‚!'
+            err_mes = 'Пользователь с такой почтой уже существует!'
         if not err_mes:
             user = User(login=form.login.data.strip(),
                             passwd_hash='',

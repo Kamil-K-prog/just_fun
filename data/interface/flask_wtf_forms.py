@@ -72,3 +72,7 @@ class PassportForm(FlaskForm):  # форма добавления/редакти
     video_url = StringField("Проверьте ссылку на работоспособность перед отправкой")
 
     submit = SubmitField("Отправить")
+
+class AdminAddForm(FlaskForm):
+    name = StringField('Название:', validators=[DataRequired()])
+    submit = SubmitField("Создать")

@@ -2,13 +2,10 @@
 
 {% block content %}
 
-<div class="col">
-    <main role="main">
-
-        <div class="row">
-            <h1 class="text-center">Добавить паспорт организации</h1>
-            <div class="col progressbar_form">
-                <div id="svg_wrap"></div>
+<div class="row">
+    <h1 class="text-center">Добавить паспорт организации</h1>
+    <div class="col progressbar_form">
+        <div id="svg_wrap"></div>
 
         <form method="post" enctype="multipart/form-data">
             {{ form.hidden_tag() }}
@@ -19,31 +16,31 @@
                     {{ form.opf.label() }}
                     {{ form.opf() }}
                     {% for error in form.opf.errors %}
-                        {{ error }}
+                    {{ error }}
                     {% endfor %}
                 </div>
 
                 <div class="mb-3">
-                   {{ form.full_name.label() }}
+                    {{ form.full_name.label() }}
                     {{ form.full_name() }}
                     {% for error in form.full_name.errors %}
-                        {{ error }}
+                    {{ error }}
                     {% endfor %}
                 </div>
 
                 <div class="mb-3">
-                   {{ form.short_name.label() }}
+                    {{ form.short_name.label() }}
                     {{ form.short_name() }}
                     {% for error in form.short_name.errors %}
-                        {{ error }}
+                    {{ error }}
                     {% endfor %}
                 </div>
 
                 <div class="mb-3">
-                   {{ form.information_date.label() }}
+                    {{ form.information_date.label() }}
                     {{ form.information_date() }}
                     {% for error in form.information_date.errors %}
-                        {{ error }}
+                    {{ error }}
                     {% endfor %}
                 </div>
 
@@ -52,18 +49,18 @@
             <section>
                 <h2>Руководитель организации</h2>
                 <div class="mb-3">
-                   {{ form.boss_fio.label() }}
+                    {{ form.boss_fio.label() }}
                     {{ form.boss_fio() }}
                     {% for error in form.boss_fio.errors %}
-                        {{ error }}
+                    {{ error }}
                     {% endfor %}
                 </div>
 
                 <div class="mb-3">
-                   {{ form.boss_place.label() }}
+                    {{ form.boss_place.label() }}
                     {{ form.boss_place() }}
                     {% for error in form.boss_place.errors %}
-                        {{ error }}
+                    {{ error }}
                     {% endfor %}
                 </div>
             </section>
@@ -72,29 +69,33 @@
                 <h2>Контакты</h2>
 
                 <div class="mb-3">
-                   {{ form.company_phone.label() }}
+                    {{ form.company_phone.label() }}
                     {{ form.company_phone() }}
                     {% for error in form.company_phone.errors %}
-                        {{ error }}
+                    {{ error }}
                     {% endfor %}
                 </div>
 
                 <div class="mb-3">
-                   {{ form.company_email.label() }}
+                    {{ form.company_email.label() }}
                     {{ form.company_email() }}
                     {% for error in form.company_email.errors %}
-                        {{ error }}
+                    {{ error }}
                     {% endfor %}
                 </div>
 
 
-                   {{ form.location.label() }}
-                    {{ form.location() }}
-                    {% for error in form.location.errors %}
-                        {{ error }}
-                    {% endfor %}
+                {{ form.location.label() }}
+                {{ form.location() }}
+                {% for error in form.location.errors %}
+                {{ error }}
+                {% endfor %}
                 <script>
                     $('#locality').select2();
+
+
+
+
 
                 </script>
             </section>
@@ -103,18 +104,18 @@
                 <h2>Адреса</h2>
 
                 <div class="mb-3">
-                   {{ form.address_fact.label() }}
+                    {{ form.address_fact.label() }}
                     {{ form.address_fact() }}
                     {% for error in form.address_fact.errors %}
-                        {{ error }}
+                    {{ error }}
                     {% endfor %}
                 </div>
 
                 <div class="mb-3">
-                   {{ form.address_yur.label() }}
+                    {{ form.address_yur.label() }}
                     {{ form.address_yur() }}
                     {% for error in form.address_yur.errors %}
-                        {{ error }}
+                    {{ error }}
                     {% endfor %}
                 </div>
 
@@ -124,26 +125,26 @@
                 <h2>Общие сведения</h2>
 
                 <div class="mb-3">
-                   {{ form.inn.label() }}
+                    {{ form.inn.label() }}
                     {{ form.inn() }}
                     {% for error in form.inn.errors %}
-                        {{ error }}
+                    {{ error }}
                     {% endfor %}
                 </div>
 
                 <div class="mb-3">
-                   {{ form.oktmo.label() }}
+                    {{ form.oktmo.label() }}
                     {{ form.oktmo() }}
                     {% for error in form.oktmo.errors %}
-                        {{ error }}
+                    {{ error }}
                     {% endfor %}
                 </div>
 
                 <div class="mb-3">
-                   {{ form.main_activity_okved.label() }}
+                    {{ form.main_activity_okved.label() }}
                     {{ form.main_activity_okved() }}
                     {% for error in form.main_activity_okved.errors %}
-                        {{ error }}
+                    {{ error }}
                     {% endfor %}
                 </div>
             </section>
@@ -151,18 +152,18 @@
             <section>
                 <h2>Среднесписочная численность работников на дату проведения мониторинга</h2>
                 <div class="mb-3">
-                   {{ form.workers_male_count.label() }}
+                    {{ form.workers_male_count.label() }}
                     {{ form.workers_male_count() }}
                     {% for error in form.workers_male_count.errors %}
-                        {{ error }}
+                    {{ error }}
                     {% endfor %}
                 </div>
 
                 <div class="mb-3">
-                   {{ form.workers_female_count.label() }}
+                    {{ form.workers_female_count.label() }}
                     {{ form.workers_female_count() }}
                     {% for error in form.workers_female_count.errors %}
-                        {{ error }}
+                    {{ error }}
                     {% endfor %}
                 </div>
             </section>
@@ -171,26 +172,26 @@
                 <h2>Специалист по охране труда или ответственный за охрану труда</h2>
 
                 <div class="mb-3">
-                   {{ form.protector_fio.label() }}
+                    {{ form.protector_fio.label() }}
                     {{ form.protector_fio() }}
                     {% for error in form.protector_fio.errors %}
-                        {{ error }}
+                    {{ error }}
                     {% endfor %}
                 </div>
 
                 <div class="mb-3">
-                   {{ form.protector_phone.label() }}
+                    {{ form.protector_phone.label() }}
                     {{ form.protector_phone() }}
                     {% for error in form.protector_phone.errors %}
-                        {{ error }}
+                    {{ error }}
                     {% endfor %}
                 </div>
 
                 <div class="mb-3">
-                   {{ form.protector_email.label() }}
+                    {{ form.protector_email.label() }}
                     {{ form.protector_email() }}
                     {% for error in form.protector_email.errors %}
-                        {{ error }}
+                    {{ error }}
                     {% endfor %}
                 </div>
 
@@ -200,10 +201,10 @@
                 <h2>Добавление фотографии</h2>
 
                 <div class="mb-3">
-                   {{ form.photo.label() }}
+                    {{ form.photo.label() }}
                     {{ form.photo() }}
                     {% for error in form.photo.errors %}
-                        {{ error }}
+                    {{ error }}
                     {% endfor %}
                 </div>
 
@@ -213,10 +214,10 @@
                 <h2>Добавление видео</h2>
 
                 <div class="mb-3">
-                   {{ form.video_url.label() }}
+                    {{ form.video_url.label() }}
                     {{ form.video_url() }}
                     {% for error in form.video_url.errors %}
-                        {{ error }}
+                    {{ error }}
                     {% endfor %}
                 </div>
 
@@ -260,20 +261,20 @@
                         <td>{{ i.id }}</td>
                         <td>{{ i.name_of_the_legal_entity }}</td>
                         {% if i.passport_status == 1 %}
-                            <td>На модерации</td>
+                        <td>На модерации</td>
                         {% elif i.passport_status == 2 %}
-                            <td>Подтверждено</td>
+                        <td>Подтверждено</td>
                         {% elif i.passport_status == 3 %}
-                            <td>Отклонено</td>
+                        <td>Отклонено</td>
                         {% endif %}
                         <td>{{ i.date_of_application_submission }}</td>
                         <td><a class="btn btn-primary" href="/passport_view/{{ i.id }}">Паспорт</a></td>
                         <td><a class="btn btn-primary" href="/passport_change/{{ i.id }}">Редактировать</a></td>
                         <td><a class="btn btn-primary" href="#">Удалить организацию</a></td>
                         {% if i.golden_mark %}
-                            <td><img src="static/back/img/gold_brand_small.png" alt="золотой знак"></td>
+                        <td><img src="static/back/img/gold_brand_small.png" alt="золотой знак"></td>
                         {% else %}
-                            <td>Отсутствует</td>
+                        <td>Отсутствует</td>
                         {% endif %}
                     </tr>
 
@@ -286,12 +287,14 @@
                                 $('#bindsTable').DataTable();
                             });
 
+
+
+
+
                 </script>
             </div>
         </div>
-
-    </main>
+    </div>
 </div>
-
 
 {% endblock %}

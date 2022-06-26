@@ -1,7 +1,6 @@
 import sqlalchemy
 import sqlalchemy.orm as orm
 import sqlalchemy.ext.declarative as declarative
-
 from .models.SqlAlchemyBase_maker import SqlAlchemyBase
 
 __factory = None

@@ -1,0 +1,63 @@
+{% extends "back/base.html" %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col">
+        <h2>Паспорта организаций</h2>
+        <table id="passpotrtsTable" class="display">
+            <thead>
+                <tr>
+                    <th>Организация</th>
+                    <th>Дата</th>
+                    <th>Просморр паспорта</th>
+                    <th>Статус</th>
+                    <th>Подтвердить</th>
+                    <th>Отклонить</th>
+                    <th>Злотой знак</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>ОГУ</td>
+                    <td>21.01.2021</td>
+                    <td><a class="btn btn-primary" href="#">Паспорт</a></td>
+                    <td>На модерации</td>
+                    <td><a class="btn btn-primary" href="#">Подтвердить</a></td>
+                    <td><a class="btn btn-primary" href="#">Отклонить</a></td>
+                    <td><img src="static/back/img/gold_brand_xs.png" alt="золотой знак"></td>
+                </tr>
+
+                <tr>
+                    <td>Газпром</td>
+                    <td>21.01.2021</td>
+                    <td><a class="btn btn-primary" href="#">Паспорт</a></td>
+                    <td>На модерации</td>
+                    <td><a class="btn btn-primary" href="#">Подтвердить</a></td>
+                    <td><a class="btn btn-primary" href="#">Отклонить</a></td>
+                    <td><img src="static/back/img/gold_brand_xs.png" alt="золотой знак"></td>
+                </tr>
+
+                <tr>
+                    <td>Магнит</td>
+                    <td>21.01.2021</td>
+                    <td><a class="btn btn-primary" href="#">Паспорт</a></td>
+                    <td>На модерации</td>
+                    <td><a class="btn btn-primary" href="#">Подтвердить</a></td>
+                    <td><a class="btn btn-primary" href="#">Отклонить</a></td>
+                    <td><img src="static/back/img/gold_brand_xs.png" alt="золотой знак"></td>
+                </tr>
+
+            </tbody>
+        </table>
+        <script>
+            $(document).ready(function () {
+                $('#passpotrtsTable').DataTable();
+            });
+        </script>
+    </div>
+</div>
+
+
+{% endblock %}

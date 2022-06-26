@@ -1,6 +1,4 @@
-# from .models.название import название модели
 from .models.role_table import Role
-from .models.SqlAlchemyBase_maker import SqlAlchemyBase
 from .models.user_table import User
 from .models.answer_table import Answer
 from .models.collective_agreement_table import CollectiveAgreement

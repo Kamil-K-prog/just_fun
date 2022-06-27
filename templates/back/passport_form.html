@@ -2,287 +2,289 @@
 
 {% block content %}
 
-<div class="row">
-    <h1 class="text-center">Добавить паспорт организации</h1>
-    <div class="col progressbar_form">
-        <div id="svg_wrap"></div>
-
-        <form method="post" enctype="multipart/form-data">
-            {{ form.hidden_tag() }}
-            <section>
-                <h2>Основные</h2>
-
-                <div class="mb-3">
-                    {{ form.opf.label() }}
-                    {{ form.opf() }}
-                    {% for error in form.opf.errors %}
-                    {{ error }}
-                    {% endfor %}
-                </div>
-
-                <div class="mb-3">
-                    {{ form.full_name.label() }}
-                    {{ form.full_name() }}
-                    {% for error in form.full_name.errors %}
-                    {{ error }}
-                    {% endfor %}
-                </div>
-
-                <div class="mb-3">
-                    {{ form.short_name.label() }}
-                    {{ form.short_name() }}
-                    {% for error in form.short_name.errors %}
-                    {{ error }}
-                    {% endfor %}
-                </div>
-
-                <div class="mb-3">
-                    {{ form.information_date.label() }}
-                    {{ form.information_date() }}
-                    {% for error in form.information_date.errors %}
-                    {{ error }}
-                    {% endfor %}
-                </div>
-
-            </section>
-
-            <section>
-                <h2>Руководитель организации</h2>
-                <div class="mb-3">
-                    {{ form.boss_fio.label() }}
-                    {{ form.boss_fio() }}
-                    {% for error in form.boss_fio.errors %}
-                    {{ error }}
-                    {% endfor %}
-                </div>
-
-                <div class="mb-3">
-                    {{ form.boss_place.label() }}
-                    {{ form.boss_place() }}
-                    {% for error in form.boss_place.errors %}
-                    {{ error }}
-                    {% endfor %}
-                </div>
-            </section>
-
-            <section>
-                <h2>Контакты</h2>
-
-                <div class="mb-3">
-                    {{ form.company_phone.label() }}
-                    {{ form.company_phone() }}
-                    {% for error in form.company_phone.errors %}
-                    {{ error }}
-                    {% endfor %}
-                </div>
-
-                <div class="mb-3">
-                    {{ form.company_email.label() }}
-                    {{ form.company_email() }}
-                    {% for error in form.company_email.errors %}
-                    {{ error }}
-                    {% endfor %}
-                </div>
-
-
-                {{ form.location.label() }}
-                {{ form.location() }}
-                {% for error in form.location.errors %}
-                {{ error }}
-                {% endfor %}
-                <script>
-                    $('#locality').select2();
-
-
-
-
-
-                </script>
-            </section>
-
-            <section>
-                <h2>Адреса</h2>
-
-                <div class="mb-3">
-                    {{ form.address_fact.label() }}
-                    {{ form.address_fact() }}
-                    {% for error in form.address_fact.errors %}
-                    {{ error }}
-                    {% endfor %}
-                </div>
-
-                <div class="mb-3">
-                    {{ form.address_yur.label() }}
-                    {{ form.address_yur() }}
-                    {% for error in form.address_yur.errors %}
-                    {{ error }}
-                    {% endfor %}
-                </div>
-
-            </section>
-
-            <section>
-                <h2>Общие сведения</h2>
-
-                <div class="mb-3">
-                    {{ form.inn.label() }}
-                    {{ form.inn() }}
-                    {% for error in form.inn.errors %}
-                    {{ error }}
-                    {% endfor %}
-                </div>
-
-                <div class="mb-3">
-                    {{ form.oktmo.label() }}
-                    {{ form.oktmo() }}
-                    {% for error in form.oktmo.errors %}
-                    {{ error }}
-                    {% endfor %}
-                </div>
-
-                <div class="mb-3">
-                    {{ form.main_activity_okved.label() }}
-                    {{ form.main_activity_okved() }}
-                    {% for error in form.main_activity_okved.errors %}
-                    {{ error }}
-                    {% endfor %}
-                </div>
-            </section>
-
-            <section>
-                <h2>Среднесписочная численность работников на дату проведения мониторинга</h2>
-                <div class="mb-3">
-                    {{ form.workers_male_count.label() }}
-                    {{ form.workers_male_count() }}
-                    {% for error in form.workers_male_count.errors %}
-                    {{ error }}
-                    {% endfor %}
-                </div>
-
-                <div class="mb-3">
-                    {{ form.workers_female_count.label() }}
-                    {{ form.workers_female_count() }}
-                    {% for error in form.workers_female_count.errors %}
-                    {{ error }}
-                    {% endfor %}
-                </div>
-            </section>
-
-            <section>
-                <h2>Специалист по охране труда или ответственный за охрану труда</h2>
-
-                <div class="mb-3">
-                    {{ form.protector_fio.label() }}
-                    {{ form.protector_fio() }}
-                    {% for error in form.protector_fio.errors %}
-                    {{ error }}
-                    {% endfor %}
-                </div>
-
-                <div class="mb-3">
-                    {{ form.protector_phone.label() }}
-                    {{ form.protector_phone() }}
-                    {% for error in form.protector_phone.errors %}
-                    {{ error }}
-                    {% endfor %}
-                </div>
-
-                <div class="mb-3">
-                    {{ form.protector_email.label() }}
-                    {{ form.protector_email() }}
-                    {% for error in form.protector_email.errors %}
-                    {{ error }}
-                    {% endfor %}
-                </div>
-
-            </section>
-
-            <section>
-                <h2>Добавление фотографии</h2>
-
-                <div class="mb-3">
-                    {{ form.photo.label() }}
-                    {{ form.photo() }}
-                    {% for error in form.photo.errors %}
-                    {{ error }}
-                    {% endfor %}
-                </div>
-
-            </section>
-
-            <section>
-                <h2>Добавление видео</h2>
-
-                <div class="mb-3">
-                    {{ form.video_url.label() }}
-                    {{ form.video_url() }}
-                    {% for error in form.video_url.errors %}
-                    {{ error }}
-                    {% endfor %}
-                </div>
-
-            </section>
-
-            <div id="agree" class="text-center m-2">
-                <label for="agree_checkbox">Даю свое согласие на участие, ознакомление с порядком
-                    проведения мониторинга по охране труда, которая гарантирует достоверность
-                    представленных сведений.</label>
-                <input id="agree_checkbox" type="checkbox" name="agree">
-            </div>
-
-
-            <div class="text-center">
-                <span class="btn btn-primary button" id="prev">&larr; Назад</span>
-                <span class="btn btn-primary button" id="next">Далее &rarr;</span>
-                {{ form.submit }}
-            </div>
-        </form>
+<div class="col">
+    <main role="main">
 
         <div class="row">
-            <div class="col">
-                <h2>Зарегистрированные вами организации</h2>
-                <table id="bindsTable" class="display">
-                    <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Организация</th>
-                        <th>Статус</th>
-                        <th>Дата создания паспорта</th>
-                        <th>Просмотр паспорта</th>
-                        <th>Редактировать паспорт</th>
-                        <th>Удалить организацию</th>
-                        <th>Золотой знак</th>
+            <h1 class="text-center">Добавить паспорт организации</h1>
+            <div class="col progressbar_form">
+                <div id="svg_wrap"></div>
 
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for i in organizations %}
-                    <tr>
-                        <td>{{ i.id }}</td>
-                        <td>{{ i.name_of_the_legal_entity }}</td>
-                        {% if i.passport_status == 1 %}
-                        <td>На модерации</td>
-                        {% elif i.passport_status == 2 %}
-                        <td>Подтверждено</td>
-                        {% elif i.passport_status == 3 %}
-                        <td>Отклонено</td>
-                        {% endif %}
-                        <td>{{ i.date_of_application_submission }}</td>
-                        <td><a class="btn btn-primary" href="/passport_view/{{ i.id }}">Паспорт</a></td>
-                        <td><a class="btn btn-primary" href="/passport_change/{{ i.id }}">Редактировать</a></td>
-                        <td><a class="btn btn-primary" href="#">Удалить организацию</a></td>
-                        {% if i.golden_mark %}
-                        <td><img src="static/back/img/gold_brand_small.png" alt="золотой знак"></td>
-                        {% else %}
-                        <td>Отсутствует</td>
-                        {% endif %}
-                    </tr>
+                <form method="post" enctype="multipart/form-data">
+                    {{ form.hidden_tag() }}
+                    <section>
+                        <h2>Основные</h2>
 
-                    {% endfor %}
+                        <div class="mb-3">
+                            {{ form.opf.label() }}
+                            {{ form.opf() }}
+                            {% for error in form.opf.errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
 
-                    </tbody>
-                </table>
-                <script>
+                        <div class="mb-3">
+                            {{ form.full_name.label() }}
+                            {{ form.full_name() }}
+                            {% for error in form.full_name.errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.short_name.label() }}
+                            {{ form.short_name() }}
+                            {% for error in form.short_name.errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.information_date.label() }}
+                            {{ form.information_date() }}
+                            {% for error in form.information_date.errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
+
+                    </section>
+
+                    <section>
+                        <h2>Руководитель организации</h2>
+                        <div class="mb-3">
+                            {{ form.boss_fio.label() }}
+                            {{ form.boss_fio() }}
+                            {% for error in form.boss_fio.errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.boss_place.label() }}
+                            {{ form.boss_place() }}
+                            {% for error in form.boss_place.errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
+                    </section>
+
+                    <section>
+                        <h2>Контакты</h2>
+
+                        <div class="mb-3">
+                            {{ form.company_phone.label() }}
+                            {{ form.company_phone() }}
+                            {% for error in form.company_phone.errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.company_email.label() }}
+                            {{ form.company_email() }}
+                            {% for error in form.company_email.errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
+
+
+                        {{ form.location.label() }}
+                        {{ form.location() }}
+                        {% for error in form.location.errors %}
+                        {{ error }}
+                        {% endfor %}
+                        <script>
+                    $('#locality').select2();
+
+                        </script>
+                    </section>
+
+                    <section>
+                        <h2>Адреса</h2>
+
+                        <div class="mb-3">
+                            {{ form.address_fact.label() }}
+                            {{ form.address_fact() }}
+                            {% for error in form.address_fact.errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.address_yur.label() }}
+                            {{ form.address_yur() }}
+                            {% for error in form.address_yur.errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
+
+                    </section>
+
+                    <section>
+                        <h2>Общие сведения</h2>
+
+                        <div class="mb-3">
+                            {{ form.inn.label() }}
+                            {{ form.inn() }}
+                            {% for error in form.inn.errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.oktmo.label() }}
+                            {{ form.oktmo() }}
+                            {% for error in form.oktmo.errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.main_activity_okved.label() }}
+                            {{ form.main_activity_okved() }}
+                            {% for error in form.main_activity_okved.errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
+                    </section>
+
+                    <section>
+                        <h2>Среднесписочная численность работников на дату проведения мониторинга</h2>
+                        <div class="mb-3">
+                            {{ form.workers_male_count.label() }}
+                            {{ form.workers_male_count() }}
+                            {% for error in form.workers_male_count.errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.workers_female_count.label() }}
+                            {{ form.workers_female_count() }}
+                            {% for error in form.workers_female_count.errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
+                    </section>
+
+                    <section>
+                        <h2>Специалист по охране труда или ответственный за охрану труда</h2>
+
+                        <div class="mb-3">
+                            {{ form.protector_fio.label() }}
+                            {{ form.protector_fio() }}
+                            {% for error in form.protector_fio.errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.protector_phone.label() }}
+                            {{ form.protector_phone() }}
+                            {% for error in form.protector_phone.errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.protector_email.label() }}
+                            {{ form.protector_email() }}
+                            {% for error in form.protector_email.errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
+
+                    </section>
+
+                    <section>
+                        <h2>Добавление фотографии</h2>
+
+                        <div class="mb-3">
+                            {{ form.photo.label() }}
+                            {{ form.photo() }}
+                            {% for error in form.photo.errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
+
+                    </section>
+
+                    <section>
+                        <h2>Добавление видео</h2>
+
+                        <div class="mb-3">
+                            {{ form.video_url.label() }}
+                            {{ form.video_url() }}
+                            {% for error in form.video_url.errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
+
+                    </section>
+
+                    <div id="agree" class="text-center m-2">
+                        <label for="agree_checkbox">Даю свое согласие на участие, ознакомление с порядком
+                            проведения мониторинга по охране труда, которая гарантирует достоверность
+                            представленных сведений.</label>
+                        <input id="agree_checkbox" type="checkbox" name="agree">
+                    </div>
+
+
+                    <div class="text-center">
+                        <span class="btn btn-primary button" id="prev">&larr; Назад</span>
+                        <span class="btn btn-primary button" id="next">Далее &rarr;</span>
+                        {{ form.submit }}
+                    </div>
+                </form>
+
+                <div class="row">
+                    <div class="col">
+                        <h2>Зарегистрированные вами организации</h2>
+                        <table id="bindsTable" class="display">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Организация</th>
+                                <th>Статус</th>
+                                <th>Дата создания паспорта</th>
+                                <th>Просмотр паспорта</th>
+                                <th>Редактировать паспорт</th>
+                                <th>Удалить организацию</th>
+                                <th>Золотой знак</th>
+
+                            </tr>
+                            </thead>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for i in organizations %}
+                            <tr>
+                                <td>{{ i.id }}</td>
+                                <td>{{ i.name_of_the_legal_entity }}</td>
+                                {% if i.passport_status == 1 %}
+                                <td>На модерации</td>
+                                {% elif i.passport_status == 2 %}
+                                <td>Подтверждено</td>
+                                {% elif i.passport_status == 3 %}
+                                <td>Отклонено</td>
+                                {% endif %}
+                                <td>{{ i.date_of_application_submission }}</td>
+                                <td><a class="btn btn-primary" href="/passport_view/{{ i.id }}">Паспорт</a></td>
+                                <td><a class="btn btn-primary" href="/passport_change/{{ i.id }}">Редактировать</a></td>
+                                <td><a class="btn btn-primary" href="/delete_organization/{{ i.id }}">Удалить организацию</a></td>
+                                {% if i.golden_mark %}
+                                <td><img src="static/back/img/gold_brand_small.png" alt="золотой знак"></td>
+                                {% else %}
+                                <td>Отсутствует</td>
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+
+
+                            </tbody>
+                        </table>
+                        <script>
                             $(document).ready(function () {
                                 $('#bindsTable').DataTable();
                             });
@@ -291,10 +293,13 @@
 
 
 
-                </script>
+
+                        </script>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
+    </main>
 </div>
 
 {% endblock %}

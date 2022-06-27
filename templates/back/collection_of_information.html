@@ -3,54 +3,56 @@
 {% block content %}
 
 
-<div class="col">
-    <nav role="navigation">
-        <ul class="main">
-            <li class="dashboard"><a href="#">Организации</a></li>
-            <li class="question"><a href="#">Сбор информации</a></li>
-            <li class="achievement"><a href="#">Золотой знак</a></li>
-        </ul>
-    </nav>
+
+    <div class="container">
+        <div class="col">
+            <nav role="navigation">
+                <ul class="main">
+                    <li class="dashboard"><a href="#">Организации</a></li>
+                    <li class="question"><a href="#">Сбор информации</a></li>
+                    <li class="achievement"><a href="#">Золотой знак</a></li>
+                </ul>
+            </nav>
 
 
-</div>
-<div class="col">
-    <main role="main">
-        <h1 class="text-center">Формы сбора ниформации</h1>
+        </div>
+        <div class="col">
+            <main role="main">
+                <h1 class="text-center">Формы сбора ниформации</h1>
+                
+
+                <div class="row">
+                    <div class="col">
+                        <h2>Достуные формы</h2>
+                        <table id="bindsTable" class="display">
+                            <thead>
+                                <tr>
+                                    <th>Название формы опроса</th>
+                                    <th>Пройти опрос</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in '0123456789ропонген' %}
+                                <tr>
+                                    <td>Управление профрисками</td>
+                                    <td><a class="btn btn-primary" href="/quiz/{id}">Пройти</a></td>
+                                </tr>
+                                {% endfor %}
 
 
-        <div class="row">
-            <div class="col">
-                <h2>Достуные формы</h2>
-                <table id="bindsTable" class="display">
-                    <thead>
-                    <tr>
-                        <th>Название формы опроса</th>
-                        <th>Пройти опрос</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for i in '0123456789ропонген' %}
-                    <tr>
-                        <td>Управление профрисками</td>
-                        <td><a class="btn btn-primary" href="/quiz/{id}">Пройти</a></td>
-                    </tr>
-                    {% endfor %}
-
-
-                    </tbody>
-                </table>
-                <script>
+                            </tbody>
+                        </table>
+                        <script>
                             $(document).ready(function () {
                                 $('#bindsTable').DataTable();
                             });
+                        </script>
+                    </div>
+                </div>
+                
 
-                </script>
-            </div>
+            </main>
         </div>
-
-
-    </main>
-</div>
+    </div>
 
 {% endblock %}

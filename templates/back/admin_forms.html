@@ -3,65 +3,62 @@
 {% block content %}
 
 
-<div class="col">
-    <main role="main">
-        <h1>Страница управления формами сбора информации</h1>
+<h1>Страница управления формами сбора информации</h1>
 
-        <div class="row justify-content-center">
-            <div class="col-6">
-                <h2>Создать форму</h2>
-                <form method="post">
-                    <div class="mb-3">
-                        <label for="title" class="form-label">Название</label>
-                        <input class="form-control" type="text" id="title"
-                               name="title">
-                    </div>
-                    <div class="mb-3 text-center">
-                        <button type="submit" name="submit_form"
-                                class="btn btn-primary">Создать
-                        </button>
-                    </div>
-                </form>
+<div class="row justify-content-center">
+    <div class="col-6">
+        <h2>Создать форму</h2>
+        <form action="" method="POST">
+            {{ form.hidden_tag() }}
+            <div class="mb-3">
+                <label for="title" class="form-label">Название</label>
+                {{ form.name(class="form-control",type="text", id="title") }}
             </div>
-        </div>
-
-        <div class="row">
-            <div class="col">
-                <h2>Формы сбора информации (Опросы)</h2>
-                <table id="formsTable" class="display">
-                    <thead>
-                    <tr>
-                        <th>Название</th>
-                        <th>Мониторинг</th>
-                        <th>Редактировать</th>
-                        <th>Удалить</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for i in '0123456789ропонген' %}
-                    <tr>
-                        <td>Управление профрисками</td>
-                        <td><a class="btn btn-primary" href="#">Мониторинг</a></td>
-                        <td><a class="btn btn-primary" href="/admin_edit_form">Редактировать</a></td>
-                        <td><a class="btn btn-primary" href="#">Удалить</a></td>
-                    </tr>
-
-                    {% endfor %}
-
-
-                    </tbody>
-                </table>
-                <script>
-                            $(document).ready(function () {
-                                $('#formsTable').DataTable();
-                            });
-
-
-                </script>
+            <div class="mb-3 text-center">
+                <button type="submit" class="btn btn-primary">Создать
+                </button>
             </div>
-        </div>
+            {% if message %}
+            <h4>{{ message }}</h4>
+            {% endif %}
+        </form>
+    </div>
+</div>
 
-    </main>
+<div class="row">
+    <div class="col">
+        <h2>Формы сбора информации (Опросы)</h2>
+        <table id="formsTable" class="display">
+            <thead>
+                <tr>
+                    <th>Название</th>
+                    <th>Мониторинг</th>
+                    <th>Редактировать</th>
+                    <th>Удалить</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in quizes %}
+                <tr>
+                    <td>{{ i.name }}</td>
+                    <td><a class="btn btn-primary" href="/admin_check_form/{{ i.id }}">Мониторинг</a></td>
+                    <td><a class="btn btn-primary" href="/admin_edit_form/{{ i.id }}">Редактировать</a></td>
+                    <td><a class="btn btn-primary" href="/admin_delete_form/{{ i.id }}">Удалить</a></td>
+                </tr>
+
+                {% endfor %}
+
+
+            </tbody>
+        </table>
+        <script>
+            $(document).ready(function () {
+                $('#formsTable').DataTable();
+            });
+
+
+        </script>
+    </div>
 </div>
 
 

@@ -3,54 +3,53 @@
 {% block content %}
 
 
-<div class="col">
-    <main role="main">
+<div class="row">
+    <div class="col">
+        <h2>Паспорта организаций</h2>
+        <table id="passpotrtsTable" class="display">
+            <thead>
+                <tr>
+                    <th>Организация</th>
+                    <th>Дата</th>
+                    <th>Просморр паспорта</th>
+                    <th>Статус</th>
+                    <th>Подтвердить</th>
+                    <th>Отклонить</th>
+                    <th>Злотой знак</th>
 
-        <div class="row">
-            <div class="col">
-                <h2>Паспорта организаций</h2>
-                <table id="passpotrtsTable" class="display">
-                    <thead>
-                    <tr>
-                        <th>Организация</th>
-                        <th>Дата</th>
-                        <th>Просморр паспорта</th>
-                        <th>Статус</th>
-                        <th>Подтвердить</th>
-                        <th>Отклонить</th>
-                        <th>Злотой знак</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in passports %}
 
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for i in '0123456789ропонген' %}
+                <tr>
+                    <td>{{i.organization_short_name}}</td>
+                    <td>{{ i.date }}</td>
+                    <td><a class="btn btn-primary" href="/passport_view/{{ i.id }}">Паспорт</a></td>
+                    <td>{{ i.status }}</td>
+                    <td><a class="btn btn-primary" href="/admin_passport_confirm/{{ i.id }}">Подтвердить</a></td>
+                    <td><a class="btn btn-primary" href="/admin_passport_decline/{{ i.id }}">Отклонить</a></td>
+                    {% if i.golden_mark %}
+                    <td><img src="/static/back/img/gold_brand_xs.png" alt="золотой знак"></td>
+                    {% else %}
+                    <td></td>
+                    {% endif %}
+                </tr>
 
-                    <tr>
-                        <td>{{i}}</td>
-                        <td>21.01.2021</td>
-                        <td><a class="btn btn-primary" href="/passport_view">Паспорт</a></td>
-                        <td>На модерации</td>
-                        <td><a class="btn btn-primary" href="#">Подтвердить</a></td>
-                        <td><a class="btn btn-primary" href="#">Отклонить</a></td>
-                        <td><img src="img/gold_brand_xs.png" alt="золотой знак"></td>
-                    </tr>
+                {% endfor %}
 
-                    {% endfor %}
-
-                    </tbody>
-                </table>
-                <script>
-                            $(document).ready(function () {
-                                $('#passpotrtsTable').DataTable();
-                            });
+            </tbody>
+        </table>
+        <script>
+            $(document).ready(function () {
+                $('#passpotrtsTable').DataTable();
+            });
 
 
-                </script>
-            </div>
-        </div>
-
-    </main>
+        </script>
+    </div>
 </div>
+
 
 
 {% endblock %}

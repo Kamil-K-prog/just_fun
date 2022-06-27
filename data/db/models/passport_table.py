@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, Text, ForeignKey, Boolean, Date
 from sqlalchemy import orm
-import datetime
 from .SqlAlchemyBase_maker import SqlAlchemyBase
+import datetime
 
 
 # Общие сведения об организации
@@ -38,8 +38,7 @@ class Passport(SqlAlchemyBase):
     phone_number = Column(Text, nullable=False, unique=True)  # телефон организации
     email_oficcial = Column(Text, nullable=False, unique=True)  # email организации
 
-    workers_protector_FIO_n_position = Column(Text, nullable=False,
-                                              unique=True)  # ФИО и должность специалиста
+    workers_protector_FIO_n_position = Column(Text, nullable=False)  # ФИО и должность специалиста
     # по охране труда или ответственного за охрану труда
     workers_protector_phone_number = Column(Text, nullable=False, unique=True)  # телефон специалиста по охране труда
     workers_protector_email = Column(Text, nullable=False, unique=True)  # email специалиста по охране труда
@@ -47,7 +46,7 @@ class Passport(SqlAlchemyBase):
     golden_mark = Column(Boolean, nullable=False, default=0)  # Золотой знак организации(есть/нет)
     golden_mark_date = Column(Text, nullable=True)  # когда выдан
 
-    passport_status = Column(Integer, ForeignKey('password_statuses.id'))
+    passport_status = Column(Integer, ForeignKey('password_statuses.id'), default=3)
 
     status = orm.relation('PassportStatus')
     user = orm.relation('User')

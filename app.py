@@ -9,14 +9,14 @@ from data.db.models.user_table import User
 
 app = Flask(__name__)
 app.config.from_object(AppConfig)
-app.config['UPLOAD_FOLDER'] = "/upload/"
-app.config['LOAD_FOLDER'] = "/load/"
+app.config['UPLOAD_FOLDER'] = "/upload"
 
 
 if __name__ == '__main__':
     db_path = os.path.join(
         app.config['DB_DIRNAME'],
         app.config['DB_FILENAME'])
+    app.config['UPLOAD_FOLDER'] = "/upload/"
     db_sessionmaker.global_init(db_path)
     auth.register_login_manager(app)
     app.register_blueprint(auth.blueprint)

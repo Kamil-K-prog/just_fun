@@ -3,61 +3,56 @@
 {% block content %}
 
 
-<div class="row">
-    <h1 class="text-center">Страница сбора информации "Управление профрисками"</h1>
-    <div class="col progressbar_form">
-        <div id="svg_wrap"></div>
+<div class="col">
+    <main role="main">
 
-        <form action="" method="post" enctype="multipart/form-data">
-            <section>
-                <h2>Дата проведения сбора информации</h2>
+        <div class="row">
+            <h1 class="text-center">Страница сбора информации "Управление профрисками"</h1>
+            <div class="col progressbar_form">
+                <div id="svg_wrap"></div>
 
-                <div class="mb-3">
-                    <label for="date" class="form-label">Дата сбора информации</label>
-                    <input class="form-control" type="date" id="date" name="date">
-                </div>
-            </section>
+                <form action="" method="post" enctype="multipart/form-data">
+                    {{ form.hidden_tag() }}
+                    <section>
+                        <div class="mb-3">
+                            {{ form.pasport_id.label() }}
+                            {{ form.pasport_id() }}
+                        </div>
+                    </section>
 
+                    <section>
+                        <div class="mb-3">
+                            <h2>Проведена оценка профессиональных рисков в области охраны труда</h2>
+                            {{ form.profrisks_check.label() }}
+                            {{ form.profrisks_check() }}
+                        </div>
+                    </section>
 
-            <section>
-                <div class="mb-3">
-                    <h2>Проведена оценка профессиональных рисков в области охраны труда</h2>
-                    <label for="risks" class="form-label">Риски </label>
-                    <select class="form-select" name="risks" id="risks">
-                        <option value="Да">Да</option>
-                        <option value="Нет">Нет</option>
-                        <option value="Частично">Частично</option>
-                    </select>
-                </div>
-            </section>
-
-            <section>
-                <h2>Дата проведения последней оценки профессиональных рисков</h2>
-                <div class="mb-3">
-                    <label for="last_date" class="form-label">Дата</label>
-                    <input class="form-control" type="date" id="last_date" name="last_date">
-                </div>
-            </section>
+                    <section>
+                        {{ form.last_check_date.label() }}
+                        {{ form.last_check_date() }}
+                    </section>
 
 
-            <div id="agree" class="text-center m-2">
-                <label for="agree_checkbox">Даю свое согласие на участие, ознакомление с порядком
-                    проведения мониторинга по охране труда, которая гарантирует достоверность
-                    представленных сведений.</label>
-                <input id="agree_checkbox" type="checkbox" name="agree">
+                    <div id="agree" class="text-center m-2">
+                        <label for="agree_checkbox">Даю свое согласие на участие, ознакомление с порядком
+                            проведения мониторинга по охране труда, которая гарантирует достоверность
+                            представленных сведений.</label>
+                        <input id="agree_checkbox" type="checkbox" name="agree">
+                    </div>
+
+
+                    <div class="text-center">
+                        <span class="btn btn-primary button" id="prev">&larr; Назад</span>
+                        <span class="btn btn-primary button" id="next">Далее &rarr;</span>
+                        {{ form.submit() }}
+                        </button>
+                    </div>
+                </form>
             </div>
+        </div>
 
-
-            <div class="text-center">
-                <span class="btn btn-primary button" id="prev">&larr; Назад</span>
-                <span class="btn btn-primary button" id="next">Далее &rarr;</span>
-                <button type="submit" id="submit" name="add_achievement"
-                        class="btn btn-primary">Отправить
-                </button>
-            </div>
-        </form>
-    </div>
+    </main>
 </div>
-
 
 {% endblock %}

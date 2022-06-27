@@ -72,3 +72,25 @@ class PassportForm(FlaskForm):  # форма добавления/редакти
     video_url = StringField("Проверьте ссылку на работоспособность перед отправкой")
 
     submit = SubmitField("Отправить")
+
+
+class AdminAddForm(FlaskForm):
+    name = StringField('Название:', validators=[DataRequired()])
+    submit = SubmitField("Создать")
+
+
+class GoldenBadgeApplicationForm(FlaskForm):
+    date_of_application = DateField("Дата подачи заявки")
+    organization_id = IntegerField('ID организации, для которой подается заявка')
+    submit = SubmitField('Отправить')
+
+
+class WorkProtectionForm(FlaskForm):
+    pasport_id = StringField('Введите ID организации, для которой заполняется форма', validators=[DataRequired()])
+    profrisks_check = SelectField('Проведена оценка профессиональных рисков в области охраны труда',
+                                  choices=[('Да', 'Да'),
+                                           ('Частично', 'Частично'),
+                                           ('Нет', 'Нет')
+                                           ], validators=[DataRequired()])
+    last_check_date = DateField('Дата проведения последней оценки профессиональных рисков', validators=[DataRequired()])
+    submit = SubmitField('Отправить')

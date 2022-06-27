@@ -8,6 +8,3 @@ class Quiz(SqlAlchemyBase):
 
     id = Column(Integer, primary_key=True, nullable=False, autoincrement=True, unique=True)
     title = Column(Text)  # название
-    data = Column(Text)  # данные
-    organizer = Column(Text)  # организатор
-

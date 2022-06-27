@@ -30,5 +30,5 @@ if __name__ == '__main__':
     def page_not_found(e):
         return render_template('403.html'), 401
 
-    interface_manager.global_interface_init(app)
+    interface_manager.global_interface_init(app) 
     app.run(host='127.0.0.1', port=8080, debug=True)

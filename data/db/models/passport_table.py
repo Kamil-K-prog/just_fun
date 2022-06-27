@@ -45,13 +45,15 @@ class Passport(SqlAlchemyBase):
     workers_protector_phone_number = Column(Text, nullable=False, unique=True)  # телефон специалиста по охране труда
     workers_protector_email = Column(Text, nullable=False, unique=True)  # email специалиста по охране труда
 
-    golden_mark = Column(Boolean, nullable=False, default=0)  # Золотой знак организации(есть/нет)
+    golden_mark = Column(Boolean, nullable=False, default=False)  # Золотой знак организации(есть/нет)
     golden_mark_date = Column(Text, nullable=True)  # когда выдан
 
-    passport_status = Column(Integer, ForeignKey('password_statuses.id'), default='1')
+    passport_status = Column(Integer, ForeignKey('password_statuses.id'), default='3')
 
     status = orm.relation('PassportStatus')
     user = orm.relation('User')
+    photo = orm.relation('Photo', back_populates='passport')
+    video = orm.relation('Video', back_populates='passport')
     sout = orm.relation('Sout', back_populates='passport')
     profrisk = orm.relation('Profrisk', back_populates='passport')
     work_conditions = orm.relation('WorkCondition', back_populates='passport')

@@ -18,8 +18,6 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
     passwd_hash = Column(Text, nullable=False)
     role_id = Column(Integer, ForeignKey('roles.id'))
 
-    photo = orm.relation('Photo', back_populates='user')
-    video = orm.relation('Video', back_populates='user')
     role = orm.relation('Role')
     passport = orm.relation('Passport', back_populates='user')
 

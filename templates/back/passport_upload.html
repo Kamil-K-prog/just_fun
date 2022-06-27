@@ -1,0 +1,67 @@
+{% extends "back/base.html" %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col">
+        <h2>Файлы для скачивания</h2>
+        <table id="pasportsTable" class="display">
+            <thead>
+                <tr>
+                    <th>Ссылки на видеоролики</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in videos %}
+                <tr>
+                    <td><a href="{{ i.link }}">{{ i.link }}</a></td>
+                </tr>
+                {% endfor %}
+
+            </tbody>
+        </table>
+
+        <table id="pasportsTable" class="display">
+            <thead>
+                <tr>
+                    <th>Фотографии</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in photos %}
+                <tr>
+                    <td><img src="/upload/{{ i.filename }}" alt="{{ i.filename }}" class="image_list"></td>
+                </tr>
+                {% endfor %}
+
+            </tbody>
+        </table>
+        <form method="POST" enctype=multipart/form-data>
+            <div class="text-center">
+                    <p><input type=file name=file></p>
+                    <p><input type=text name=video_url></p>
+            </div>
+            <div class="mb-3 text-center">
+                <button type="submit" class="btn btn-primary">Сохранить
+                </button>
+            </div>
+            <div class="mb-3 text-center">
+                <a href="/account">
+                    <button class="btn btn-primary" type="button">Выход</button>
+                </a>    
+            </div>
+        </form>
+
+        <script>
+            $(document).ready(function () {
+                $('#passpotrtsTable').DataTable();
+            });
+
+
+        </script>
+    </div>
+</div>
+
+
+
+{% endblock %}

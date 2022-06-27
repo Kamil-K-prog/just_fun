@@ -8,7 +8,7 @@ class Photo(SqlAlchemyBase):
     __tablename__ = 'photos'
 
     id = Column(Integer, primary_key=True, nullable=False, autoincrement=True, unique=True)
-    user_id = Column(Integer, ForeignKey('users.id'))  # кто прикрепил
+    pass_id = Column(Integer, ForeignKey('passports.id'))  # кто прикрепил
     filename = Column(Text, unique=True, nullable=False)
 
-    user = orm.relation('User')
+    passport = orm.relation('Passport')

@@ -67,12 +67,13 @@ class PassportForm(FlaskForm):  # форма добавления/редакти
     protector_phone = StringField("Телефон", validators=[DataRequired()])
     protector_email = StringField("Email", validators=[DataRequired()])
 
-    photo = FileField('Поддерживаемые форматы: jpeg, jpg, png, gif')
-
-    video_url = StringField("Проверьте ссылку на работоспособность перед отправкой")
-
     submit = SubmitField("Отправить")
 
 class AdminAddForm(FlaskForm):
     name = StringField('Название:', validators=[DataRequired()])
     submit = SubmitField("Создать")
+
+class GetFilesForm(FlaskForm):
+    photo = FileField('Поддерживаемые форматы: jpeg, jpg, png, gif')
+    video_url = StringField("Проверьте ссылку на работоспособность перед отправкой")
+    submit = SubmitField("Отправить")

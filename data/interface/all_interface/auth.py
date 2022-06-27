@@ -21,7 +21,10 @@ def register_login_manager(app):
     @login_manager.user_loader
     def load_user(user_id: int):
         db_sess = db_sessionmaker.create_session()
-        return db_sess.query(User).get(user_id)
+        if db_sess.query(User).filter_by(id=user_id).all():
+            return db_sess.query(User).get(user_id)
+        else:
+            return None
 
 
 blueprint = Blueprint('auth', __name__, template_folder='templates')

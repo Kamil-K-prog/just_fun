@@ -421,11 +421,30 @@ def Golden_Badge():
 def Passport_Change(id):
     form = PassportForm()
     user = current_user
-    if form.validate_on_submit():
-        print('POST\n')
-        sess = db_sessionmaker.create_session()
+    sess = db_sessionmaker.create_session()
+    passp = sess.query(Passport).filter(Passport.id == id).first()
 
-        passp = sess.query(Passport).filter(Passport.id == id).first()
+    form.opf.data = passp.name_of_the_legal_entity[:]
+    form.full_name.data = passp.organization_full_name[:]
+    form.short_name.data = passp.organization_short_name[:]
+    form.information_date.data = passp.date_of_data_collection[:]
+    form.boss_fio.data = passp.boss_full_name_n_position[:]
+    form.boss_place.data = passp.boss_full_name_n_position[:]
+    form.company_phone.data = passp.phone_number[:]
+    form.company_email.data = passp.email_oficcial[:]
+    form.location.data = passp.address_for_contact[:]
+    form.address_fact.data = passp.fact_address[:]
+    form.address_yur.data = passp.legal_address[:]
+    form.inn.data = passp.INN[:]
+    form.oktmo.data = passp.OKTMO[:]
+    form.main_activity_okved.data = passp.main_activity_OKVED[:]
+    form.workers_male_count.data = passp.male_workers_count
+    form.workers_female_count.data = passp.female_workers_count
+    form.protector_fio.data = passp.workers_protector_FIO_n_position[:]
+    form.protector_phone.data = passp.workers_protector_phone_number[:]
+    form.protector_email.data = passp.workers_protector_email[:]
+
+    if form.validate_on_submit():
 
         passp.name_of_the_legal_entity = form.opf.data
         passp.organization_full_name = form.full_name.data
@@ -446,16 +465,7 @@ def Passport_Change(id):
         passp.workers_protector_phone_number = form.protector_phone.data
         passp.workers_protector_email = form.protector_email.data
 
-        if form.video_url.data:
-            vid = Video(user_id=user.id, link=form.video_url.data)
-            sess.add(vid)
-        if form.photo.data:
-            phot = form.photo.data
-            filename = secure_filename(phot.filename)
-            phot.save('/photos', filename)
-
-            photo = Photo(user_id=user.id, path=f'/photos/{filename}')
-            sess.add(photo)
+        sess.add(passp)
         sess.commit()
         return redirect('/account')
     return render_template('back/passport_edit.html', form=form, user=user)

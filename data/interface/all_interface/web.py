@@ -14,8 +14,8 @@ from flask_login import (
 from data.db import db_sessionmaker
 from werkzeug.utils import secure_filename
 import os
-from ...db.__all_models import User, Passport, PassportStatus, GoldenMarkApplication, Quiz, Video, Photo, Field
-from ..flask_wtf_forms import AdminAddForm, GetFilesForm
+from ...db.__all_models import User, Passport, PassportStatus, GoldenMarkApplication, Quiz, Video, Photo, Field, Profrisk
+from ..flask_wtf_forms import AdminAddForm, GetFilesForm, GoldenBadgeApplicationForm, WorkProtectionForm
 
 blueprint = Blueprint('web', __name__, template_folder='templates')
 login_manager = LoginManager()
@@ -362,6 +362,7 @@ def Passport_Create():
     form = PassportForm()
     sess = db_sessionmaker.create_session()
     if form.validate_on_submit():
+        print('POST\n')
         passport = Passport(
             user_id=user.id,
             name_of_the_legal_entity=form.opf.data,
@@ -423,24 +424,7 @@ def Passport_Downdoads(pas_id):
                            videos=videos, photos=photos)
 
 
-@blueprint.route('/form_collection_of_information', methods=['GET', 'POST'])
-@login_required
-@is_user
-def Form_Collection_of_Information():
-    user = current_user
-    return render_template('back/form_collection_of_information.html',
-                           user=user,
-                           title='Сбор информации')
 
-
-@blueprint.route('/golden_badge', methods=['GET', 'POST'])
-@login_required
-@is_user
-def Golden_Badge():
-    user = current_user
-    return render_template('back/golden_badge.html',
-                           user=user,
-                           title='Р—РѕР»РѕС‚РѕР№ Р·РЅР°Рє')
 
 
 @blueprint.route('/passport_change/<id>', methods=['GET', 'POST'])
@@ -512,3 +496,87 @@ def delete(id):
     sess.delete(i)
     sess.commit()
     return redirect('/account')
+
+@blueprint.route('/golden_badge', methods=['GET', 'POST'])
+@login_required
+@is_user
+def golden_badge():
+    sess = db_sessionmaker.create_session()
+    user = current_user
+
+    applications = []
+    passports = sess.query(Passport).filter(Passport.user_id == user.id).all()
+    for passp in passports:
+        for i in sess.query(GoldenMarkApplication).filter(GoldenMarkApplication.passport_id == passp.id).all():
+            applications.append([passp, i])
+
+    form = GoldenBadgeApplicationForm()
+    if form.validate_on_submit():
+        badge = GoldenMarkApplication(
+            passport_id=form.organization_id.data,
+            application_date=form.date_of_application.data
+        )
+        sess.add(badge)
+        sess.commit()
+        return render_template('back/golden_badge.html',
+                               user=user,
+                               title='Золотой знак',
+                               form=form,
+                               applications=applications)
+    return render_template('back/golden_badge.html',
+                           user=user,
+                           title='Золотой знак',
+                           form=form,
+                           applications=applications)
+
+
+@blueprint.route('/delete_organization/<id>', methods=['GET', 'POST'])
+@login_required
+@is_user
+def delete_passport(id):
+    sess = db_sessionmaker.create_session()
+    i = sess.query(Passport).filter(Passport.id == id).first()
+    sess.delete(i)
+    sess.commit()
+    return redirect('/account')
+
+
+@blueprint.route('/delete_application/<id>', methods=['GET', 'POST'])
+@login_required
+@is_user
+def delete_application(id):
+    sess = db_sessionmaker.create_session()
+    i = sess.query(GoldenMarkApplication).filter(GoldenMarkApplication.id == id).first()
+    sess.delete(i)
+    sess.commit()
+    return redirect('/golden_badge')
+
+
+@blueprint.route('/profrisk_information_collection', methods=['GET', 'POST'])
+@login_required
+@is_user
+def profrisks_collection():
+    user = current_user
+    form = WorkProtectionForm()
+    sess = db_sessionmaker.create_session()
+
+    if form.validate_on_submit():
+        check = 0
+
+        if form.profrisks_check.data == 'Да':
+            check = 1
+        elif form.profrisks_check.data == 'Нет':
+            check = 2
+        elif form.profrisks_check.data == 'Частично':
+            check = 3
+
+        prf = Profrisk(
+            passport_id=form.pasport_id.data,
+            profrisks_check=check,
+            last_check_date=form.last_check_date.data
+        )
+        sess.add(prf)
+        sess.commit()
+        return redirect('/profrisk_information_collection')
+    return render_template('back/form_collection_of_information.html', user=user,
+                           title='Сбор информации о профрисках', form=form)

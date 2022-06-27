@@ -8,8 +8,7 @@ from .SqlAlchemyBase_maker import SqlAlchemyBase
 class Profrisk(SqlAlchemyBase):
     __tablename__ = 'profrisks'
 
-    passport_id = Column(Integer, ForeignKey('passports.id'), primary_key=True, nullable=False, autoincrement=True,
-                         unique=True)  # id организации
+    passport_id = Column(Integer, ForeignKey('passports.id'), primary_key=True, nullable=False, autoincrement=True)  # id организации
     profrisks_check = Column(Integer,
                              nullable=False)  # Проведена оценка профессиональных рисков в области охраны труда
     # да / нет / частично

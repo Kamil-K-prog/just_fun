@@ -1,0 +1,6 @@
+SQLAlchemy~=1.4.31
+Werkzeug~=2.0.3
+Flask~=2.0.3
+black~=22.3.0
+future~=0.18.2
+WTForms~=3.0.1

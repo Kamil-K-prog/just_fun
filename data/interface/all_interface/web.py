@@ -1,6 +1,7 @@
 from flask import Blueprint, session, jsonify, render_template, redirect
 from flask import request as req
 from requests import request
+import smtplib
 from ...interface.flask_wtf_forms import PassportForm
 from .middleware import is_admin, is_user
 from flask_login import (
@@ -27,6 +28,21 @@ ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+
+
+def send_mail(user, mail_to, subject, text):
+    HOST = "www.uc.osu.ru"
+    FROM = "just_fun@gmail.com"
+    BODY = "\r\n".join((
+        "From: %s" % FROM,
+        "To: %s" % mail_to,
+        "Subject: %s" % subject,
+        "",
+        f'{user}, {text}'
+    ))
+    server = smtplib.SMTP(HOST)
+    server.sendmail(FROM, [mail_to], BODY)
+    server.quit()
 
 
 @blueprint.route('/admin', methods=['GET', 'POST']
@@ -190,6 +206,9 @@ def Admin_PasswordConfirm_Form(pass_id):
         name='Принят').first().id
     db_sess.add(pass_obj)
     db_sess.commit()
+    send_mail('Aleksey', 'begun.aleksey@mail.ru',
+          'Your organization\'s passport has been verified',
+          'You can use the information collection service')
     return redirect('/admin')
 
 
@@ -204,6 +223,9 @@ def Admin_PassDecline_Form(pass_id):
         name='Отклонен').first().id
     db_sess.add(pass_obj)
     db_sess.commit()
+    send_mail('Aleksey', 'begun.aleksey@mail.ru',
+          'Your organization\'s passport has been rejected',
+          'Contact the administrator for clarification')
     return redirect('/admin')
 
 
@@ -221,6 +243,8 @@ def Admin_GoldConfirm_Form(pass_id):
     db_sess.add(pass_obj)
     db_sess.add(gd_app)
     db_sess.commit()
+    send_mail('Aleksey', 'begun.aleksey@mail.ru', 'You have been given a golden badge',
+          'Congratulations to your organization')
     return redirect('/admin_bids')
 
 
@@ -238,6 +262,8 @@ def Admin_GoldDecline_Form(pass_id):
     db_sess.add(pass_obj)
     db_sess.add(gd_app)
     db_sess.commit()
+    send_mail('Aleksey', 'begun.aleksey@mail.ru', 'Gold badge application rejected',
+          'Contact the administrator for clarification')
     return redirect('/admin_bids')
 
 
@@ -359,6 +385,8 @@ def Passport_Create():
             workers_protector_email=form.protector_email.data)
         sess.add(passport)
         sess.commit()
+        send_mail('Aleksey', 'begun.aleksey@mail.ru', "Passport application",
+          'You have received an application for a passport')
         return redirect(f'/passpoort_upload/{passport.id}')
     return render_template('back/passport_create.html',
                            user=user,

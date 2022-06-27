@@ -518,11 +518,7 @@ def golden_badge():
         )
         sess.add(badge)
         sess.commit()
-        return render_template('back/golden_badge.html',
-                               user=user,
-                               title='Золотой знак',
-                               form=form,
-                               applications=applications)
+        return redirect('/golden_badge')
     return render_template('back/golden_badge.html',
                            user=user,
                            title='Золотой знак',

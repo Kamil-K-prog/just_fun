@@ -22,7 +22,12 @@
                         {{ form.organization_id.label() }}
                         {{ form.organization_id() }}
                     </div>
-                    {{ form.submit() }}
+
+                    <div class="mb-3 text-center">
+                        <button type="submit" class="btn btn-primary">Сохранить
+                        </button>
+                    </div>
+
                 </form>
 
             </div>
@@ -63,6 +68,8 @@
                             $(document).ready(function () {
                                 $('#bindsTable').DataTable();
                             });
+
+
 
 
 

@@ -36,7 +36,7 @@ class PassportForm(FlaskForm):  # форма добавления/редакти
     opf = StringField("Наименование ОПФ юрлица", validators=[DataRequired()])
     full_name = StringField("Полное наименование организации (для ИП - ФИО)", validators=[DataRequired()])
     short_name = StringField("Краткое наименование организации (для ИП - ФИО)", validators=[DataRequired()])
-    information_date = DateField("Дата сбора информации", validators=[DataRequired()])
+    information_date = StringField("Дата сбора информации", validators=[DataRequired()])
 
     boss_fio = StringField("ФИО руководителя", validators=[DataRequired()])
     boss_place = StringField("Должность руководителя", validators=[DataRequired()])

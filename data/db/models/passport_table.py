@@ -27,7 +27,8 @@ class Passport(SqlAlchemyBase):
     legal_address = Column(Text, nullable=False, unique=True)  # Адрес юридический
     fact_address = Column(Text, nullable=True, unique=True)  # Адрес фактический
 
-    boss_full_name_n_position = Column(Text, nullable=False, unique=True)  # ФИО и должность руководителя
+    boss_full_name = Column(Text, nullable=False, unique=True)  # ФИО руководителя
+    boss_position = Column(Text, nullable=False, unique=True)  # должность руководителя
 
     INN = Column(Text, nullable=False, unique=True)  # ИНН
     OKTMO = Column(Text, nullable=False, unique=True)  # ОКТМО
@@ -48,7 +49,7 @@ class Passport(SqlAlchemyBase):
     golden_mark = Column(Boolean, nullable=False, default=False)  # Золотой знак организации(есть/нет)
     golden_mark_date = Column(Text, nullable=True)  # когда выдан
 
-    passport_status = Column(Integer, ForeignKey('password_statuses.id'), default='3')
+    passport_status = Column(Integer, ForeignKey('password_statuses.id'), default=3)
 
     status = orm.relation('PassportStatus')
     user = orm.relation('User')

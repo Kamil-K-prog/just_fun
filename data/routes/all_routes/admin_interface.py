@@ -3,7 +3,6 @@ from flask import Blueprint, session, jsonify, render_template, redirect
 from flask import request as req
 from requests import request
 from .mail_sender import send_mail
-from ...routes.flask_wtf_forms import PassportForm
 from .middleware import is_admin, is_user
 from flask_login import (
     LoginManager,
@@ -13,8 +12,6 @@ from flask_login import (
     current_user,
 )
 from data.db import db_sessionmaker
-from werkzeug.utils import secure_filename
-import os
 from ...db.__all_models import User, Passport, PassportStatus, GoldenMarkApplication, Quiz, Video, Photo, Field, Profrisk
 from ..flask_wtf_forms import AdminAddForm, GetFilesForm, GoldenBadgeApplicationForm, WorkProtectionForm
 

@@ -10,7 +10,7 @@ from flask_login import (
     current_user,
 )
 from data.db import db_sessionmaker
-from ...db.__all_models import User, Passport, PassportStatus, GoldenMarkApplication
+from ...db.__all_models import User, Passport, PassportStatus, GoldenMarkApplication, Video, Photo
 
 blueprint = Blueprint('passport', __name__, template_folder='templates')
 login_manager = LoginManager()
@@ -19,15 +19,15 @@ login_manager = LoginManager()
 @blueprint.route('/admin_passport_confirm/<pass_id>', methods=['GET', 'POST'])  # подтверждение паспорта
 @login_required
 @is_admin
-def Admin_PasswordConfirm_Form(pass_id):
-    user = current_user
+def Admin_PassConfirm_Form(pass_id):
     db_sess = db_sessionmaker.create_session()
     pass_obj = db_sess.query(Passport).filter_by(id=pass_id).first()
     pass_obj.passport_status = db_sess.query(PassportStatus).filter_by(
         name='Принят').first().id
+    user = db_sess.query(User).filter_by(id=pass_obj.user_id).first()
     db_sess.add(pass_obj)
     db_sess.commit()
-    send_mail('Aleksey', 'begun.aleksey@mail.ru',
+    send_mail(user.login, user.email,
           'Your organization\'s passport has been verified',
           'You can use the information collection service')
     return redirect('/admin')
@@ -37,55 +37,22 @@ def Admin_PasswordConfirm_Form(pass_id):
 @login_required
 @is_admin
 def Admin_PassDecline_Form(pass_id):
-    user = current_user
     db_sess = db_sessionmaker.create_session()
     pass_obj = db_sess.query(Passport).filter_by(id=pass_id).first()
     pass_obj.passport_status = db_sess.query(PassportStatus).filter_by(
         name='Отклонен').first().id
+    user = db_sess.query(User).filter_by(id=pass_obj.user_id).first()
+    
+    gd_app = db_sess.query(GoldenMarkApplication).filter_by(passport_id=pass_obj.id).first()  # удаление заявки на золотой знак
+    if gd_app:
+        db_sess.delete(gd_app)
+
     db_sess.add(pass_obj)
     db_sess.commit()
-    send_mail('Aleksey', 'begun.aleksey@mail.ru',
+    send_mail(user.login, user.email,
           'Your organization\'s passport has been rejected',
           'Contact the administrator for clarification')
     return redirect('/admin')
-
-
-@blueprint.route('/admin_gold_confirm/<pass_id>', methods=['GET', 'POST'])  # подтверждение выдачи золотого знака
-@login_required
-@is_admin
-def Admin_GoldConfirm_Form(pass_id):
-    user = current_user
-    db_sess = db_sessionmaker.create_session()
-    pass_obj = db_sess.query(Passport).filter_by(id=pass_id).first()
-    gd_app = db_sess.query(GoldenMarkApplication).filter_by(
-        passport_id=pass_id).first()
-    pass_obj.golden_mark = True
-    gd_app.application_verdict = True
-    db_sess.add(pass_obj)
-    db_sess.add(gd_app)
-    db_sess.commit()
-    send_mail('Aleksey', 'begun.aleksey@mail.ru', 'You have been given a golden badge',
-          'Congratulations to your organization')
-    return redirect('/admin_bids')
-
-
-@blueprint.route('/admin_gold_decline/<pass_id>', methods=['GET', 'POST'])  # отказ в выдаче золотого знака
-@login_required
-@is_admin
-def Admin_GoldDecline_Form(pass_id):
-    user = current_user
-    db_sess = db_sessionmaker.create_session()
-    pass_obj = db_sess.query(Passport).filter_by(id=pass_id).first()
-    gd_app = db_sess.query(GoldenMarkApplication).filter_by(
-        passport_id=pass_id).first()
-    pass_obj.golden_mark = False
-    gd_app.application_verdict = False
-    db_sess.add(pass_obj)
-    db_sess.add(gd_app)
-    db_sess.commit()
-    send_mail('Aleksey', 'begun.aleksey@mail.ru', 'Gold badge application rejected',
-          'Contact the administrator for clarification')
-    return redirect('/admin_bids')
 
 
 @blueprint.route('/passport_view/<pas_id>', methods=['GET', 'POST'])  # просмотр паспорта
@@ -167,8 +134,8 @@ def Passport_Create():
             organization_full_name=form.full_name.data,
             organization_short_name=form.short_name.data,
             date_of_data_collection=form.information_date.data,
-            boss_full_name_n_position=form.boss_fio.data + ' ' +  #TODO: убрать разделение этих полей
-            form.boss_place.data,
+            boss_full_name=form.boss_fio.data,
+            boss_position=form.boss_place.data,
             phone_number=form.company_phone.data,
             email_oficcial=form.company_email.data,
             address_for_contact=form.location.data,
@@ -200,39 +167,21 @@ def Passport_Change(id):
     form = PassportForm()
     user = current_user
     sess = db_sessionmaker.create_session()
-    passp = sess.query(Passport).filter(Passport.id == id).first()
+
+    passp = sess.query(Passport).filter(Passport.id == id).first()  # пасспорт
 
     if user.role_id != 2:  # защита от редактирования чужого паспорта
         if user.id != passp.user_id:
             return redirect('/account')
 
-    form.opf.data = passp.name_of_the_legal_entity[:]
-    form.full_name.data = passp.organization_full_name[:]
-    form.short_name.data = passp.organization_short_name[:]
-    form.information_date.data = passp.date_of_data_collection[:]
-    form.boss_fio.data = passp.boss_full_name_n_position[:]
-    form.boss_place.data = passp.boss_full_name_n_position[:]
-    form.company_phone.data = passp.phone_number[:]
-    form.company_email.data = passp.email_oficcial[:]
-    form.location.data = passp.address_for_contact[:]
-    form.address_fact.data = passp.fact_address[:]
-    form.address_yur.data = passp.legal_address[:]
-    form.inn.data = passp.INN[:]
-    form.oktmo.data = passp.OKTMO[:]
-    form.main_activity_okved.data = passp.main_activity_OKVED[:]
-    form.workers_male_count.data = passp.male_workers_count
-    form.workers_female_count.data = passp.female_workers_count
-    form.protector_fio.data = passp.workers_protector_FIO_n_position[:]
-    form.protector_phone.data = passp.workers_protector_phone_number[:]
-    form.protector_email.data = passp.workers_protector_email[:]
-
     if form.validate_on_submit():
-
+        # перенос данных из формы с существующий паспорт 
         passp.name_of_the_legal_entity = form.opf.data
         passp.organization_full_name = form.full_name.data
         passp.organization_short_name = form.short_name.data
         passp.date_of_data_collection = form.information_date.data
-        passp.boss_full_name_n_position = form.boss_fio.data + ' ' + form.boss_place.data
+        passp.boss_full_name = form.boss_fio.data
+        passp.boss_position = form.boss_place.data
         passp.phone_number = form.company_phone.data
         passp.email_oficcial = form.company_email.data
         passp.address_for_contact = form.location.data
@@ -247,9 +196,40 @@ def Passport_Change(id):
         passp.workers_protector_phone_number = form.protector_phone.data
         passp.workers_protector_email = form.protector_email.data
 
+        # условия редактирования паспорта
+        passp.passport_status = sess.query(PassportStatus).filter_by(name='На рассмотрении').first().id  # сброс статуса паспорта
+
+        passp.golden_mark = False  # сброс золотого знака
+        passp.golden_mark_date = ''
+
+        gd_app = sess.query(GoldenMarkApplication).filter_by(passport_id=passp.id).first()  # удаление заявки на золотой знак
+        if gd_app:
+            sess.delete(gd_app)
+
         sess.add(passp)
         sess.commit()
         return redirect('/account')
+    else:
+        # получение данных с паспорта
+        form.opf.data = passp.name_of_the_legal_entity
+        form.full_name.data = passp.organization_full_name
+        form.short_name.data = passp.organization_short_name
+        form.information_date.data = passp.date_of_data_collection
+        form.boss_fio.data = passp.boss_full_name
+        form.boss_place.data = passp.boss_position
+        form.company_phone.data = passp.phone_number
+        form.company_email.data = passp.email_oficcial
+        form.location.data = passp.address_for_contact
+        form.address_fact.data = passp.fact_address
+        form.address_yur.data = passp.legal_address
+        form.inn.data = passp.INN
+        form.oktmo.data = passp.OKTMO
+        form.main_activity_okved.data = passp.main_activity_OKVED
+        form.workers_male_count.data = passp.male_workers_count
+        form.workers_female_count.data = passp.female_workers_count
+        form.protector_fio.data = passp.workers_protector_FIO_n_position
+        form.protector_phone.data = passp.workers_protector_phone_number
+        form.protector_email.data = passp.workers_protector_email
     return render_template('back/passport_edit.html', form=form, user=user)
 
 
@@ -259,12 +239,24 @@ def Passport_Change(id):
 def delete(id):
     user = current_user
     sess = db_sessionmaker.create_session()
-    passp = sess.query(Passport).filter(Passport.id == id).first()
+    passp = sess.query(Passport).filter(Passport.id == id).first()  # паспорт
 
     if user.role_id != 2:  # защита от удаления чужого паспорта
         if user.id != passp.user_id:
             return redirect('/account')
+    
+    gd_app = sess.query(GoldenMarkApplication).filter_by(passport_id=passp.id).first()  # удаление заявки на золотой знак
+    if gd_app:
+        sess.delete(gd_app)
+    
+    videos = sess.query(Video).filter_by(pass_id=passp.id).all()  # удаление всех ссылок
+    for v in videos:
+        sess.delete(v)
+    
+    photos = sess.query(Photo).filter_by(pass_id=passp.id).all()  # удаление всех файлов
+    for p in photos:
+        sess.delete(p)
 
-    sess.delete(passp)
+    sess.delete(passp)  # удаление паспорта
     sess.commit()
     return redirect('/account')

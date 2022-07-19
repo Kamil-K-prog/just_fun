@@ -5,7 +5,7 @@ from data.db import db_sessionmaker
 from data.routes.all_routes import auth
 from data.routes import routes_manager
 from flask import render_template
-from data.db.models.user_table import User
+
 
 app = Flask(__name__)
 app.config.from_object(AppConfig)

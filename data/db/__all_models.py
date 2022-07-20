@@ -23,3 +23,7 @@ from .models.survey_models.quiz import Quiz
 # Модели для работы системы аккаунтов
 from .models.user_models.user import User
 from .models.user_models.role import Role
+# Модели, отвечающие за системные операции,
+# использующие данные и "поведение" остальных сущностей
+from .models.system_models.user_log import UserLog
+from .models.system_models.passport_log import PassportLog

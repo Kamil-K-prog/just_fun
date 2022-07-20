@@ -5,9 +5,9 @@ from ...sqlalchemy_base_maker import SqlAlchemyBase
 from ...db_utils import get_current_yekt_datetime
 
 
-class GoldenMarkApplication(SqlAlchemyBase):
+class GoldenBadge(SqlAlchemyBase):
     """Сущность 'Золотого знака' организации"""
-    __tablename__ = 'golden_mark_application'
+    __tablename__ = 'golden_badge'
 
     id = Column(
         Integer,
@@ -18,11 +18,14 @@ class GoldenMarkApplication(SqlAlchemyBase):
         Integer, ForeignKey('passport.id'),
         nullable=False, unique=True)
 
-    application_date = Column(  # дата подачи
+    # Золотой знак организации (есть/нет)
+    verdict = Column(Boolean, nullable=False, default=False)
+
+    application_date = Column(  # дата подачи заявки
         Date, nullable=False,
         default=get_current_yekt_datetime)
 
-    # вердикт
-    application_verdict = Column(Boolean, nullable=False, default=False)
+    verification_date = Column(  # дата подтверждения статуса "Золотой знак"
+        Date, nullable=True)  # NULL при отстутствии знака (при verdict=False)
 
     passport = orm.relationship('Passport', lazy='select')

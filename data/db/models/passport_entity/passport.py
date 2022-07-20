@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, Text, ForeignKey, Boolean, Date
+from sqlalchemy import Column, Integer, Text, ForeignKey, Date
 from sqlalchemy import orm
 
 from ...sqlalchemy_base_maker import SqlAlchemyBase
@@ -17,14 +17,20 @@ class Passport(SqlAlchemyBase):
         Integer, primary_key=True, nullable=False,
         autoincrement=True, unique=True)
 
-    # кто зарегистрировал эту организацию
+    # id пользователя, который зарегистрировал эту организацию
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
 
-    date_of_application_submission = Column(
-        Date, nullable=False,  # дата создания паспорта
-        default=get_current_yekt_datetime)
+    # id статуса паспорта этой организации
+    passport_status_id = Column(Integer, ForeignKey(
+        'passport_status.id'), default=3)  # по умолчанию 'Отклонен'
 
-    date_of_data_collection = Column(  # дата сбора информации
+    # дата создания паспорта
+    date_of_application_submission = Column(
+        Date, nullable=False, default=get_current_yekt_datetime)
+
+    # дата последнего сбора информации (универсальная форма опросника)
+    # или последнего редактирования паспорта
+    date_of_data_collection = Column(
         Date, nullable=False, default=get_current_yekt_datetime)
 
     name_of_the_legal_entity = Column(
@@ -76,9 +82,6 @@ class Passport(SqlAlchemyBase):
     email_oficcial = Column(  # официальный email организации
         Text, nullable=False, unique=True)
 
-    workers_protector_FIO_n_position = Column(
-        Text, nullable=False, unique=True)
-
     # Следующие поля описывают специалиста по охране труда
     # или ответственного за охрану труда
 
@@ -99,15 +102,6 @@ class Passport(SqlAlchemyBase):
 
     # email специалиста по охране труда
     workers_protector_email = Column(Text, nullable=False)
-
-    # Золотой знак организации(есть/нет)
-    golden_mark = Column(Boolean, nullable=False, default=False)
-
-    golden_mark_date = Column(  # когда присвоен статус "Золотой знак"
-        Date, nullable=True)  # NULL при отстутствии этого статуса
-
-    passport_status_id = Column(Integer, ForeignKey(
-        'passport_status.id'), default=3)
 
     # Связи many-to-one
     status = orm.relationship(
@@ -139,7 +133,7 @@ class Passport(SqlAlchemyBase):
         'CollectiveAgreement',
         back_populates='passport',
         uselist=False, lazy=LAZY)
-    golden_mark_application = orm.relationship(
-        'GoldenMarkApplication',
+    golden_badge = orm.relationship(
+        'GoldenBadge',
         back_populates='passport',
         uselist=False, lazy=LAZY)

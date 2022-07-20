@@ -10,7 +10,7 @@ from flask_login import (
     current_user,
 )
 from data.db import db_sessionmaker
-from ...db.__all_models import User, Passport, PassportStatus, GoldenMarkApplication, Video, Photo
+from ...db.__all_models import User, Passport, PassportStatus, GoldenBadge, Video, Photo
 
 blueprint = Blueprint('passport', __name__, template_folder='templates')
 login_manager = LoginManager()
@@ -43,7 +43,7 @@ def Admin_PassDecline_Form(pass_id):
         name='Отклонен').first().id
     user = db_sess.query(User).filter_by(id=pass_obj.user_id).first()
     
-    gd_app = db_sess.query(GoldenMarkApplication).filter_by(passport_id=pass_obj.id).first()  # удаление заявки на золотой знак
+    gd_app = db_sess.query(GoldenBadge).filter_by(passport_id=pass_obj.id).first()  # удаление заявки на золотой знак
     if gd_app:
         db_sess.delete(gd_app)
 
@@ -202,7 +202,7 @@ def Passport_Change(id):
         passp.golden_mark = False  # сброс золотого знака
         passp.golden_mark_date = ''
 
-        gd_app = sess.query(GoldenMarkApplication).filter_by(passport_id=passp.id).first()  # удаление заявки на золотой знак
+        gd_app = sess.query(GoldenBadge).filter_by(passport_id=passp.id).first()  # удаление заявки на золотой знак
         if gd_app:
             sess.delete(gd_app)
 
@@ -245,7 +245,7 @@ def delete(id):
         if user.id != passp.user_id:
             return redirect('/account')
     
-    gd_app = sess.query(GoldenMarkApplication).filter_by(passport_id=passp.id).first()  # удаление заявки на золотой знак
+    gd_app = sess.query(GoldenBadge).filter_by(passport_id=passp.id).first()  # удаление заявки на золотой знак
     if gd_app:
         sess.delete(gd_app)
     

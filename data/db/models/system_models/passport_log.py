@@ -29,4 +29,4 @@ class PassportLog(SqlAlchemyBase):
         Date, nullable=False,
         default=get_current_yekt_datetime)
 
-    passport = orm.relationship('User', lazy=LAZY)
+    passport = orm.relationship('Passport', lazy=LAZY)

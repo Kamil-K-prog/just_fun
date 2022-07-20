@@ -13,7 +13,7 @@ from flask_login import (
 from data.db import db_sessionmaker
 from werkzeug.utils import secure_filename
 import os
-from ...db.__all_models import User, Passport, PassportStatus, GoldenMarkApplication, Quiz, Video, Photo, Field, Profrisk
+from ...db.__all_models import User, Passport, PassportStatus, GoldenBadge, Quiz, Video, Photo, Field, Profrisk
 from ..flask_wtf_forms import AdminAddForm, GetFilesForm, GoldenBadgeApplicationForm, WorkProtectionForm
 
 blueprint = Blueprint('user_interface', __name__, template_folder='templates')
@@ -58,12 +58,12 @@ def golden_badge():
     applications = []
     passports = sess.query(Passport).filter(Passport.user_id == user.id).all()
     for passp in passports:
-        for i in sess.query(GoldenMarkApplication).filter(GoldenMarkApplication.passport_id == passp.id).all():
+        for i in sess.query(GoldenBadge).filter(GoldenBadge.passport_id == passp.id).all():
             applications.append([passp, i])
 
     form = GoldenBadgeApplicationForm()
     if form.validate_on_submit():
-        badge = GoldenMarkApplication(
+        badge = GoldenBadge(
             passport_id=form.organization_id.data,
             application_date=form.date_of_application.data
         )
@@ -93,7 +93,7 @@ def delete_passport(id):
 @is_user
 def delete_application(id):
     sess = db_sessionmaker.create_session()
-    i = sess.query(GoldenMarkApplication).filter(GoldenMarkApplication.id == id).first()
+    i = sess.query(GoldenBadge).filter(GoldenBadge.id == id).first()
     sess.delete(i)
     sess.commit()
     return redirect('/golden_badge')

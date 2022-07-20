@@ -10,7 +10,7 @@ from flask_login import (
     current_user,
 )
 from data.db import db_sessionmaker
-from ...db.__all_models import User, Passport, PassportStatus, GoldenMarkApplication
+from ...db.__all_models import User, Passport, PassportStatus, GoldenBadge
 
 blueprint = Blueprint('golden_mark', __name__, template_folder='templates')
 login_manager = LoginManager()
@@ -22,7 +22,7 @@ login_manager = LoginManager()
 def Admin_GoldConfirm_Form(pass_id):
     db_sess = db_sessionmaker.create_session()
     pass_obj = db_sess.query(Passport).filter_by(id=pass_id).first()
-    gd_app = db_sess.query(GoldenMarkApplication).filter_by(
+    gd_app = db_sess.query(GoldenBadge).filter_by(
         passport_id=pass_id).first()
     pass_obj.golden_mark = True
     pass_obj.golden
@@ -42,7 +42,7 @@ def Admin_GoldConfirm_Form(pass_id):
 def Admin_GoldDecline_Form(pass_id):
     db_sess = db_sessionmaker.create_session()
     pass_obj = db_sess.query(Passport).filter_by(id=pass_id).first()
-    gd_app = db_sess.query(GoldenMarkApplication).filter_by(
+    gd_app = db_sess.query(GoldenBadge).filter_by(
         passport_id=pass_id).first()
     pass_obj.golden_mark = False
     gd_app.application_verdict = False

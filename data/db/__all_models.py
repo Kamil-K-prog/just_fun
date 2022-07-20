@@ -1,8 +1,7 @@
 # Модели, представляющие сущность паспорта организации
 from .models.passport_entity.collective_agreement import CollectiveAgreement
 from .models.passport_entity.general_data import GeneralData
-from .models.passport_entity.golden_mark_application import \
-    GoldenMarkApplication
+from .models.passport_entity.golden_badge import GoldenBadge
 from .models.passport_entity.injuries import Injuries
 from .models.passport_entity.passport import Passport
 from .models.passport_entity.profrisk import Profrisk

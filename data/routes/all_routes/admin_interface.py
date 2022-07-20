@@ -12,7 +12,7 @@ from flask_login import (
     current_user,
 )
 from data.db import db_sessionmaker
-from ...db.__all_models import User, Passport, PassportStatus, GoldenMarkApplication, Quiz, Video, Photo, Field, Profrisk
+from ...db.__all_models import User, Passport, PassportStatus, GoldenBadge, Quiz, Video, Photo, Field, Profrisk
 from ..flask_wtf_forms import AdminAddForm, GetFilesForm, GoldenBadgeApplicationForm, WorkProtectionForm
 
 
@@ -54,7 +54,7 @@ def Passports():
 def Admin_Bids():
     user = current_user
     db_sess = db_sessionmaker.create_session()
-    m = db_sess.query(GoldenMarkApplication).all()
+    m = db_sess.query(GoldenBadge).all()
     appl_list = []
     for ap in m:
         appl_list.append({

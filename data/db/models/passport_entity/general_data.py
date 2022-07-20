@@ -5,6 +5,7 @@ from ...sqlalchemy_base_maker import SqlAlchemyBase
 
 
 class GeneralData(SqlAlchemyBase):
+    """Модель с информацией из секции 'Общие данные' паспорта организации"""
     __tablename__ = 'general_data'
 
     id = Column(

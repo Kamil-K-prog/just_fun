@@ -19,13 +19,12 @@ class Field(SqlAlchemyBase):
 
     quiz_id = Column(Integer, ForeignKey('quiz.id'))
 
-    title = Column(Text)
+    title = Column(Text, nullable=False)
     field_type_id = Column(Integer, ForeignKey('field_type.id'))
 
     # Связи many-to-one:
     quiz = orm.relationship('Quiz', lazy='select')
-    field_type = orm.relationship(
-        'FieldType', back_populates='fields', lazy=LAZY)
+    field_type = orm.relationship('FieldType', lazy=LAZY)
 
     # Связи one-to-many
     answers = orm.relationship('Answer', lazy='select')

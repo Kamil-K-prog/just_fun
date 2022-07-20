@@ -6,6 +6,8 @@ from ...db_utils import get_current_yekt_datetime
 
 
 class Process(SqlAlchemyBase):
+    ("""Сущность процесса заполненния универсальной """
+     """формы опроса конкретной организацией""")
     __tablename__ = 'process'
 
     id = Column(

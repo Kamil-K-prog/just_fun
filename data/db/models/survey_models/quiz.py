@@ -18,7 +18,7 @@ class Quiz(SqlAlchemyBase):
         primary_key=True, nullable=False,
         autoincrement=True, unique=True)
 
-    title = Column(Text, nullable=True)  # Название квиза
+    title = Column(Text, nullable=False)  # Название квиза
 
     # Связи one-to-many:
     fields = orm.relationship('Field', back_populates='quiz', lazy=LAZY)

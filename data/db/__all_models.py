@@ -2,7 +2,7 @@
 from .models.passport_models.eval_mark import EvalMark
 from .models.passport_models.passport import Passport
 from .models.passport_models.passport_status import PassportStatus
-from .models.passport_models.photo import Photo
+from .models.passport_models.file import File
 from .models.passport_models.video import Video
 # Модели, отвечающие за работу универсальной формы опросника
 # для сбора информации об охране труда в организациях

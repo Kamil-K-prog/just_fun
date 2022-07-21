@@ -303,7 +303,7 @@ class Passport(SqlAlchemyBase):
     profrisks_check_eval_mark = orm.relationship('EvalMark', lazy=LAZY)
 
     # Связи one-to-many:
-    photos = orm.relationship('Photo', back_populates='passport', lazy=LAZY)
+    files = orm.relationship('File', back_populates='passport', lazy=LAZY)
     videos = orm.relationship('Video', back_populates='passport', lazy=LAZY)
 
     processes = orm.relationship(

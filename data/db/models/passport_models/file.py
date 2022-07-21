@@ -4,8 +4,10 @@ from sqlalchemy import orm
 from ...sqlalchemy_base_maker import SqlAlchemyBase
 
 
-class Photo(SqlAlchemyBase):
-    __tablename__ = 'photo'
+class File(SqlAlchemyBase):
+    ("""Модель c информацией о файлах (в файловой системе сервера), """
+     """прикрепляемых к паспорту. Прежде всего, для фотографий""")
+    __tablename__ = 'file'
 
     id = Column(
         Integer,

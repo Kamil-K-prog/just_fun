@@ -1,7 +1,7 @@
 import os
 from flask import Flask
 from config import AppConfig
-from data.db import db_sessionmaker
+from data.db import db_sessionmaker, db_preparation_manager
 from data.routes.all_routes import auth
 # from data.routes import routes_manager  # заглушено на время интеграции с бд
 from flask import render_template
@@ -18,6 +18,7 @@ if __name__ == '__main__':
         app.config['DB_FILENAME'])
     app.config['UPLOAD_FOLDER'] = "/upload/"
     db_sessionmaker.global_init(db_path)
+    db_preparation_manager.prepare_db()
     auth.register_login_manager(app)
     app.register_blueprint(auth.blueprint)
 
@@ -28,7 +29,7 @@ if __name__ == '__main__':
     @app.errorhandler(401)
     def page_not_found(e):
         return render_template('403.html'), 401
-    
+
     # заглушено на время интеграции с бд
     # routes_manager.global_routes_init(app)
     app.run(host='127.0.0.1', port=8080, debug=True)

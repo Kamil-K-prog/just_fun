@@ -21,10 +21,10 @@ class Answer(SqlAlchemyBase, SerializerMixin):
         autoincrement=True, unique=True)
 
     # к какому процессу относится
-    process_id = Column(Integer, ForeignKey('process.id'))
+    process_id = Column(Integer, ForeignKey('process.id'), nullable=False)
 
     # Какое именно поле заполнено
-    field_id = Column(Integer, ForeignKey('field.id'))
+    field_id = Column(Integer, ForeignKey('field.id'), nullable=False)
 
     user_answer = Column(Text, nullable=False)  # Чем заполнено поле
 

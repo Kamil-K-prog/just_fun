@@ -1,12 +1,15 @@
 from sqlalchemy import Column, Integer, Text
 from sqlalchemy import orm
+from sqlalchemy_serializer import SerializerMixin
 
 from ...sqlalchemy_base_maker import SqlAlchemyBase
 
 
-class EvalMarkSout(SqlAlchemyBase):
+class EvalMarkSout(SqlAlchemyBase, SerializerMixin):
     """Метка качества и наличия специальной оценки условий труда (СОУТ)"""
     __tablename__ = 'eval_mark_sout'
+
+    serialize_only = ('id', 'title')
 
     id = Column(
         Integer,

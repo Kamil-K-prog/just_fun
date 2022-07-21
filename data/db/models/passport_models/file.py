@@ -18,7 +18,7 @@ class File(SqlAlchemyBase, SerializerMixin):
         autoincrement=True, unique=True)
 
     # id паспорта организации, к которому прикреплён файл
-    passport_id = Column(Integer, ForeignKey('passport.id'))
+    passport_id = Column(Integer, ForeignKey('passport.id'), nullable=False)
 
     filename = Column(Text, unique=True, nullable=False)
 

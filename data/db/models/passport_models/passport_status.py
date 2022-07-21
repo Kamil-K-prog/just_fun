@@ -1,12 +1,15 @@
 from sqlalchemy import Column, Integer, Text
+from sqlalchemy_serializer import SerializerMixin
 
 from ...sqlalchemy_base_maker import SqlAlchemyBase
 
 
-class PassportStatus(SqlAlchemyBase):
+class PassportStatus(SqlAlchemyBase, SerializerMixin):
     ("""Статус паспорта в рамках процесса его регистрации в системе. """
      """По типу: 1 - 'Принят', 2 - 'На рассмотрении', 3 - 'Отклонен'""")
     __tablename__ = 'passport_status'
+
+    serialize_only = ('id', 'name')
 
     id = Column(
         Integer,

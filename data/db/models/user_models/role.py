@@ -1,12 +1,15 @@
 from sqlalchemy import Column, Integer, Text
 from sqlalchemy import orm
+from sqlalchemy_serializer import SerializerMixin
 
 from ...sqlalchemy_base_maker import SqlAlchemyBase
 
 
-class Role(SqlAlchemyBase):
+class Role(SqlAlchemyBase, SerializerMixin):
     """Роль пользователя в системе"""
     __tablename__ = 'role'
+
+    serialize_only = ('id', 'name')
 
     id = Column(
         Integer,

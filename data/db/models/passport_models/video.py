@@ -18,7 +18,7 @@ class Video(SqlAlchemyBase, SerializerMixin):
         autoincrement=True, unique=True)
 
     # id паспорта организации, к которому прикреплено видео
-    passport_id = Column(Integer, ForeignKey('passport.id'))
+    passport_id = Column(Integer, ForeignKey('passport.id'), nullable=False)
 
     link = Column(Text, unique=True, nullable=False)  # ссылка на web-страницу
 

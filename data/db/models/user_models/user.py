@@ -27,7 +27,7 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
     login = Column(Text, unique=True, nullable=False)
     passwd_hash = Column(Text, nullable=False)
 
-    role_id = Column(Integer, ForeignKey('role.id'))
+    role_id = Column(Integer, ForeignKey('role.id'), nullable=False)
 
     # Связи many-to-one:
     role = orm.relationship('Role', back_populates='users', lazy=LAZY)

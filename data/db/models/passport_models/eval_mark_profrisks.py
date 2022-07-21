@@ -1,12 +1,15 @@
 from sqlalchemy import Column, Integer, Text
 from sqlalchemy import orm
+from sqlalchemy_serializer import SerializerMixin
 
 from ...sqlalchemy_base_maker import SqlAlchemyBase
 
 
-class EvalMarkProfrisks(SqlAlchemyBase):
+class EvalMarkProfrisks(SqlAlchemyBase, SerializerMixin):
     """Метка качества и наличия оценки профессиональных рисков"""
     __tablename__ = 'eval_mark_profrisks'
+
+    serialize_only = ('id', 'title')
 
     id = Column(
         Integer,

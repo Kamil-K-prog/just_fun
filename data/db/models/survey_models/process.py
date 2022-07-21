@@ -18,9 +18,9 @@ class Process(SqlAlchemyBase, SerializerMixin):
         primary_key=True, nullable=False,
         autoincrement=True, unique=True)
 
-    passport_id = Column(Integer, ForeignKey('passport.id'))
+    passport_id = Column(Integer, ForeignKey('passport.id'), nullable=False)
 
-    quiz_id = Column(Integer, ForeignKey('quiz.id'))
+    quiz_id = Column(Integer, ForeignKey('quiz.id'), nullable=False)
 
     date = Column(Date, nullable=False, default=get_current_yekt_datetime)
 

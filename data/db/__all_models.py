@@ -8,8 +8,9 @@ from .models.passport_models.video import Video
 # Модели, отвечающие за работу универсальной формы опросника
 # для сбора информации об охране труда в организациях
 from .models.survey_models.answer import Answer
-from .models.survey_models.field import Field
 from .models.survey_models.field_type import FieldType
+from .models.survey_models.field import Field
+from .models.survey_models.possible_answer import PossibleAnswer
 from .models.survey_models.process import Process
 from .models.survey_models.quiz import Quiz
 # Модели для работы системы аккаунтов

@@ -56,8 +56,9 @@ class Passport(SqlAlchemyBase, SerializerMixin):
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
 
     # id статуса паспорта этой организации
+    # по умолчанию 'Отклонен'
     passport_status_id = Column(Integer, ForeignKey(
-        'passport_status.id'), default=3)  # по умолчанию 'Отклонен'
+        'passport_status.id'), nullable=False, default=3)
 
     # *** СЕКЦИЯ "Общие сведения" ***
 

@@ -1,11 +1,14 @@
 from sqlalchemy import Column, Integer, Text
+from sqlalchemy_serializer import SerializerMixin
 
 from ...sqlalchemy_base_maker import SqlAlchemyBase
 
 
-class FieldType(SqlAlchemyBase):
+class FieldType(SqlAlchemyBase, SerializerMixin):
     """Тип поля универсальной формы для сбора информации"""
     __tablename__ = 'field_type'
+
+    serialize_only = ('id', 'name')
 
     id = Column(
         Integer,

@@ -20,14 +20,21 @@ class Field(SqlAlchemyBase, SerializerMixin):
         primary_key=True, nullable=False,
         autoincrement=True, unique=True)
 
-    quiz_id = Column(Integer, ForeignKey('quiz.id'))
+    # в какой форме числится
+    quiz_id = Column(Integer, ForeignKey('quiz.id'), nullable=False)
 
-    title = Column(Text, nullable=False)
-    field_type_id = Column(Integer, ForeignKey('field_type.id'))
+    title = Column(Text, nullable=False)  # Заголовок поля
+
+    # Тип поля
+    field_type_id = Column(Integer, ForeignKey(
+        'field_type.id'), nullable=False)
 
     # Связи many-to-one:
     quiz = orm.relationship('Quiz', lazy='select')
     field_type = orm.relationship('FieldType', lazy=LAZY)
 
     # Связи one-to-many
+    # возможные варианты ответа могут быть только у поля соответствующего типа
+    # (в противном случае possible_answers должны игнорироваться)
+    possible_answers = orm.relationship('PossibleAnswer', lazy=LAZY)
     answers = orm.relationship('Answer', lazy='select')

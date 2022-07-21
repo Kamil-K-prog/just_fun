@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, Text, ForeignKey, Date, Boolean
 from sqlalchemy import orm
+from sqlalchemy_serializer import SerializerMixin
 
 from ...sqlalchemy_base_maker import SqlAlchemyBase
 from ...db_utils import get_current_yekt_datetime, default_same_as
@@ -9,9 +10,43 @@ from config import AppConfig
 LAZY = AppConfig.ORM_MODEL_RELATIONSHIP_LAZY_PARAM
 
 
-class Passport(SqlAlchemyBase):
-    """Сущность паспорта организации. Общие сведения об организации"""
+class Passport(SqlAlchemyBase, SerializerMixin):
+    """Сущность паспорта организации в системе мониторинга"""
     __tablename__ = 'passport'
+
+    serialize_only = (
+        'id', 'user_id', 'passport_status_id',
+        'date_of_application_submission', 'date_of_application_editing',
+        'name_of_the_legal_entity', 'organization_full_name',
+        'organization_short_name', 'address_for_contact', 'legal_address',
+        'fact_address', 'boss_surname', 'boss_name', 'boss_patronymic',
+        'boss_position', 'INN', 'OKTMO', 'main_activity_OKVED',
+        'male_workers_count', 'female_workers_count', 'phone_number',
+        'email_oficcial', 'workers_protector_surname',
+        'workers_protector_name', 'workers_protector_patronymic',
+        'workers_protector_position', 'workers_protector_phone_number',
+        'workers_protector_email', 'golden_badge_verdict',
+        'golden_badge_application_date', 'golden_badge_verification_date',
+        'sout_check_eval_mark_id', 'sout_report_date', 'sout_report_number',
+        'jobs_all_count', 'jobs_with_sout', 'jobs_with_sout_percent',
+        'jobs_with_work_conditions', 'jobs_with_work_conditions_and_workers',
+        'sout_danger_class1', 'sout_danger_class2', 'sout_danger_class31',
+        'sout_danger_class32', 'sout_danger_class33', 'sout_danger_class34',
+        'sout_danger_class4', 'workers_with_dangerous_work_percent',
+        'profrisks_check_eval_mark_id', 'last_profrisks_check_date',
+        'workers_with_free_ppe', 'average_percent_with_ppe',
+        'workers_with_free_soap', 'average_percent_with_soap',
+        'workers_with_free_medicine', 'average_percent_with_medicine',
+        'deceased_workers', 'severely_injured_workers', 'group_accidents',
+        'workers_with_simple_injuries', 'workers_with_micro_injuries',
+        'have_local_regulatory_act', 'have_commission_of_workers_protection',
+        'trusted_persons_for_protection', 'have_agreement_on_work_protection',
+        'have_office_of_work_protection', 'have_room_for_medical_care',
+        'have_improve_working_conditions_plan', 'the_amount_of_financing',
+        'have_employees_health_save_plan', 'workers_to_train_count',
+        'trained_workers', 'is_timely_training', 'have_union_organization',
+        'have_collective_agreement', 'notificational_registration_number',
+        'notificational_registration_number_with_changes')
 
     id = Column(
         Integer, primary_key=True, nullable=False,
@@ -121,7 +156,7 @@ class Passport(SqlAlchemyBase):
     # 2 - нет
     # 3 - частично
     sout_check_eval_mark_id = Column(
-        Integer, ForeignKey('eval_mark.id'),
+        Integer, ForeignKey('eval_mark_sout.id'),
         nullable=False, default=2)
 
     # Дата внесения отчета СОУТ
@@ -185,7 +220,7 @@ class Passport(SqlAlchemyBase):
     # 2 - нет
     # 3 - частично
     profrisks_check_eval_mark_id = Column(
-        Integer, ForeignKey('eval_mark.id'),
+        Integer, ForeignKey('eval_mark_profrisks.id'),
         nullable=False, default=2)
 
     # Дата проведения последней оценки профрисков
@@ -267,7 +302,7 @@ class Passport(SqlAlchemyBase):
     # Количество работников, которые должны проходить обучение по охране
     # труда и проверку знаний требований охраны труда в аккредитованных
     # образовательных организациях
-    workers_count = Column(Integer, nullable=False, default=0)
+    workers_to_train_count = Column(Integer, nullable=False, default=0)
 
     # процент фактически прошедших такое обучение
     trained_workers = Column(Integer, nullable=False, default=0)
@@ -293,14 +328,15 @@ class Passport(SqlAlchemyBase):
         Text, nullable=True)
 
     # Связи many-to-one
-    status = orm.relationship(
-        'PassportStatus', lazy=LAZY)
+    status = orm.relationship('PassportStatus', lazy=LAZY)
 
     user = orm.relationship('User', back_populates='passports', lazy=LAZY)
 
-    sout_check_eval_mark = orm.relationship('EvalMark', lazy=LAZY)
+    sout_check_eval_mark = orm.relationship(
+        'EvalMarkSout', back_populates='passports', lazy=LAZY)
 
-    profrisks_check_eval_mark = orm.relationship('EvalMark', lazy=LAZY)
+    profrisks_check_eval_mark = orm.relationship(
+        'EvalMarkProfrisks', back_populates='passports', lazy=LAZY)
 
     # Связи one-to-many:
     files = orm.relationship('File', back_populates='passport', lazy=LAZY)

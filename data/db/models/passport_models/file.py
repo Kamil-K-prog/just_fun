@@ -1,13 +1,16 @@
 from sqlalchemy import Column, Integer, Text, ForeignKey
 from sqlalchemy import orm
+from sqlalchemy_serializer import SerializerMixin
 
 from ...sqlalchemy_base_maker import SqlAlchemyBase
 
 
-class File(SqlAlchemyBase):
+class File(SqlAlchemyBase, SerializerMixin):
     ("""Модель c информацией о файлах (в файловой системе сервера), """
      """прикрепляемых к паспорту. Прежде всего, для фотографий""")
     __tablename__ = 'file'
+
+    serialize_only = ('id', 'passport_id', 'filename')
 
     id = Column(
         Integer,

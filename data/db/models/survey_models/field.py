@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, Text, ForeignKey
 from sqlalchemy import orm
+from sqlalchemy_serializer import SerializerMixin
 
 from ...sqlalchemy_base_maker import SqlAlchemyBase
 from config import AppConfig
@@ -8,9 +9,11 @@ from config import AppConfig
 LAZY = AppConfig.ORM_MODEL_RELATIONSHIP_LAZY_PARAM
 
 
-class Field(SqlAlchemyBase):
+class Field(SqlAlchemyBase, SerializerMixin):
     """Поле универсальной формы для сбора информации"""
     __tablename__ = 'field'
+
+    serialize_only = ('id', 'quiz_id', 'title', 'field_type_id')
 
     id = Column(
         Integer,

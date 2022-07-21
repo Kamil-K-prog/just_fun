@@ -1,5 +1,6 @@
 # Модели, представляющие собой систему паспортов
-from .models.passport_models.eval_mark import EvalMark
+from .models.passport_models.eval_mark_profrisks import EvalMarkProfrisks
+from .models.passport_models.eval_mark_sout import EvalMarkSout
 from .models.passport_models.passport import Passport
 from .models.passport_models.passport_status import PassportStatus
 from .models.passport_models.file import File

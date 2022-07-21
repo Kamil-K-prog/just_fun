@@ -1,13 +1,16 @@
 from sqlalchemy import Column, Integer, Text, ForeignKey
 from sqlalchemy import orm
+from sqlalchemy_serializer import SerializerMixin
 
 from ...sqlalchemy_base_maker import SqlAlchemyBase
 
 
-class Video(SqlAlchemyBase):
+class Video(SqlAlchemyBase, SerializerMixin):
     ("""Сущность видео (доступного по определённому URL в Rutube), """
      """прикрепляемого к паспорту""")
     __tablename__ = 'video'
+
+    serialize_only = ('id', 'passport_id', 'link')
 
     id = Column(
         Integer,

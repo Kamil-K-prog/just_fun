@@ -1,14 +1,17 @@
 from sqlalchemy import Column, Integer, ForeignKey, Date
 from sqlalchemy import orm
+from sqlalchemy_serializer import SerializerMixin
 
 from ...sqlalchemy_base_maker import SqlAlchemyBase
 from ...db_utils import get_current_yekt_datetime
 
 
-class Process(SqlAlchemyBase):
+class Process(SqlAlchemyBase, SerializerMixin):
     ("""Сущность процесса заполненния универсальной """
      """формы опроса конкретной организацией""")
     __tablename__ = 'process'
+
+    serialize_only = ('id', 'passport_id', 'quiz_id', 'date')
 
     id = Column(
         Integer,

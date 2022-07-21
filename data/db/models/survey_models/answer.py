@@ -3,6 +3,7 @@ from sqlalchemy import orm
 from sqlalchemy_serializer import SerializerMixin
 
 from ...sqlalchemy_base_maker import SqlAlchemyBase
+from ...db_utils import versatile_represent, versatile_convert_to_str
 from config import AppConfig
 
 
@@ -31,3 +32,7 @@ class Answer(SqlAlchemyBase, SerializerMixin):
     # Связи many-to-one:
     field = orm.relationship('Field', back_populates='answers', lazy=LAZY)
     process = orm.relationship('Process', back_populates='answers', lazy=LAZY)
+
+    __repr__ = versatile_represent
+
+    __str__ = versatile_convert_to_str

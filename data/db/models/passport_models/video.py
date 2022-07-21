@@ -3,6 +3,7 @@ from sqlalchemy import orm
 from sqlalchemy_serializer import SerializerMixin
 
 from ...sqlalchemy_base_maker import SqlAlchemyBase
+from ...db_utils import versatile_represent, versatile_convert_to_str
 
 
 class Video(SqlAlchemyBase, SerializerMixin):
@@ -24,3 +25,7 @@ class Video(SqlAlchemyBase, SerializerMixin):
 
     # Связи many-to-one:
     passport = orm.relationship('Passport', lazy='select')
+
+    __repr__ = versatile_represent
+
+    __str__ = versatile_convert_to_str

@@ -3,7 +3,8 @@ from sqlalchemy import orm
 from sqlalchemy_serializer import SerializerMixin
 
 from ...sqlalchemy_base_maker import SqlAlchemyBase
-from ...db_utils import get_current_yekt_datetime
+from ...db_utils import get_current_yekt_datetime, versatile_represent, \
+    versatile_convert_to_str
 from config import AppConfig
 
 
@@ -33,3 +34,7 @@ class PassportLog(SqlAlchemyBase, SerializerMixin):
         default=get_current_yekt_datetime)
 
     passport = orm.relationship('Passport', lazy=LAZY)
+
+    __repr__ = versatile_represent
+
+    __str__ = versatile_convert_to_str

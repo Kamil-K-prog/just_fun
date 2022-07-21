@@ -3,6 +3,7 @@ from sqlalchemy import orm
 from sqlalchemy_serializer import SerializerMixin
 
 from ...sqlalchemy_base_maker import SqlAlchemyBase
+from ...db_utils import versatile_represent, versatile_convert_to_str
 from config import AppConfig
 
 
@@ -38,3 +39,7 @@ class Field(SqlAlchemyBase, SerializerMixin):
     # (в противном случае possible_answers должны игнорироваться)
     possible_answers = orm.relationship('PossibleAnswer', lazy=LAZY)
     answers = orm.relationship('Answer', lazy='select')
+
+    __repr__ = versatile_represent
+
+    __str__ = versatile_convert_to_str

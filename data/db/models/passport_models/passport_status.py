@@ -2,6 +2,7 @@ from sqlalchemy import Column, Integer, Text
 from sqlalchemy_serializer import SerializerMixin
 
 from ...sqlalchemy_base_maker import SqlAlchemyBase
+from ...db_utils import versatile_represent, versatile_convert_to_str
 
 
 class PassportStatus(SqlAlchemyBase, SerializerMixin):
@@ -17,3 +18,7 @@ class PassportStatus(SqlAlchemyBase, SerializerMixin):
         autoincrement=True, unique=True)
 
     name = Column(Text, unique=True, nullable=False)  # Наименование статуса
+
+    __repr__ = versatile_represent
+
+    __str__ = versatile_convert_to_str

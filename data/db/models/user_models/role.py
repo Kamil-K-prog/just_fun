@@ -3,6 +3,7 @@ from sqlalchemy import orm
 from sqlalchemy_serializer import SerializerMixin
 
 from ...sqlalchemy_base_maker import SqlAlchemyBase
+from ...db_utils import versatile_represent, versatile_convert_to_str
 
 
 class Role(SqlAlchemyBase, SerializerMixin):
@@ -20,3 +21,7 @@ class Role(SqlAlchemyBase, SerializerMixin):
 
     # Связи one-to-many:
     users = orm.relationship('User', lazy='select')
+
+    __repr__ = versatile_represent
+
+    __str__ = versatile_convert_to_str

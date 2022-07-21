@@ -3,6 +3,7 @@ from sqlalchemy import orm
 from sqlalchemy_serializer import SerializerMixin
 
 from ...sqlalchemy_base_maker import SqlAlchemyBase
+from ...db_utils import versatile_represent, versatile_convert_to_str
 from config import AppConfig
 
 
@@ -26,3 +27,7 @@ class Quiz(SqlAlchemyBase, SerializerMixin):
     # Связи one-to-many:
     fields = orm.relationship('Field', back_populates='quiz', lazy=LAZY)
     processes = orm.relationship('Process', back_populates='quiz', lazy=LAZY)
+
+    __repr__ = versatile_represent
+
+    __str__ = versatile_convert_to_str

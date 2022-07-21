@@ -5,6 +5,7 @@ from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from ...sqlalchemy_base_maker import SqlAlchemyBase
+from ...db_utils import versatile_represent, versatile_convert_to_str
 from config import AppConfig
 
 
@@ -40,3 +41,7 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
 
     def check_password(self, password: str) -> bool:
         return check_password_hash(self.passwd_hash, password)
+
+    __repr__ = versatile_represent
+
+    __str__ = versatile_convert_to_str

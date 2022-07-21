@@ -3,7 +3,8 @@ from sqlalchemy import orm
 from sqlalchemy_serializer import SerializerMixin
 
 from ...sqlalchemy_base_maker import SqlAlchemyBase
-from ...db_utils import get_current_yekt_datetime
+from ...db_utils import get_current_yekt_datetime, versatile_represent, \
+    versatile_convert_to_str
 
 
 class Process(SqlAlchemyBase, SerializerMixin):
@@ -31,3 +32,7 @@ class Process(SqlAlchemyBase, SerializerMixin):
 
     # Связи one-to-many:
     answers = orm.relationship('Answer', lazy='select')
+
+    __repr__ = versatile_represent
+
+    __str__ = versatile_convert_to_str

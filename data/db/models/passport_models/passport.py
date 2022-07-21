@@ -3,7 +3,8 @@ from sqlalchemy import orm
 from sqlalchemy_serializer import SerializerMixin
 
 from ...sqlalchemy_base_maker import SqlAlchemyBase
-from ...db_utils import get_current_yekt_datetime, default_same_as
+from ...db_utils import get_current_yekt_datetime, default_same_as, \
+    versatile_represent, versatile_convert_to_str
 from config import AppConfig
 
 
@@ -345,3 +346,7 @@ class Passport(SqlAlchemyBase, SerializerMixin):
 
     processes = orm.relationship(
         'Process', back_populates='passport', lazy=LAZY)
+
+    __repr__ = versatile_represent
+
+    __str__ = versatile_convert_to_str

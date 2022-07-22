@@ -3,6 +3,7 @@ from .models.passport_models.eval_mark_profrisks import EvalMarkProfrisks
 from .models.passport_models.eval_mark_sout import EvalMarkSout
 from .models.passport_models.passport import Passport
 from .models.passport_models.passport_status import PassportStatus
+from .models.passport_models.location import Location
 from .models.passport_models.file import File
 from .models.passport_models.video import Video
 # Модели, отвечающие за работу универсальной формы опросника

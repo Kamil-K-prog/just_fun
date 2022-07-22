@@ -19,7 +19,7 @@ class Passport(SqlAlchemyBase, SerializerMixin):
         'id', 'user_id', 'passport_status_id',
         'date_of_application_submission', 'date_of_application_editing',
         'name_of_the_legal_entity', 'organization_full_name',
-        'organization_short_name', 'address_for_contact', 'legal_address',
+        'organization_short_name', 'location', 'legal_address',
         'fact_address', 'boss_surname', 'boss_name', 'boss_patronymic',
         'boss_position', 'INN', 'OKTMO', 'main_activity_OKVED',
         'male_workers_count', 'female_workers_count', 'phone_number',
@@ -80,7 +80,9 @@ class Passport(SqlAlchemyBase, SerializerMixin):
     # Краткое наименование организации
     organization_short_name = Column(Text, nullable=False, unique=True)
 
-    address_for_contact = Column(Text, nullable=False)  # контактный адрес
+    # примерный(обобщённый для поиска) адрес
+    location_id = Column(  # По умолчанию Оренбург
+        Integer, ForeignKey('location.id'), nullable=False, default=1)
 
     legal_address = Column(  # Адрес юридический
         Text, nullable=False, unique=True)
@@ -333,6 +335,8 @@ class Passport(SqlAlchemyBase, SerializerMixin):
     status = orm.relationship('PassportStatus', lazy=LAZY)
 
     user = orm.relationship('User', back_populates='passports', lazy=LAZY)
+
+    location = orm.relationship('Location', lazy=LAZY)
 
     sout_check_eval_mark = orm.relationship(
         'EvalMarkSout', back_populates='passports', lazy=LAZY)

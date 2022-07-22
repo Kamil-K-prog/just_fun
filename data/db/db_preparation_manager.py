@@ -1,9 +1,10 @@
 from . import db_sessionmaker
 from .__all_models import Role, PassportStatus, FieldType, EvalMarkProfrisks, \
-    EvalMarkSout
+    EvalMarkSout, Location
 
 
-EVAL_MARK_CONTENTS = ('да', 'нет', 'частично')  # метки качества соблюдения
+LOCATIONS = ('Оренбург', 'Тюмень',  'Орск', 'Сорочинск', 'Бугуруслан', 'Гай')
+EVAL_MARK_CONTENTS = ('Да', 'Нет', 'Частично')  # метки качества соблюдения
 PREPARATION_DATA = [  # Константа с обязательными записями БД (см. prepare_db)
     # Роли пользователей
     {'model': Role, 'name_field': 'name', 'contents': ('User', 'Admin')},
@@ -20,6 +21,7 @@ PREPARATION_DATA = [  # Константа с обязательными зап�
     # Метки качества и наличия специальной оценки условий труда (СОУТ)
     {'model': EvalMarkSout, 'name_field': 'title',
         'contents': EVAL_MARK_CONTENTS},
+    {'model': Location, 'name_field': 'name', 'contents': LOCATIONS}
 ]
 
 

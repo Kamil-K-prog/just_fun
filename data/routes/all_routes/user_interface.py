@@ -1,129 +1,93 @@
-from flask import Blueprint, session, jsonify, render_template, redirect
-from flask import request as req
-from requests import request
-from .mail_sender import send_mail
-from .middleware import is_admin, is_user
-from flask_login import (
-    LoginManager,
-    login_user,
-    logout_user,
-    login_required,
-    current_user,
-)
-from data.db import db_sessionmaker
-from werkzeug.utils import secure_filename
-import os
-from ...db.__all_models import User, Passport, PassportStatus, GoldenBadge, Quiz, Video, Photo, Field, Profrisk
-from ..flask_wtf_forms import AdminAddForm, GetFilesForm, GoldenBadgeApplicationForm, WorkProtectionForm
+from flask import Blueprint, Response, render_template, redirect, abort
+from flask_login import login_required, current_user
+
+from ...db import db_sessionmaker
+from ...db.db_utils import get_current_yekt_datetime
+from ...db.__all_models import User, Passport
+from ..flask_wtf_forms import GoldenBadgeApplicationForm
+from .middleware import is_user
+
 
 blueprint = Blueprint('user_interface', __name__, template_folder='templates')
-login_manager = LoginManager()
 
 
-@blueprint.route('/account', methods=['GET', 'POST'])
+@blueprint.route('/account/', methods=['GET', 'POST'])
 @login_required
 @is_user
-def account():
-    user = current_user
-    db_sess = db_sessionmaker.create_session()
-    m = db_sess.query(Passport).filter_by(user_id=user.id).all()
-    passports_list = []
-    for pas in m:
-        passports_list.append({
-            'id':
-            pas.id,
-            'organization_short_name':
-            pas.organization_short_name,
-            'date':
-            pas.date_of_data_collection,
-            'golden_mark':
-            pas.golden_mark,
-            'status':
-            db_sess.query(PassportStatus).filter_by(
-                id=pas.passport_status).first().name
-        })
-    return render_template('back/passport_form.html',
-                           user=user,
-                           title='Личный кабинет',
-                           organizations=passports_list)
+def account() -> Response:
+    user: User = current_user
+
+    user_passports = user.passports
+
+    passports_list = [None] * len(user_passports)
+    for index, pass_obj in enumerate(user_passports):
+        passports_list[index] = {
+            'id': pass_obj.id,
+            'organization_short_name': pass_obj.organization_short_name,
+            'date': pass_obj.date_of_application_editing,
+            'golden_mark': pass_obj.golden_badge_verdict,
+            'status': pass_obj.status.name}
+
+    return render_template(
+        'back/passport_form.html',
+        user=user,
+        title='Личный кабинет',
+        organizations=passports_list)
 
 
-@blueprint.route('/golden_badge', methods=['GET', 'POST'])
+@blueprint.route('/golden_badge/', methods=['GET', 'POST'])
 @login_required
 @is_user
-def golden_badge():
-    sess = db_sessionmaker.create_session()
-    user = current_user
+def golden_badge() -> Response:
+    user: User = current_user
 
-    applications = []
-    passports = sess.query(Passport).filter(Passport.user_id == user.id).all()
-    for passp in passports:
-        for i in sess.query(GoldenBadge).filter(GoldenBadge.passport_id == passp.id).all():
-            applications.append([passp, i])
+    with db_sessionmaker.create_session() as db_sess:
 
-    form = GoldenBadgeApplicationForm()
-    if form.validate_on_submit():
-        badge = GoldenBadge(
-            passport_id=form.organization_id.data,
-            application_date=form.date_of_application.data
-        )
-        sess.add(badge)
-        sess.commit()
-        return redirect('/golden_badge')
-    return render_template('back/golden_badge.html',
-                           user=user,
-                           title='Золотой знак',
-                           form=form,
-                           applications=applications)
+        form = GoldenBadgeApplicationForm()
+        if form.validate_on_submit():
+            passport: Passport = db_sess.query(
+                Passport).get(form.organization_id.data)
+
+            if passport is None:
+                return redirect('/golden_badge/')
+
+            passport.golden_badge_application_date = (
+                get_current_yekt_datetime())
+            passport.golden_badge_verdict = False
+            passport.golden_badge_verification_date = None
+            db_sess.commit()
+
+            return redirect('/golden_badge/')
+
+    return render_template(
+        'back/golden_badge.html',
+        user=user,
+        title='Золотой знак',
+        form=form,
+        passports=user.passports)
 
 
-@blueprint.route('/delete_organization/<id>', methods=['GET', 'POST'])
+@blueprint.route(
+    '/delete_application/<int:passport_id>/', methods=['GET', 'POST'])
 @login_required
 @is_user
-def delete_passport(id):
-    sess = db_sessionmaker.create_session()
-    i = sess.query(Passport).filter(Passport.id == id).first()
-    sess.delete(i)
-    sess.commit()
-    return redirect('/account')
+def delete_application(passport_id: int) -> Response():
+    user: User = current_user
 
+    with db_sessionmaker.create_session() as db_sess:
+        passport: Passport = db_sess.query(Passport).get(passport_id)
 
-@blueprint.route('/delete_application/<id>', methods=['GET', 'POST'])
-@login_required
-@is_user
-def delete_application(id):
-    sess = db_sessionmaker.create_session()
-    i = sess.query(GoldenBadge).filter(GoldenBadge.id == id).first()
-    sess.delete(i)
-    sess.commit()
+        if passport is None:
+            abort(404, description='Паспорт с таким id не найден')
+
+        # защита от удаления чужой заявки на статус "Золотой знак"
+        if user.role_id != 2 and user.id != passport.user_id:
+            abort(403, description='Вам запрещено совершать это действие')
+
+        passport.golden_badge_application_date = None
+        passport.golden_badge_verdict = False
+        passport.golden_badge_verification_date = None
+
+        db_sess.commit()
+
     return redirect('/golden_badge')
-
-
-@blueprint.route('/profrisk_information_collection', methods=['GET', 'POST'])
-@login_required
-@is_user
-def profrisks_collection():
-    user = current_user
-    form = WorkProtectionForm()
-    sess = db_sessionmaker.create_session()
-
-    if form.validate_on_submit():
-        check = 0
-
-        if form.profrisks_check.data == 'Да':
-            check = 1
-        elif form.profrisks_check.data == 'Нет':
-            check = 2
-        elif form.profrisks_check.data == 'Частично':
-            check = 3
-
-        prf = Profrisk(
-            passport_id=form.pasport_id.data,
-            profrisks_check=check,
-            last_check_date=form.last_check_date.data
-        )
-        sess.add(prf)
-        sess.commit()
-        return redirect('/profrisk_information_collection')
-    return render_template('back/form_collection_of_information.html', user=user,
-                           title='Сбор информации о профрисках', form=form)

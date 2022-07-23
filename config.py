@@ -13,6 +13,9 @@ class AppConfig:
     # адрес почтового ящика, с которого приложение будет рассылать письма
     EMAIL_FROM = 'just_fun@gmail.com'
 
+    # название директории и файлами, загруженными пользователями системы
+    UPLOAD_FOLDER = 'upload/'
+
     # Секретный ключ WSGI приложения Flask
     # SECRET_KEY = os.environ.get('SECRET_KEY')
     SECRET_KEY = '50eafa001ed07f3c92e0acb7da6d8c3c'

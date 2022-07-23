@@ -1,6 +1,7 @@
-from typing import Callable, Iterable, Tuple
+from typing import Callable, Iterable, Tuple, Union
 
 import datetime
+from sqlalchemy.orm.decl_api import DeclarativeMeta
 from sqlalchemy.engine.default import DefaultExecutionContext
 
 
@@ -24,10 +25,28 @@ def default_same_as(column_name: str) -> Callable:
     return default_function
 
 
-def _get_column_names(model_obj: SqlAlchemyBase) -> Tuple[str]:
+def _get_column_names(
+        model_class_or_obj: Union[
+            DeclarativeMeta, SqlAlchemyBase]) -> Tuple[str]:
     ("""Вспомогательная функция, возвращающая названия колонок таблицы БД, """
-     """к которой относится ORM-модель данного объекта""")
-    return tuple(col.name for col in model_obj.__table__.columns)
+     """к которой относится данная ORM-модель""")
+    return tuple(col.name for col in model_class_or_obj.__table__.columns)
+
+
+def _get_column_names_with_types(
+        model: DeclarativeMeta, column_py_types: Iterable[type]) -> Tuple[str]:
+    ("""Возвращает названия атрибутов(полей) определённой ORM-модели, """
+     """соответствующие определённым python-типам """)
+    return tuple(
+        col.name for col in model.__table__.columns
+        if col.type.python_type in column_py_types)
+
+
+def _get_column_names_of_foreign_keys(model: DeclarativeMeta) -> Tuple[str]:
+    ("""Возвращает названия атрибутов(полей) определённой ORM-модели, """
+     """которые являются внешними ключами """)
+    return tuple(
+        col.name for col in model.__table__.columns if col.foreign_keys)
 
 
 def _join_model_obj_kwargs(

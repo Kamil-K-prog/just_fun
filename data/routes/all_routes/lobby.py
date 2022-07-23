@@ -1,17 +1,12 @@
-from flask import Blueprint, session, jsonify, render_template, redirect
-from flask_login import (
-    LoginManager,
-    login_user,
-    logout_user,
-    login_required,
-    current_user,
-)
+from flask import Blueprint, Response, render_template, redirect
+from flask_login import current_user
+
 
 blueprint = Blueprint('lobby', __name__, template_folder='templates')
 
 
 @blueprint.route('/', methods=['GET', 'POST'])
-def index():
+def index() -> Response:
     user = current_user
     if hasattr(user, 'role_id'):
         if user.role_id == 1:

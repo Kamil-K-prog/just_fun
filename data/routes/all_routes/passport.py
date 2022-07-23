@@ -1,262 +1,347 @@
-from flask import Blueprint, session, jsonify, render_template, redirect
-from .mail_sender import send_mail
-from ...routes.flask_wtf_forms import PassportForm
-from .middleware import is_admin, is_user
+from typing import Dict, Set, Tuple
+import datetime
+
+import sqlalchemy
+import flask_wtf
+from flask import Blueprint, Response, render_template, redirect, abort
 from flask_login import (
-    LoginManager,
-    login_user,
-    logout_user,
     login_required,
     current_user,
 )
-from data.db import db_sessionmaker
-from ...db.__all_models import User, Passport, PassportStatus, GoldenBadge, Video, Photo
+
+from ...db import db_sessionmaker, db_utils
+from ...db.__all_models import User, Passport, PassportStatus, Video, File, \
+    Location, EvalMarkSout, EvalMarkProfrisks, Process, Answer, PassportLog
+from ...routes.flask_wtf_forms import PassportForm
+from .middleware import is_admin, is_user
+from .mail_sender import send_mail
+
 
 blueprint = Blueprint('passport', __name__, template_folder='templates')
-login_manager = LoginManager()
 
 
-@blueprint.route('/admin_passport_confirm/<pass_id>', methods=['GET', 'POST'])  # подтверждение паспорта
+def _get_passport_normal_column_names() -> Set[str]:
+    ("""Возвращает названия числовых, текстовых, булевых и датированных """
+     """колонок таблицы passport, которые не заполняются автоматически и """
+     """которые не являются внешними ключами на другие таблицы а БД""")
+    NORMAL_TYPES = (int, str, bool, datetime.date)
+    # получаем сет названий всех числовых, строковых и булевых колонок
+    passport_normal_column_names = set(  # и колонок с датами
+        db_utils._get_column_names_with_types(Passport, NORMAL_TYPES))
+    # удаляем названия всех внешних ключей
+    passport_normal_column_names -= set(
+        db_utils._get_column_names_of_foreign_keys(Passport))
+
+    # удаляем те названия колонок которые должны сами
+    # заполниться автоматически (не обязательно сразу)
+    passport_normal_column_names -= {
+        'id',  # авто (первичный ключ)
+        'date_of_application_submission',  # авто (текущее время)
+        'date_of_application_editing',  # авто (текущее время)
+        'golden_badge_verdict',  # авто (булевое значение)
+        # заявка на Золотой знак не могла быть подана
+        'golden_badge_application_date',
+        # собственно, подтверждена тоже не могла быть
+        'golden_badge_verification_date'}
+
+    return passport_normal_column_names
+
+
+PASSPORT_NORMAL_COLUMN_NAMES: Set[str] = _get_passport_normal_column_names()
+
+
+def _get_foreign_key_kwarg(
+        db_session: sqlalchemy.orm.Session,
+        flask_wtf_form: flask_wtf.FlaskForm,
+        db_model: sqlalchemy.orm.decl_api.DeclarativeMeta,
+        db_name_field: str,
+        form_field_name: str,
+        kwarg_name: str) -> Dict[str, int]:
+    """Возвращает словарь с именованым аргументом и id для записи в бд"""
+    value = getattr(flask_wtf_form, form_field_name).data.title()
+    entity = db_session.query(db_model).filter_by(
+        **{db_name_field: value}).first()
+
+    if entity is None:
+        return {}
+    return {kwarg_name: entity.id}
+
+
+def _get_required_foreign_keys_kwargs(
+    db_session: sqlalchemy.orm.Session,
+        flask_wtf_form: flask_wtf.FlaskForm) -> Tuple[Dict[str, int]]:
+    ("""Возвращает словари с названиями и значениями обязательных """
+     """внешних ключей таблицы passport(значения берёт из формы) """
+     """для подачи этой информации в ORM-модель/объект ORM-модели Passport"""
+     """(для создания/редактирования паспорта организации)""")
+    # получаем нужный аргумент location
+    location_kwarg: Dict[str, int] = _get_foreign_key_kwarg(
+        db_session, flask_wtf_form, Location,
+        db_name_field='name',
+        form_field_name='location',
+        kwarg_name='location_id')
+
+    # получаем нужный аргумент с отметкой проведения СОУТ
+    sout_check_kwarg: Dict[str, int] = _get_foreign_key_kwarg(
+        db_session, flask_wtf_form, EvalMarkSout,
+        db_name_field='title',
+        form_field_name='sout_check',
+        kwarg_name='sout_check_eval_mark_id')
+
+    # получаем нужный аргумент с отметкой проведения оценки профрисков
+    profrisks_check_kwarg: Dict[str, int] = _get_foreign_key_kwarg(
+        db_session, flask_wtf_form, EvalMarkProfrisks,
+        db_name_field='title',
+        form_field_name='profrisks_check',
+        kwarg_name='profrisks_check_eval_mark_id')
+
+    return (location_kwarg, sout_check_kwarg, profrisks_check_kwarg)
+
+
+@blueprint.route(
+    '/admin_passport_confirm/<int:pass_id>/', methods=['GET', 'POST'])
 @login_required
 @is_admin
-def Admin_PassConfirm_Form(pass_id):
-    db_sess = db_sessionmaker.create_session()
-    pass_obj = db_sess.query(Passport).filter_by(id=pass_id).first()
-    pass_obj.passport_status = db_sess.query(PassportStatus).filter_by(
-        name='Принят').first().id
-    user = db_sess.query(User).filter_by(id=pass_obj.user_id).first()
-    db_sess.add(pass_obj)
-    db_sess.commit()
-    send_mail(user.login, user.email,
-          'Your organization\'s passport has been verified',
-          'You can use the information collection service')
+def admin_passport_confirm_form(pass_id: int) -> Response:
+    """Подтверждение паспорта"""
+
+    with db_sessionmaker.create_session() as db_sess:
+        pass_obj: Passport = db_sess.query(Passport).get(pass_id)
+
+        if pass_obj is None:
+            abort(404, description='Паспорт с таким id не найден')
+
+        pass_obj.passport_status_id = db_sess.query(PassportStatus).filter_by(
+            name='Принят').first().id
+        user: User = pass_obj.user
+
+        db_sess.commit()
+
+        send_mail(
+            user=user.login, mail_to=user.email,
+            subject='Your organization\'s passport has been verified',
+            text='You can use the information collection service')
+
     return redirect('/admin')
 
 
-@blueprint.route('/admin_passport_decline/<pass_id>', methods=['GET', 'POST'])  # отказ в подтверждении паспорта
+@blueprint.route(
+    '/admin_passport_decline/<int:pass_id>/', methods=['GET', 'POST'])
 @login_required
 @is_admin
-def Admin_PassDecline_Form(pass_id):
-    db_sess = db_sessionmaker.create_session()
-    pass_obj = db_sess.query(Passport).filter_by(id=pass_id).first()
-    pass_obj.passport_status = db_sess.query(PassportStatus).filter_by(
-        name='Отклонен').first().id
-    user = db_sess.query(User).filter_by(id=pass_obj.user_id).first()
-    
-    gd_app = db_sess.query(GoldenBadge).filter_by(passport_id=pass_obj.id).first()  # удаление заявки на золотой знак
-    if gd_app:
-        db_sess.delete(gd_app)
+def admin_passport_decline_form(pass_id: int) -> Response:
+    """Отказ в подтверждении паспорта"""
 
-    db_sess.add(pass_obj)
-    db_sess.commit()
-    send_mail(user.login, user.email,
-          'Your organization\'s passport has been rejected',
-          'Contact the administrator for clarification')
+    with db_sessionmaker.create_session() as db_sess:
+        pass_obj: Passport = db_sess.query(Passport).get(pass_id)
+
+        if pass_obj is None:
+            abort(404, description='Паспорт с таким id не найден')
+
+        pass_obj.passport_status_id = db_sess.query(PassportStatus).filter_by(
+            name='Отклонен').first().id
+        user: User = pass_obj.user
+
+        # удаление заявки на золотой знак
+        pass_obj.golden_badge_application_date = None
+        pass_obj.golden_badge_verification_date = None
+        pass_obj.golden_badge_verdict = False
+
+        db_sess.commit()
+
+        send_mail(
+            user=user.login, mail_to=user.email,
+            subject='Your organization\'s passport has been rejected',
+            text='Contact the administrator for clarification')
+
     return redirect('/admin')
 
 
-@blueprint.route('/passport_view/<pas_id>', methods=['GET', 'POST'])  # просмотр паспорта
+@blueprint.route(
+    '/passport_view/<int:pass_id>/', methods=['GET', 'POST'])
 @login_required
-def Passport_View(pas_id):
-    user = current_user
+def passport_view(pass_id: int) -> Response:
+    """Просмотр паспорта"""
+    user: User = current_user
+
     db_sess = db_sessionmaker.create_session()
-    pas = db_sess.query(Passport).filter_by(id=pas_id).first()
+    pass_obj: Passport = db_sess.query(Passport).get(pass_id)
 
-    if user.role_id != 2:  # защита от просмотра чужого паспорта
-        if user.id != pas.user_id:
-            return redirect('/account')
-    
-    pass_di = {
-        'id':
-        pas.id,
-        'user_id':
-        pas.user_id,
-        'name_of_the_legal_entity':
-        pas.name_of_the_legal_entity,
-        'organization_full_name':
-        pas.organization_full_name,
-        'organization_short_name':
-        pas.organization_short_name,
-        'legal_address':
-        pas.legal_address,
-        'fact_address':
-        pas.fact_address,
-        'boss_full_name_n_position':
-        pas.boss_full_name_n_position,
-        'INN':
-        pas.INN,
-        'OKTMO':
-        pas.OKTMO,
-        'main_activity_OKVED':
-        pas.main_activity_OKVED,
-        'male_workers_count':
-        pas.male_workers_count,
-        'female_workers_count':
-        pas.female_workers_count,
-        'phone_number':
-        pas.phone_number,
-        'email_oficcial':
-        pas.email_oficcial,
-        'workers_protector_FIO_n_position':
-        pas.workers_protector_FIO_n_position,
-        'workers_protector_phone_number':
-        pas.workers_protector_phone_number,
-        'workers_protector_email':
-        pas.workers_protector_email,
-        'golden_mark':
-        pas.golden_mark,
-        'golden_mark_date':
-        pas.golden_mark_date,
-        'passport_status':
-        db_sess.query(PassportStatus).filter_by(
-            id=pas.passport_status).first().name,
-        'date_of_application_submission':
-        pas.date_of_application_submission
-    }
-    return render_template('back/passport_view.html',
-                           user=user,
-                           title='Паспорт',
-                           passport=pass_di)
+    if pass_obj is None:
+        abort(404, description='Паспорт с таким id не найден')
+
+    # защита от просмотра чужого паспорта:
+    if user.role_id != 2 and user.id != pass_obj.user_id:
+        # если юзер - не админ и если это не его паспорт
+        abort(403, description='Вам запрещено совершать это действие')
+
+    passport_dict = pass_obj.to_dict()
+    passport_dict['passport_status'] = pass_obj.status.name.title()
+    passport_dict['location'] = pass_obj.location.name.title()
+    passport_dict['sout_check'] = (
+        pass_obj.sout_check_eval_mark.title.title())
+    passport_dict['profrisks_check'] = (
+        pass_obj.profrisks_check_eval_mark.title.title())
+
+    return render_template(
+        'back/passport_view.html',
+        user=current_user,
+        title='Паспорт',
+        passport=passport_dict)
 
 
-@blueprint.route('/passport_create', methods=['GET', 'POST'])  # создание паспорта
+@blueprint.route('/passport_create/', methods=['GET', 'POST'])
 @login_required
 @is_user
-def Passport_Create():
-    user = current_user
+def passport_create() -> Response:
+    """Создание паспорта"""
+    user: User = current_user
     form = PassportForm()
-    sess = db_sessionmaker.create_session()
-    if form.validate_on_submit():
-        print('POST\n')
-        passport = Passport(
-            user_id=user.id,
-            name_of_the_legal_entity=form.opf.data,
-            organization_full_name=form.full_name.data,
-            organization_short_name=form.short_name.data,
-            date_of_data_collection=form.information_date.data,
-            boss_full_name=form.boss_fio.data,
-            boss_position=form.boss_place.data,
-            phone_number=form.company_phone.data,
-            email_oficcial=form.company_email.data,
-            address_for_contact=form.location.data,
-            fact_address=form.address_fact.data,
-            legal_address=form.address_yur.data,
-            INN=form.inn.data,
-            OKTMO=form.oktmo.data,
-            main_activity_OKVED=form.main_activity_okved.data,
-            male_workers_count=form.workers_male_count.data,
-            female_workers_count=form.workers_female_count.data,
-            workers_protector_FIO_n_position=form.protector_fio.data,
-            workers_protector_phone_number=form.protector_phone.data,
-            workers_protector_email=form.protector_email.data)
-        sess.add(passport)
-        sess.commit()
-        send_mail('Aleksey', 'begun.aleksey@mail.ru', "Passport application",
-          'You have received an application for a passport')
-        return redirect(f'/passpoort_upload/{passport.id}')
-    return render_template('back/passport_create.html',
-                           user=user,
-                           title='Организации',
-                           form=form)
+
+    with db_sessionmaker.create_session() as db_sess:
+        if form.validate_on_submit():
+
+            (  # получаем именованые аргументы обязательных внешних ключей
+                location_kwarg,
+                sout_check_kwarg,
+                profrisks_check_kwarg
+            ) = _get_required_foreign_keys_kwargs(db_sess, form)
+
+            passport = Passport(
+                user_id=user.id,  # проставляем вшешние ключи
+                **location_kwarg,
+                **sout_check_kwarg,
+                **profrisks_check_kwarg,
+
+                **{colname: getattr(form, colname).data  # проставляем значения
+                    for colname in PASSPORT_NORMAL_COLUMN_NAMES})
+
+            db_sess.add(passport)
+            db_sess.commit()
+
+            send_mail(
+                user=user.login, mail_to=user.email,
+                subject='Passport application',
+                text='You have received an application for a passport')
+
+            return redirect(f'/passport_upload/{passport.id}/')
+
+    return render_template(
+        'back/passport_create_or_edit.html',
+        user=user,
+        title='Организации',
+        form=form)
 
 
-@blueprint.route('/passport_change/<id>', methods=['GET', 'POST'])  # изменение паспорта
+@blueprint.route('/passport_change/<int:pass_id>/', methods=['GET', 'POST'])
 @login_required
 @is_user
-def Passport_Change(id):
+def passport_change(pass_id: int) -> Response:
+    """Изменение паспорта"""
     form = PassportForm()
-    user = current_user
-    sess = db_sessionmaker.create_session()
+    user: User = current_user
 
-    passp = sess.query(Passport).filter(Passport.id == id).first()  # пасспорт
+    with db_sessionmaker.create_session() as db_sess:
 
-    if user.role_id != 2:  # защита от редактирования чужого паспорта
-        if user.id != passp.user_id:
+        passport: Passport = db_sess.query(Passport).get(pass_id)
+
+        if passport is None:
+            abort(404, description='Паспорт с таким id не найден')
+
+        # защита от редактирования чужого паспорта
+        if user.role_id != 2 and user.id != passport.user_id:
+            abort(403, description='Вам запрещено совершать это действие')
+
+        if form.validate_on_submit():
+            # ПЕРЕНОС ДАННЫХ ИЗ ФОРМЫ В СУЩЕСТВУЮЩИЙ ПАСПОРТ
+
+            # проставляем внешние ключи
+            for foreign_key_dict in (
+                    _get_required_foreign_keys_kwargs(db_sess, form)):
+                if foreign_key_dict:
+                    fk_key, fk_value = tuple(foreign_key_dict.items())[0]
+                    setattr(passport, fk_key, fk_value)
+
+            # проставляем значения обычных полей
+            for pass_colname in PASSPORT_NORMAL_COLUMN_NAMES:
+                setattr(
+                    passport, pass_colname,
+                    getattr(form, pass_colname).data)
+
+            # ПРОЧИЕ МАНИПУЛЯЦИИ С ОБЪЕКТОМ ORM-МОДЕЛИ ПАСПОРТА
+
+            # сброс статуса паспорта
+            passport.passport_status_id = db_sess.query(
+                PassportStatus).filter_by(name='На рассмотрении').first().id
+
+            # удаление заявки на золотой знак
+            passport.golden_badge_application_date = None
+            passport.golden_badge_verification_date = None
+            passport.golden_badge_verdict = False
+
+            db_sess.commit()
+
             return redirect('/account')
 
-    if form.validate_on_submit():
-        # перенос данных из формы с существующий паспорт 
-        passp.name_of_the_legal_entity = form.opf.data
-        passp.organization_full_name = form.full_name.data
-        passp.organization_short_name = form.short_name.data
-        passp.date_of_data_collection = form.information_date.data
-        passp.boss_full_name = form.boss_fio.data
-        passp.boss_position = form.boss_place.data
-        passp.phone_number = form.company_phone.data
-        passp.email_oficcial = form.company_email.data
-        passp.address_for_contact = form.location.data
-        passp.fact_address = form.address_fact.data
-        passp.legal_address = form.address_yur.data
-        passp.INN = form.inn.data
-        passp.OKTMO = form.oktmo.data
-        passp.main_activity_OKVED = form.main_activity_okved.data
-        passp.male_workers_count = form.workers_male_count.data
-        passp.female_workers_count = form.workers_female_count.data
-        passp.workers_protector_FIO_n_position = form.protector_fio.data
-        passp.workers_protector_phone_number = form.protector_phone.data
-        passp.workers_protector_email = form.protector_email.data
+        # ПОЛУЧЕНИЕ ДАННЫХ ИЗ ПАСПОРТА В ФОРМУ
 
-        # условия редактирования паспорта
-        passp.passport_status = sess.query(PassportStatus).filter_by(name='На рассмотрении').first().id  # сброс статуса паспорта
+        # проставляем значения из связанных таблиц
+        form.location.data = passport.location.name
+        form.sout_check.data = passport.sout_check_eval_mark.title
+        form.profrisks_check.data = passport.profrisks_check_eval_mark.title
 
-        passp.golden_mark = False  # сброс золотого знака
-        passp.golden_mark_date = ''
+        # проставляем значения обычных полей
+        for pass_colname in PASSPORT_NORMAL_COLUMN_NAMES:
+            getattr(form, pass_colname).data = getattr(passport, pass_colname)
 
-        gd_app = sess.query(GoldenBadge).filter_by(passport_id=passp.id).first()  # удаление заявки на золотой знак
-        if gd_app:
-            sess.delete(gd_app)
-
-        sess.add(passp)
-        sess.commit()
-        return redirect('/account')
-    else:
-        # получение данных с паспорта
-        form.opf.data = passp.name_of_the_legal_entity
-        form.full_name.data = passp.organization_full_name
-        form.short_name.data = passp.organization_short_name
-        form.information_date.data = passp.date_of_data_collection
-        form.boss_fio.data = passp.boss_full_name
-        form.boss_place.data = passp.boss_position
-        form.company_phone.data = passp.phone_number
-        form.company_email.data = passp.email_oficcial
-        form.location.data = passp.address_for_contact
-        form.address_fact.data = passp.fact_address
-        form.address_yur.data = passp.legal_address
-        form.inn.data = passp.INN
-        form.oktmo.data = passp.OKTMO
-        form.main_activity_okved.data = passp.main_activity_OKVED
-        form.workers_male_count.data = passp.male_workers_count
-        form.workers_female_count.data = passp.female_workers_count
-        form.protector_fio.data = passp.workers_protector_FIO_n_position
-        form.protector_phone.data = passp.workers_protector_phone_number
-        form.protector_email.data = passp.workers_protector_email
-    return render_template('back/passport_edit.html', form=form, user=user)
+    return render_template(
+        'back/passport_create_or_edit.html', form=form, user=user)
 
 
-@blueprint.route('/passport_delete/<id>')  # Удаление паспорта
+@blueprint.route(
+    '/delete_organization/<int:passport_id>/', methods=['GET', 'POST'])
+@blueprint.route(
+    '/passport_delete/<int:passport_id>/', methods=["GET", "POST"])
 @login_required
 @is_user
-def delete(id):
-    user = current_user
-    sess = db_sessionmaker.create_session()
-    passp = sess.query(Passport).filter(Passport.id == id).first()  # паспорт
+def passport_delete(passport_id: int) -> Response:
+    """Удаление всех записей в бд, отвечающих за данный паспорт"""
+    response = redirect('/account')
+    user: User = current_user
 
-    if user.role_id != 2:  # защита от удаления чужого паспорта
-        if user.id != passp.user_id:
-            return redirect('/account')
-    
-    gd_app = sess.query(GoldenBadge).filter_by(passport_id=passp.id).first()  # удаление заявки на золотой знак
-    if gd_app:
-        sess.delete(gd_app)
-    
-    videos = sess.query(Video).filter_by(pass_id=passp.id).all()  # удаление всех ссылок
-    for v in videos:
-        sess.delete(v)
-    
-    photos = sess.query(Photo).filter_by(pass_id=passp.id).all()  # удаление всех файлов
-    for p in photos:
-        sess.delete(p)
+    with db_sessionmaker.create_session() as db_sess:
+        passport: Passport = db_sess.query(Passport).get(passport_id)
 
-    sess.delete(passp)  # удаление паспорта
-    sess.commit()
-    return redirect('/account')
+        if passport is None:
+            abort(404, description='Паспорт с таким id не найден')
+
+        # защита от удаления чужого паспорта:
+        if user.role_id != 2 and user.id != passport.user_id:
+            # если юзер - не админ и если это не его паспорт
+            abort(403, description='Вам запрещено совершать это действие')
+
+        # удаление всех ссылок на видео
+        db_sess.query(Video).filter_by(passport_id=passport.id).delete()
+
+        # удаление всех файлов
+        db_sess.query(File).filter_by(passport_id=passport.id).delete()
+
+        # удаляем все ответы в опросах данной организации
+        for process in (
+            db_sess
+            .query(Process)
+            .filter_by(passport_id=passport.id)
+                .all()):
+            db_sess.query(Answer).filter_by(process_id=process.id).delete()
+
+        # удаляем все процессы опроса данной организации
+        db_sess.query(Process).filter_by(passport_id=passport.id).delete()
+
+        # удаляем все прикреплённые к данному паспорту логи
+        db_sess.query(PassportLog).filter_by(passport_id=passport_id).delete()
+
+        db_sess.delete(passport)  # удаление паспорта
+
+        db_sess.commit()
+
+    return response

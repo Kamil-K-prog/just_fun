@@ -1,0 +1,645 @@
+{% extends "back/base.html" %}
+
+{% block content %}
+
+<div class="row">
+    <h1 class="text-center">Редактирование паспорта организации</h1>
+    <div class="col progressbar_form">
+        <div id="svg_wrap"></div>
+
+        <form method="POST" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+            <section>
+                <h2>Основные</h2>
+
+                <div class="mb-3">
+                    {{ form.name_of_the_legal_entity.label(class="form-label") }}
+                    {{ form.name_of_the_legal_entity(class="form-control", id="legal_entity") }}
+                    {% for error in form.name_of_the_legal_entity.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.organization_full_name.label(class="form-label") }}
+                    {{ form.organization_full_name(class="form-control", id="full-name") }}
+                    {% for error in form.organization_full_name.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.organization_short_name.label(class="form-label") }}
+                    {{ form.organization_short_name(class="form-control", id="short-name") }}
+                    {% for error in form.organization_short_name.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+
+            </section>
+
+            <section>
+                <h2>Руководитель организации</h2>
+                <div class="mb-3">
+                    {{ form.boss_surname.label(class="form-label") }}
+                    {{ form.boss_surname(class="form-control", id="leader") }}
+                    {% for error in form.boss_surname.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.boss_name.label(class="form-label") }}
+                    {{ form.boss_name(class="form-control", id="leader") }}
+                    {% for error in form.boss_name.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.boss_patronymic.label(class="form-label") }}
+                    {{ form.boss_patronymic(class="form-control", id="leader") }}
+                    {% for error in form.boss_patronymic.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.boss_position.label(class="form-label") }}
+                    {{ form.boss_position(class="form-control",  id="position") }}
+                    {% for error in form.boss_position.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+            </section>
+
+            <section>
+                <h2>Контакты</h2>
+
+                <div class="mb-3">
+                    {{ form.phone_number.label(class="form-label") }}
+                    {% if is_editing %}
+                    {{ form.phone_number(class="form-control", id="phone") }}
+                    {% else %}
+                    {{ form.phone_number(class="form-control", id="phone", value="+7") }}
+                    {% endif %}
+                    {% for error in form.phone_number.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.email_oficcial.label(class="form-label") }}
+                    {{ form.email_oficcial(class="form-control", id="email") }}
+                    {% for error in form.email_oficcial.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+
+
+                {{ form.location.label(class="form-label") }}
+                {{ form.location(class="form-select") }}
+                {% for error in form.location.errors %}
+                {{ error }}
+                {% endfor %}
+                <script>
+                    $('#locality').select2();
+
+
+                </script>
+            </section>
+
+            <section>
+                <h2>Адреса</h2>
+
+                <div class="mb-3">
+                    {{ form.fact_address.label(class="form-label") }}
+                    {{ form.fact_address(class="form-control", id="actual_address")}}
+                    {% for error in form.fact_address.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.legal_address.label(class="form-label") }}
+                    {{ form.legal_address(class="form-control", id="legal_address") }}
+                    {% for error in form.legal_address.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+
+            </section>
+
+            <section>
+                <h2>Общие сведения</h2>
+
+                <div class="mb-3">
+                    {{ form.INN.label(class="form-label") }}
+                    {{ form.INN(class="form-control", id="IIN") }}
+                    {% for error in form.INN.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.OKTMO.label(class="form-label") }}
+                    {{ form.OKTMO() }}
+                    {% for error in form.OKTMO.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.main_activity_OKVED.label(class="form-label") }}
+                    {{ form.main_activity_OKVED(class="form-control", id="IIN") }}
+                    {% for error in form.main_activity_OKVED.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+            </section>
+
+            <section>
+                <h2>Среднесписочная численность работников на дату проведения мониторинга</h2>
+                <div class="mb-3">
+                    {{ form.male_workers_count.label(class="form-label") }}
+                    {{ form.male_workers_count(class="form-control", id="Count_man_workers") }}
+                    {% for error in form.male_workers_count.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.female_workers_count.label(class="form-label") }}
+                    {{ form.female_workers_count(class="form-control", id="Count_women_workers") }}
+                    {% for error in form.female_workers_count.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+            </section>
+
+            <section>
+                <h2>Специалист по охране труда или ответственный за охрану труда</h2>
+
+                <div class="mb-3">
+                    {{ form.workers_protector_surname.label(class="form-label") }}
+                    {{ form.workers_protector_surname(class="form-control", id="protection_specialist") }}
+                    {% for error in form.workers_protector_surname.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.workers_protector_name.label(class="form-label") }}
+                    {{ form.workers_protector_name(class="form-control", id="protection_specialist") }}
+                    {% for error in form.workers_protector_name.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.workers_protector_patronymic.label(class="form-label") }}
+                    {{ form.workers_protector_patronymic(class="form-control", id="protection_specialist") }}
+                    {% for error in form.workers_protector_patronymic.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.workers_protector_position.label(class="form-label") }}
+                    {{ form.workers_protector_position(class="form-control", id="protection_specialist") }}
+                    {% for error in form.workers_protector_position.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.workers_protector_phone_number.label(class="form-label") }}
+                    {% if is_editing %}
+                    {{ form.workers_protector_phone_number(class="form-control", id="protection_specialist_phone") }}
+                    {% else %}
+                    {{ form.workers_protector_phone_number(class="form-control", id="protection_specialist_phone", value="+7") }}
+                    {% endif %}
+                    {% for error in form.workers_protector_phone_number.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.workers_protector_email.label(class="form-label") }}
+                    {{ form.workers_protector_email(class="form-control", id="protection_specialist_mail") }}
+                    {% for error in form.workers_protector_email.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+
+            </section>
+
+            <section>
+                <h2>Специальная оценка условий труда (СОУТ)</h2>
+                <div class="mb-3">
+                    {{ form.sout_check.label(class="form-label") }}
+                    {{ form.sout_check(class="form-control", id="sout_check") }}
+                    {% for error in form.sout_check.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.sout_report_date.label(class="form-label") }}
+                    {{ form.sout_report_date(class="form-control", id="sout_report_date") }}
+                    {% for error in form.sout_report_date.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.sout_report_number.label(class="form-label") }}
+                    {{ form.sout_report_number(class="form-control", id="sout_report_date") }}
+                    {% for error in form.sout_report_date.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+            </section>
+
+            <section>
+                <h2>СОУТ. Количество рабочих мест/работников и так далее</h2>
+                <div class="mb-3">
+                    {{ form.jobs_all_count.label(class="form-label") }}
+                    {{ form.jobs_all_count(class="form-control", id="jobs_all_count") }}
+                    {% for error in form.jobs_all_count.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.jobs_with_sout.label(class="form-label") }}
+                    {{ form.jobs_with_sout(class="form-control", id="jobs_with_sout") }}
+                    {% for error in form.jobs_with_sout.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.jobs_with_sout_percent.label(class="form-label") }}
+                    {{ form.jobs_with_sout_percent(class="form-control", id="jobs_with_sout_percent") }}
+                    {% for error in form.jobs_with_sout_percent.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.jobs_with_work_conditions.label(class="form-label") }}
+                    {{ form.jobs_with_work_conditions(class="form-control", id="jobs_with_work_conditions") }}
+                    {% for error in form.jobs_with_work_conditions.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.jobs_with_work_conditions_and_workers.label(class="form-label") }}
+                    {{ form.jobs_with_work_conditions_and_workers(class="form-control", id="jobs_with_work_conditions_and_workers") }}
+                    {% for error in form.jobs_with_work_conditions_and_workers.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.workers_with_dangerous_work_percent.label(class="form-label") }}
+                    {{ form.workers_with_dangerous_work_percent(class="form-control", id="workers_with_dangerous_work_percent") }}
+                    {% for error in form.workers_with_dangerous_work_percent.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+
+            </section>
+
+            <section>
+                <h2>СОУТ. Классы опасности</h2>
+                <div class="mb-3">
+                    {{ form.sout_danger_class1.label(class="form-label") }}
+                    {{ form.sout_danger_class1(class="form-control", id="sout_danger_class1") }}
+                    {% for error in form.sout_danger_class1.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.sout_danger_class2.label(class="form-label") }}
+                    {{ form.sout_danger_class2(class="form-control", id="sout_danger_class2") }}
+                    {% for error in form.sout_danger_class2.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.sout_danger_class31.label(class="form-label") }}
+                    {{ form.sout_danger_class31(class="form-control", id="sout_danger_class31") }}
+                    {% for error in form.sout_danger_class31.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.sout_danger_class32.label(class="form-label") }}
+                    {{ form.sout_danger_class32(class="form-control", id="sout_danger_class32") }}
+                    {% for error in form.sout_danger_class32.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.sout_danger_class33.label(class="form-label") }}
+                    {{ form.sout_danger_class33(class="form-control", id="sout_danger_class33") }}
+                    {% for error in form.sout_danger_class33.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.sout_danger_class34.label(class="form-label") }}
+                    {{ form.sout_danger_class34(class="form-control", id="sout_danger_class34") }}
+                    {% for error in form.sout_danger_class34.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.sout_danger_class4.label(class="form-label") }}
+                    {{ form.sout_danger_class4(class="form-control", id="sout_danger_class4") }}
+                    {% for error in form.sout_danger_class4.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+
+            </section>
+
+            <section>
+                <h2>Оценка профессиональных рисков в области охраны труда</h2>
+                <div class="mb-3">
+                    {{ form.profrisks_check.label(class="form-label") }}
+                    {{ form.profrisks_check(class="form-control", id="profrisks_check") }}
+                    {% for error in form.profrisks_check.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.last_profrisks_check_date.label(class="form-label") }}
+                    {{ form.last_profrisks_check_date(class="form-control", id="last_profrisks_check_date") }}
+                    {% for error in form.last_profrisks_check_date.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+            </section>
+
+            <section>
+                <h2>Условия труда</h2>
+                <div class="mb-3">
+                    {{ form.workers_with_free_ppe.label(class="form-label") }}
+                    {{ form.workers_with_free_ppe(class="form-control", id="workers_with_free_ppe") }}
+                    {% for error in form.workers_with_free_ppe.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.average_percent_with_ppe.label(class="form-label") }}
+                    {{ form.average_percent_with_ppe(class="form-control", id="average_percent_with_ppe") }}
+                    {% for error in form.average_percent_with_ppe.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.workers_with_free_soap.label(class="form-label") }}
+                    {{ form.workers_with_free_soap(class="form-control", id="workers_with_free_soap") }}
+                    {% for error in form.workers_with_free_soap.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.average_percent_with_soap.label(class="form-label") }}
+                    {{ form.average_percent_with_soap(class="form-control", id="average_percent_with_soap") }}
+                    {% for error in form.average_percent_with_soap.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.workers_with_free_medicine.label(class="form-label") }}
+                    {{ form.workers_with_free_medicine(class="form-control", id="workers_with_free_medicine") }}
+                    {% for error in form.workers_with_free_medicine.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.average_percent_with_medicine.label(class="form-label") }}
+                    {{ form.average_percent_with_medicine(class="form-control", id="average_percent_with_medicine") }}
+                    {% for error in form.average_percent_with_medicine.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+            </section>
+
+            <section>
+                <h2>Производственный травматизм</h2>
+                <div class="mb-3">
+                    {{ form.deceased_workers.label(class="form-label") }}
+                    {{ form.deceased_workers(class="form-control", id="deceased_workers") }}
+                    {% for error in form.deceased_workers.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.severely_injured_workers.label(class="form-label") }}
+                    {{ form.severely_injured_workers(class="form-control", id="severely_injured_workers") }}
+                    {% for error in form.severely_injured_workers.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.group_accidents.label(class="form-label") }}
+                    {{ form.group_accidents(class="form-control", id="group_accidents") }}
+                    {% for error in form.group_accidents.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.workers_with_simple_injuries.label(class="form-label") }}
+                    {{ form.workers_with_simple_injuries(class="form-control", id="workers_with_simple_injuries") }}
+                    {% for error in form.workers_with_simple_injuries.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.workers_with_micro_injuries.label(class="form-label") }}
+                    {{ form.workers_with_micro_injuries(class="form-control", id="workers_with_micro_injuries") }}
+                    {% for error in form.workers_with_micro_injuries.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+
+            </section>
+
+            <section>
+                <h2>Общие данные</h2>
+                <div class="mb-3">
+                    {{ form.have_local_regulatory_act.label(class="form-label") }}
+                    {{ form.have_local_regulatory_act(class="form-control", id="have_local_regulatory_act") }}
+                    {% for error in form.have_local_regulatory_act.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.have_commission_of_workers_protection.label(class="form-label") }}
+                    {{ form.have_commission_of_workers_protection(class="form-control", id="have_commission_of_workers_protection") }}
+                    {% for error in form.have_commission_of_workers_protection.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.trusted_persons_for_protection.label(class="form-label") }}
+                    {{ form.trusted_persons_for_protection(class="form-control", id="trusted_persons_for_protection") }}
+                    {% for error in form.trusted_persons_for_protection.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.have_agreement_on_work_protection.label(class="form-label") }}
+                    {{ form.have_agreement_on_work_protection(class="form-control", id="have_agreement_on_work_protection") }}
+                    {% for error in form.have_agreement_on_work_protection.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.have_office_of_work_protection.label(class="form-label") }}
+                    {{ form.have_office_of_work_protection(class="form-control", id="have_office_of_work_protection") }}
+                    {% for error in form.have_office_of_work_protection.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.have_room_for_medical_care.label(class="form-label") }}
+                    {{ form.have_room_for_medical_care(class="form-control", id="have_room_for_medical_care") }}
+                    {% for error in form.have_room_for_medical_care.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.have_improve_working_conditions_plan.label(class="form-label") }}
+                    {{ form.have_improve_working_conditions_plan(class="form-control", id="have_improve_working_conditions_plan") }}
+                    {% for error in form.have_improve_working_conditions_plan.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.the_amount_of_financing.label(class="form-label") }}
+                    {{ form.the_amount_of_financing(class="form-control", id="the_amount_of_financing") }}
+                    {% for error in form.the_amount_of_financing.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.have_employees_health_save_plan.label(class="form-label") }}
+                    {{ form.have_employees_health_save_plan(class="form-control", id="have_employees_health_save_plan") }}
+                    {% for error in form.have_employees_health_save_plan.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+            </section>
+
+            <section>
+                <h2>Обучение по охране труда</h2>
+                <div class="mb-3">
+                    {{ form.workers_to_train_count.label(class="form-label") }}
+                    {{ form.workers_to_train_count(class="form-control", id="workers_to_train_count") }}
+                    {% for error in form.workers_to_train_count.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.trained_workers.label(class="form-label") }}
+                    {{ form.trained_workers(class="form-control", id="trained_workers") }}
+                    {% for error in form.trained_workers.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.is_timely_training.label(class="form-label") }}
+                    {{ form.is_timely_training(class="form-control", id="trained_workers") }}
+                    {% for error in form.trained_workers.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+            </section>
+
+            <section>
+                <h2>Среднесписочная численность работников на дату проведения мониторинга</h2>
+                <div class="mb-3">
+                    {{ form.have_union_organization.label(class="form-label") }}
+                    {{ form.have_union_organization(class="form-control", id="have_union_organization") }}
+                    {% for error in form.have_union_organization.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.have_collective_agreement.label(class="form-label") }}
+                    {{ form.have_collective_agreement(class="form-control", id="have_collective_agreement") }}
+                    {% for error in form.have_collective_agreement.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.notificational_registration_number.label(class="form-label") }}
+                    {{ form.notificational_registration_number(class="form-control", id="notificational_registration_number") }}
+                    {% for error in form.notificational_registration_number.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.notificational_registration_number_with_changes.label(class="form-label") }}
+                    {{ form.notificational_registration_number_with_changes(class="form-control", id="notificational_registration_number_with_changes") }}
+                    {% for error in form.notificational_registration_number_with_changes.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+            </section>
+
+            <div id="agree" class="text-center m-2">
+                <label for="agree_checkbox">Даю свое согласие на участие, ознакомление с порядком
+                    проведения мониторинга по охране труда, которая гарантирует достоверность
+                    представленных сведений.</label>
+                <input id="agree_checkbox" type="checkbox" name="agree">
+            </div>
+
+
+            <div class="text-center">
+                <span class="btn btn-primary button" id="prev">&larr; Назад</span>
+                <span class="btn btn-primary button" id="next">Далее &rarr;</span>
+                {{ form.submit }}
+            </div>
+        </form>
+    </div>
+</div>
+
+
+{% endblock %}

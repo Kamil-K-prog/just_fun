@@ -23,5 +23,5 @@ def send_mail(user: str, mail_to: str, subject: str, text: str) -> None:
     try:
         with smtplib.SMTP(AppConfig.EMAIL_HOST) as smtp_server:
             smtp_server.sendmail(AppConfig.EMAIL_FROM, [mail_to], body)
-    except smtplib.SMTPException as smtp_exc:
+    except (smtplib.SMTPException, OSError) as smtp_exc:
         log_smtp_exception(smtp_exc)

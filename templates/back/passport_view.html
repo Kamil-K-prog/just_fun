@@ -8,29 +8,111 @@
 
     <div class="col">
         <ul>
+            <br><li><center><strong>СЕКЦИЯ "Общие сведения"</strong></center></li><br>
+            <li><strong>Уникальный номер организации: </strong>{{ passport.id }}</li>
+            {% if passport.date_of_application_submission %}
+            <li><strong>Дата создания паспорта: </strong> {{ passport.date_of_application_submission }}</li>
+            {% endif %}
+            {% if passport.date_of_application_editing %}
+            <li><strong>Дата последнего редактирования паспорта: </strong> {{ passport.date_of_application_editing }}</li>
+            {% endif %}
             <li><strong>Наименование ОПФ юрлица: </strong>{{ passport.name_of_the_legal_entity }}</li>
             <li><strong>Полное наименование организации (для ИП -ФИО): </strong>{{ passport.organization_full_name }}</li>
             <li><strong>Краткое наименование организации: </strong>{{ passport.organization_short_name }}</li>
+            <li><strong>Примерное местоположение: </strong>{{ passport.location }}</li>
             <li><strong>Адрес юридический: </strong>{{ passport.legal_address }}</li>
             <li><strong>Адрес фактический: </strong>{{ passport.fact_address }}</li>
-            <li><strong>ФИО и должность руководителя: </strong>{{ passport.boss_full_name_n_position }}</li>
+            <li><strong>Фамилия руководителя: </strong>{{ passport.boss_surname }}</li>
+            <li><strong>Имя руководителя: </strong>{{ passport.boss_name }}</li>
+            <li><strong>Отчество руководителя: </strong>{{ passport.boss_patronymic }}</li>
+            <li><strong>Должность руководителя: </strong>{{ passport.boss_position }}</li>
             <li><strong>ИНН: </strong>{{ passport.INN }}</li>
             <li><strong>ОКТМО: </strong>{{ passport.OKTMO }}</li>
             <li><strong>Основной вид деятельности по ОКВЭД: </strong>{{ passport.main_activity_OKVED }}</li>
             <li><strong>Численность работников: </strong>{{ passport.male_workers_count + passport.female_workers_count }}</li>
-            <li><strong>Численность мужчин</strong>{{ passport.male_workers_count }}</li>
+            <li><strong>Численность мужчин: </strong>{{ passport.male_workers_count }}</li>
             <li><strong>Численность женщин: </strong>{{ passport.female_workers_count }}</li>
             <li><strong>Телефон: </strong>{{ passport.phone_number }}</li>
             <li><strong>E-mail официальный: </strong>{{ passport.email_oficcial }}</li>
-            <li><strong>ФИО и должность специалиста по охране труда: </strong>{{ passport.workers_protector_FIO_n_position }}</li>
+            <li><strong>Фамилия специалиста по охране труда: </strong>{{ passport.workers_protector_surname }}</li>
+            <li><strong>Имя специалиста по охране труда: </strong>{{ passport.workers_protector_name }}</li>
+            <li><strong>Отчество специалиста по охране труда: </strong>{{ passport.workers_protector_patronymic }}</li>
+            <li><strong>Должность специалиста по охране труда: </strong>{{ passport.workers_protector_position }}</li>
             <li><strong>Телефон специалиста по охране труда: </strong>{{ passport.workers_protector_phone_number }}</li>
             <li><strong>E-mail специалиста по охране труда: </strong>{{ passport.workers_protector_email }}</li>
-            {% if passport.golden_mark %}
+            {% if passport.golden_badge_verdict %}
             <li><strong>«Золотой знак»: </strong>Присвоен</li>
             {% else %}
             <li><strong>«Золотой знак»: </strong>Не присвоен</li>
             {% endif %}
-            <li><strong>Уникальный номер организации: </strong>{{ passport.id }}</li>
+            {% if passport.golden_badge_application_date %}
+            <li><strong>Дата подачи заявки на статус "Золотой знак": </strong> {{ passport.golden_badge_application_date }}</li>
+            {% endif %}
+            {% if passport.golden_badge_verification_date %}
+            <li><strong>Дата подтверждения статуса "Золотой знак": </strong> {{ passport.golden_badge_verification_date }}</li>
+            {% endif %}
+            <br><li><center><strong>СЕКЦИЯ "Специальная оценка условий труда (СОУТ)"</strong></center></li><br>
+            <li><strong>Пройдена ли специальная оценка СОУТ: </strong> {{ passport.sout_check }}</li>
+            {% if passport.sout_report_date %}
+            <li><strong>Дата внесения отчета СОУТ: </strong> {{ passport.sout_report_date }}</li>
+            {% endif %}
+            {% if passport.sout_report_number %}
+            <li><strong>Номер отчета во ФГИС СОУТ: </strong> {{ passport.sout_report_number }}</li>
+            {% endif %}
+            <li><strong>Всего рабочих мест в организации: </strong> {{ passport.jobs_all_count }}</li>
+            <li><strong>Количество рабочих мест, на которых проведена СОУТ: </strong> {{ passport.jobs_with_sout }}</li>
+            <li><strong>Процент рабочих мест, охваченных СОУТ: </strong> {{ passport.jobs_with_sout_percent }}</li>
+            <li><strong>Количество рабочих мест с условиями труда: </strong> {{ passport.jobs_with_work_conditions }}</li>
+            <li><strong>Кол-во человек, занятых на рабочих мест с условиями труда: </strong> {{ passport.jobs_with_work_conditions_and_workers }}</li>
+            <li><strong>Количество работников, имеющих класс опасности 1: </strong> {{ passport.sout_danger_class1 }}</li>
+            <li><strong>Количество работников, имеющих класс опасности 2: </strong> {{ passport.sout_danger_class2 }}</li>
+            <li><strong>Количество работников, имеющих класс опасности 3.1: </strong> {{ passport.sout_danger_class31 }}</li>
+            <li><strong>Количество работников, имеющих класс опасности 3.2: </strong> {{ passport.sout_danger_class32 }}</li>
+            <li><strong>Количество работников, имеющих класс опасности 3.3: </strong> {{ passport.sout_danger_class33 }}</li>
+            <li><strong>Количество работников, имеющих класс опасности 3.4: </strong> {{ passport.sout_danger_class34 }}</li>
+            <li><strong>Количество работников, имеющих класс опасности 4: </strong> {{ passport.sout_danger_class4 }}</li>
+            <li><strong>Процент работников, занятых на работах с опасными условиями труда: </strong> {{ passport.workers_with_dangerous_work_percent }}</li>
+            <br><li><center><strong>СЕКЦИЯ "Управление профессиональными рисками"</strong></center></li><br>
+            <li><strong>Проведена оценка профрисков в области охраны труда: </strong> {{ passport.profrisks_check }}</li>
+            {% if passport.last_profrisks_check_date %}
+            <li><strong>Дата проведения последней оценки профрисков: </strong> {{ passport.last_profrisks_check_date }}</li>
+            {% endif %}
+            <br><li><center><strong>СЕКЦИЯ "Условия труда"</strong></center></li><br>
+            <li><strong>Численность работников, получающих бесплатно CИЗ: </strong> {{ passport.workers_with_free_ppe }}</li>
+            <li><strong>Средний процент обеспеченности СИЗ: </strong> {{ passport.average_percent_with_ppe }}</li>
+            <li><strong>Численность работников, получающих бесплатно смывающие средства: </strong> {{ passport.workers_with_free_soap }}</li>
+            <li><strong>Средний процент обеспеченности смывающими средствами: </strong> {{ passport.average_percent_with_soap }}</li>
+            <li><strong>Численность работников, получающих бесплатно медосмотр: </strong> {{ passport.workers_with_free_medicine }}</li>
+            <li><strong>Средний процент работников, прошедших медосмотр: </strong> {{ passport.average_percent_with_medicine }}</li>
+            <br><li><center><strong>СЕКЦИЯ "Производственный травматизм"</strong></center></li><br>
+            <li><strong>Кол-во погибших работников: </strong> {{ passport.deceased_workers }}</li>
+            <li><strong>Кол-во тяжело травмированных работников: </strong> {{ passport.severely_injured_workers }}</li>
+            <li><strong>Кол-во групповых несчастных случаев: </strong> {{ passport.group_accidents }}</li>
+            <li><strong>Кол-во работников с лёгкими травмами: </strong> {{ passport.workers_with_simple_injuries }}</li>
+            <li><strong>Кол-во работников с микротравмами: </strong> {{ passport.workers_with_micro_injuries }}</li>
+            <br><li><center><strong>СЕКЦИЯ "Общие данные"</strong></center></li><br>
+            <li><strong>Наличие локального нормативного акта, регламентирующего систему управления охраной труда: </strong> {% if passport.have_local_regulatory_act %} Есть {% else %} Нет {% endif %}</li>
+            <li><strong>Наличие комитета по охране труда: </strong> {% if passport.have_commission_of_workers_protection %} Есть {% else %} Нет {% endif %}</li>
+            <li><strong>Количество уполномоченных лиц по охране труда: </strong> {{ passport.trusted_persons_for_protection }}</li>
+            <li><strong>Наличие соглашения по охране труда в организации: </strong> {% if passport.have_agreement_on_work_protection %} Есть {% else %} Нет {% endif %}</li>
+            <li><strong>Наличие кабинета (уголка) охраны труда: </strong> {% if passport.have_office_of_work_protection %} Есть {% else %} Нет {% endif %}</li>
+            <li><strong>Наличие помещения для оказания медицинской помощи: </strong> {% if passport.have_room_for_medical_care %} Есть {% else %} Нет {% endif %}</li>
+            <li><strong>Наличие плана мероприятий по улучшению и оздоровлению условий труда: </strong> {% if passport.have_improve_working_conditions_plan %} Есть {% else %} Нет {% endif %}</li>
+            <li><strong>Объем финансирования этого плана (тыс. рублей): </strong> {{ passport.the_amount_of_financing }}</li>
+            <li><strong>Наличие корпоративной программы сохранения здоровья работников: </strong> {% if passport.have_employees_health_save_plan %} Есть {% else %} Нет {% endif %}</li>
+            <br><li><center><strong>СЕКЦИЯ "Обучение по охране труда"</strong></center></li><br>
+            <li><strong>Количество работников, которые должны проходить обучение по охране труда и проверку знаний требований охраны труда в аккредитованных образовательных организациях: </strong> {{ passport.workers_to_train_count }}</li>
+            <li><strong>Процент фактически прошедших такое обучение: </strong> {{ passport.trained_workers }}</li>
+            <li><strong>Своевременное проведение инструктажей по охране труда: </strong> {% if passport.is_timely_training %} Есть {% else %} Нет {% endif %}</li>
+            <br><li><center><strong>СЕКЦИЯ "Коллективный договор"</strong></center></li><br>
+            <li><strong>Наличие профсоюзной организации: </strong> {% if passport.have_union_organization %} Есть {% else %} Нет {% endif %}</li>
+            <li><strong>Наличие коллективного договора: </strong> {% if passport.have_collective_agreement %} Есть {% else %} Нет {% endif %}</li>
+            {% if passport.notificational_registration_number %}
+            <li><strong>Номер уведомительной регистрации коллективного договора: </strong> {{ passport.notificational_registration_number }}</li>
+            {% endif %}
+            {% if passport.notificational_registration_number_with_changes %}
+            <li><strong>Номер уведомительной регистрации при наличии изменений в колдоговоре: </strong> {{ passport.notificational_registration_number_with_changes }}</li>
+            {% endif %}
         </ul>
     </div>
 </div>

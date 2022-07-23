@@ -1,55 +1,62 @@
-from flask import Blueprint, session, jsonify, render_template, redirect
+from flask import Blueprint, Response, redirect, abort
+from flask_login import login_required
+
+from ...db import db_sessionmaker
+from ...db.__all_models import User, Passport
+from ...db.db_utils import get_current_yekt_datetime
+from .middleware import is_admin
 from .mail_sender import send_mail
-from ...routes.flask_wtf_forms import PassportForm
-from .middleware import is_admin, is_user
-from flask_login import (
-    LoginManager,
-    login_user,
-    logout_user,
-    login_required,
-    current_user,
-)
-from data.db import db_sessionmaker
-from ...db.__all_models import User, Passport, PassportStatus, GoldenMarkApplication
+
 
 blueprint = Blueprint('golden_mark', __name__, template_folder='templates')
-login_manager = LoginManager()
 
 
-@blueprint.route('/admin_gold_confirm/<pass_id>', methods=['GET', 'POST'])  # подтверждение выдачи золотого знака
+@blueprint.route('/admin_gold_confirm/<int:pass_id>/', methods=['GET', 'POST'])
 @login_required
 @is_admin
-def Admin_GoldConfirm_Form(pass_id):
-    db_sess = db_sessionmaker.create_session()
-    pass_obj = db_sess.query(Passport).filter_by(id=pass_id).first()
-    gd_app = db_sess.query(GoldenMarkApplication).filter_by(
-        passport_id=pass_id).first()
-    pass_obj.golden_mark = True
-    pass_obj.golden
-    gd_app.application_verdict = True
-    user = db_sess.query(User).filter_by(id=pass_obj.user_id).first()
-    db_sess.add(pass_obj)
-    db_sess.add(gd_app)
-    db_sess.commit()
-    send_mail(user.login, user.email, 'You have been given a golden badge',
-          'Congratulations to your organization')
+def admin_golden_badge_confirm(pass_id: int) -> Response:
+    """Подтверждение выдачи золотого знака"""
+
+    with db_sessionmaker.create_session() as db_sess:
+        pass_obj: Passport = db_sess.query(Passport).get(pass_id)
+
+        if pass_obj is None:
+            abort(404, description='Паспорт с таким id не найден')
+
+        pass_obj.golden_badge_verdict = True
+        pass_obj.golden_badge_verification_date = get_current_yekt_datetime()
+
+        db_sess.commit()
+
+        passport_owner: User = pass_obj.user
+        send_mail(
+            passport_owner.login, passport_owner.email,
+            'You have been given a golden badge',
+            'Congratulations to your organization')
+
     return redirect('/admin_bids')
 
 
-@blueprint.route('/admin_gold_decline/<pass_id>', methods=['GET', 'POST'])  # отказ в выдаче золотого знака
+@blueprint.route('/admin_gold_decline/<int:pass_id>/', methods=['GET', 'POST'])
 @login_required
 @is_admin
-def Admin_GoldDecline_Form(pass_id):
-    db_sess = db_sessionmaker.create_session()
-    pass_obj = db_sess.query(Passport).filter_by(id=pass_id).first()
-    gd_app = db_sess.query(GoldenMarkApplication).filter_by(
-        passport_id=pass_id).first()
-    pass_obj.golden_mark = False
-    gd_app.application_verdict = False
-    user = db_sess.query(User).filter_by(id=pass_obj.user_id).first()
-    db_sess.add(pass_obj)
-    db_sess.add(gd_app)
-    db_sess.commit()
-    send_mail(user.login, user.email, 'Gold badge application rejected',
-          'Contact the administrator for clarification')
+def admin_golden_badge_decline(pass_id: int) -> Response:
+    """Отказ в выдаче золотого знака"""
+    with db_sessionmaker.create_session() as db_sess:
+        pass_obj: Passport = db_sess.query(Passport).get(pass_id)
+
+        if pass_obj is None:
+            abort(404, description='Паспорт с таким id не найден')
+
+        pass_obj.golden_badge_verdict = False
+        pass_obj.golden_badge_verification_date = None
+
+        db_sess.commit()
+
+        passport_owner: User = pass_obj.user
+        send_mail(
+            passport_owner.login, passport_owner.email,
+            'Gold badge application rejected',
+            'Contact the administrator for clarification')
+
     return redirect('/admin_bids')

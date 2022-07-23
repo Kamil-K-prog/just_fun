@@ -5,6 +5,9 @@
 <div class="row">
     <div class="col">
         <h2>Файлы для скачивания</h2>
+        {% if sent_msg %}
+        <h3><strong>{{ sent_msg }}</strong></h3>
+        {% endif %}
         <table id="pasportsTable" class="display">
             <thead>
                 <tr>
@@ -12,9 +15,9 @@
                 </tr>
             </thead>
             <tbody>
-                {% for i in videos %}
+                {% for v in videos %}
                 <tr>
-                    <td><a href="{{ i.link }}">{{ i.link }}</a></td>
+                    <td><a href="{{ v.link }}">{{ v.link }}</a></td>
                 </tr>
                 {% endfor %}
 
@@ -24,13 +27,13 @@
         <table id="pasportsTable" class="display">
             <thead>
                 <tr>
-                    <th>Фотографии</th>
+                    <th>Файлы</th>
                 </tr>
             </thead>
             <tbody>
-                {% for i in photos %}
+                {% for f in files %}
                 <tr>
-                    <td><img src="/upload/{{ i.filename }}" alt="{{ i.filename }}" class="image_list"></td>
+                    <td><img src="/upload/{{ f.filename }}" alt="{{ f.filename }}" class="image_list"></td>
                 </tr>
                 {% endfor %}
 

@@ -1,18 +1,23 @@
-from .models.role_table import Role
-from .models.user_table import User
-from .models.answer_table import Answer
-from .models.collective_agreement_table import CollectiveAgreement
-from .models.field_table import Field
-from .models.general_data_table import GeneralData
-from .models.golden_mark_application_table import GoldenMarkApplication
-from .models.injuries_table import Injuries
-from .models.passport_status import PassportStatus
-from .models.passport_table import Passport
-from .models.photo_table import Photo
-from .models.process_table import Process
-from .models.profrisk_table import Profrisk
-from .models.quiz_table import Quiz
-from .models.safety_training_table import SafetyTraining
-from .models.video_table import Video
-from .models.work_condition_table import WorkCondition
-from .models.sout_table import Sout
+# Модели, представляющие собой систему паспортов
+from .models.passport_models.eval_mark_profrisks import EvalMarkProfrisks
+from .models.passport_models.eval_mark_sout import EvalMarkSout
+from .models.passport_models.passport import Passport
+from .models.passport_models.passport_status import PassportStatus
+from .models.passport_models.location import Location
+from .models.passport_models.file import File
+from .models.passport_models.video import Video
+# Модели, отвечающие за работу универсальной формы опросника
+# для сбора информации об охране труда в организациях
+from .models.survey_models.answer import Answer
+from .models.survey_models.field_type import FieldType
+from .models.survey_models.field import Field
+from .models.survey_models.possible_answer import PossibleAnswer
+from .models.survey_models.process import Process
+from .models.survey_models.quiz import Quiz
+# Модели для работы системы аккаунтов
+from .models.user_models.user import User
+from .models.user_models.role import Role
+# Модели, отвечающие за системные операции,
+# использующие данные и "поведение" остальных сущностей
+from .models.system_models.user_log import UserLog
+from .models.system_models.passport_log import PassportLog

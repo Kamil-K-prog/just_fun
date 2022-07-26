@@ -295,7 +295,7 @@ def passport_change(pass_id: int) -> Response:
             getattr(form, pass_colname).data = getattr(passport, pass_colname)
 
     return render_template(
-        'back/passport_create_or_edit.html', form=form, user=user)
+        'back/passport_create_or_edit.html', form=form, user=user, is_editing=True)
 
 
 @blueprint.route(

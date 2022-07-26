@@ -250,7 +250,9 @@ main li:before {
 /* forms */
 form input,
 form textarea,
-form select {
+form select,
+form:not(input[type=checkbox]),
+form:not(input[type=radio]) {
     width: 100%;
     display: block;
     border: solid 1px #dde;
@@ -265,11 +267,11 @@ form select:after {
     clear: both;
 }
 
-form input[type=checkbox],
+/* form input[type=checkbox],
 form input[type=radio] {
     display: inline;
     width: auto;
-}
+} */
 
 form label,
 form legend {
@@ -598,7 +600,8 @@ td {
     transition: transform 0.2s ease-in-out;
 }
 
-.progressbar_form input {
+.progressbar_form input,
+.progressbar_form:not(input[type=checkbox]){
     width: 100%;
     margin: 7px 0px;
     display: inline-block;
@@ -611,9 +614,15 @@ td {
     background: white;
 }
 
+.progressbar_form input[type=checkbox]{
+    margin: 0;
+    width: 2em;
+    height: 2em;
+    display: inline;
+}
+
 #agree_checkbox {
     display: inline;
-    width: 40px;
 }
 
 .progressbar_form p {

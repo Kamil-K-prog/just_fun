@@ -101,14 +101,24 @@ $(document).ready(function () {
 
 //mask phone
 $(function () {
-  //2. Получить элемент, к которому необходимо добавить маску
   $(".phone").mask("+7 (999) 999-9999");
 });
 
 $(function () {
-  //2. Получить элемент, к которому необходимо добавить маску
   $("#protection_specialist_phone").mask("+7 (999) 999-9999");
 });
+
+$(function () {
+  $(".INN").mask("9999999999");
+});
+
+
+$(function () {
+  $(".OKTMO").mask("99999999999");
+});
+
+
+
 
 // if ($('#agree_checkbox').attr('checked')) {
 //   $("#submit").show();

@@ -79,9 +79,9 @@
                 <div class="mb-3">
                     {{ form.phone_number.label(class="form-label") }}
                     {% if is_editing %}
-                    {{ form.phone_number(class="form-control", id="phone") }}
+                    {{ form.phone_number(class="form-control phone") }}
                     {% else %}
-                    {{ form.phone_number(class="form-control", id="phone", value="+7") }}
+                    {{ form.phone_number(class="form-control phone", value="+7") }}
                     {% endif %}
                     {% for error in form.phone_number.errors %}
                     {{ error }}
@@ -98,14 +98,12 @@
 
 
                 {{ form.location.label(class="form-label") }}
-                {{ form.location(class="form-select") }}
+                {{ form.location(class="form-select locality") }}
                 {% for error in form.location.errors %}
                 {{ error }}
                 {% endfor %}
                 <script>
-                    $('#locality').select2();
-
-
+                    $('.locality').select2();
                 </script>
             </section>
 
@@ -135,7 +133,7 @@
 
                 <div class="mb-3">
                     {{ form.INN.label(class="form-label") }}
-                    {{ form.INN(class="form-control", id="IIN") }}
+                    {{ form.INN(class="form-control INN", id="INN") }}
                     {% for error in form.INN.errors %}
                     {{ error }}
                     {% endfor %}
@@ -143,7 +141,7 @@
 
                 <div class="mb-3">
                     {{ form.OKTMO.label(class="form-label") }}
-                    {{ form.OKTMO() }}
+                    {{ form.OKTMO(class="form-control  OKTMO") }}
                     {% for error in form.OKTMO.errors %}
                     {{ error }}
                     {% endfor %}
@@ -491,7 +489,7 @@
                 <h2>Общие данные</h2>
                 <div class="mb-3">
                     {{ form.have_local_regulatory_act.label(class="form-label") }}
-                    {{ form.have_local_regulatory_act(class="form-control", id="have_local_regulatory_act") }}
+                    {{ form.have_local_regulatory_act(id="have_local_regulatory_act") }}
                     {% for error in form.have_local_regulatory_act.errors %}
                     {{ error }}
                     {% endfor %}
@@ -499,7 +497,7 @@
 
                 <div class="mb-3">
                     {{ form.have_commission_of_workers_protection.label(class="form-label") }}
-                    {{ form.have_commission_of_workers_protection(class="form-control", id="have_commission_of_workers_protection") }}
+                    {{ form.have_commission_of_workers_protection(id="have_commission_of_workers_protection") }}
                     {% for error in form.have_commission_of_workers_protection.errors %}
                     {{ error }}
                     {% endfor %}
@@ -515,7 +513,7 @@
 
                 <div class="mb-3">
                     {{ form.have_agreement_on_work_protection.label(class="form-label") }}
-                    {{ form.have_agreement_on_work_protection(class="form-control", id="have_agreement_on_work_protection") }}
+                    {{ form.have_agreement_on_work_protection(id="have_agreement_on_work_protection") }}
                     {% for error in form.have_agreement_on_work_protection.errors %}
                     {{ error }}
                     {% endfor %}
@@ -523,7 +521,7 @@
 
                 <div class="mb-3">
                     {{ form.have_office_of_work_protection.label(class="form-label") }}
-                    {{ form.have_office_of_work_protection(class="form-control", id="have_office_of_work_protection") }}
+                    {{ form.have_office_of_work_protection( id="have_office_of_work_protection") }}
                     {% for error in form.have_office_of_work_protection.errors %}
                     {{ error }}
                     {% endfor %}
@@ -531,7 +529,7 @@
 
                 <div class="mb-3">
                     {{ form.have_room_for_medical_care.label(class="form-label") }}
-                    {{ form.have_room_for_medical_care(class="form-control", id="have_room_for_medical_care") }}
+                    {{ form.have_room_for_medical_care(id="have_room_for_medical_care") }}
                     {% for error in form.have_room_for_medical_care.errors %}
                     {{ error }}
                     {% endfor %}
@@ -539,7 +537,7 @@
 
                 <div class="mb-3">
                     {{ form.have_improve_working_conditions_plan.label(class="form-label") }}
-                    {{ form.have_improve_working_conditions_plan(class="form-control", id="have_improve_working_conditions_plan") }}
+                    {{ form.have_improve_working_conditions_plan(id="have_improve_working_conditions_plan") }}
                     {% for error in form.have_improve_working_conditions_plan.errors %}
                     {{ error }}
                     {% endfor %}
@@ -555,7 +553,7 @@
 
                 <div class="mb-3">
                     {{ form.have_employees_health_save_plan.label(class="form-label") }}
-                    {{ form.have_employees_health_save_plan(class="form-control", id="have_employees_health_save_plan") }}
+                    {{ form.have_employees_health_save_plan(id="have_employees_health_save_plan") }}
                     {% for error in form.have_employees_health_save_plan.errors %}
                     {{ error }}
                     {% endfor %}
@@ -582,7 +580,7 @@
 
                 <div class="mb-3">
                     {{ form.is_timely_training.label(class="form-label") }}
-                    {{ form.is_timely_training(class="form-control", id="trained_workers") }}
+                    {{ form.is_timely_training(id="trained_workers") }}
                     {% for error in form.trained_workers.errors %}
                     {{ error }}
                     {% endfor %}
@@ -593,18 +591,18 @@
                 <h2>Среднесписочная численность работников на дату проведения мониторинга</h2>
                 <div class="mb-3">
                     {{ form.have_union_organization.label(class="form-label") }}
-                    {{ form.have_union_organization(class="form-control", id="have_union_organization") }}
+                    {{ form.have_union_organization(id="have_union_organization") }}
                     {% for error in form.have_union_organization.errors %}
                     {{ error }}
                     {% endfor %}
                 </div>
 
                 <div class="mb-3">
-                    {{ form.have_collective_agreement.label(class="form-label") }}
-                    {{ form.have_collective_agreement(class="form-control", id="have_collective_agreement") }}
-                    {% for error in form.have_collective_agreement.errors %}
-                    {{ error }}
-                    {% endfor %}
+                        {{ form.have_collective_agreement.label(class="form-label") }}
+                        {{ form.have_collective_agreement(id="have_collective_agreement") }}
+                        {% for error in form.have_collective_agreement.errors %}
+                        {{ error }}
+                        {% endfor %}
                 </div>
 
                 <div class="mb-3">
@@ -635,7 +633,9 @@
             <div class="text-center">
                 <span class="btn btn-primary button" id="prev">&larr; Назад</span>
                 <span class="btn btn-primary button" id="next">Далее &rarr;</span>
-                {{ form.submit }}
+                <!-- {{ form.submit }}
+                <input id="submit" name="submit" type="submit" value="Отправить" class="" style="display: inline-block;"> -->
+                <button type="submit" id="submit" name="submit" class="btn btn-primary">Отправить</button>
             </div>
         </form>
     </div>

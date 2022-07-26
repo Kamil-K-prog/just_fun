@@ -64,7 +64,9 @@ def golden_badge() -> Response:
         user=user,
         title='Золотой знак',
         form=form,
-        passports=user.passports)
+        passports=(
+            pass_obj for pass_obj in user.passports
+            if pass_obj.golden_badge_application_date is not None))
 
 
 @blueprint.route(

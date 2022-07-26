@@ -9,6 +9,7 @@ class AppConfig:
     # ORM_MODEL_RELATIONSHIP_LAZY_PARAM = 'select' # lazy-load
     ORM_MODEL_RELATIONSHIP_LAZY_PARAM = 'joined'  # eager-load
 
+    IS_SENDING_EMAILS = False  # флаг, показювающий отправлять ли письма
     EMAIL_HOST = 'www.uc.osu.ru'  # адрес почтового сервера
     # адрес почтового ящика, с которого приложение будет рассылать письма
     EMAIL_FROM = 'just_fun@gmail.com'

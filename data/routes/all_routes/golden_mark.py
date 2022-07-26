@@ -2,7 +2,7 @@ from flask import Blueprint, Response, redirect, abort
 from flask_login import login_required
 
 from ...db import db_sessionmaker
-from ...db.__all_models import User, Passport
+from ...db.__all_models import User, Passport, PassportStatus
 from ...db.db_utils import get_current_yekt_datetime
 from .middleware import is_admin
 from .mail_sender import send_mail
@@ -25,6 +25,10 @@ def admin_golden_badge_confirm(pass_id: int) -> Response:
 
         pass_obj.golden_badge_verdict = True
         pass_obj.golden_badge_verification_date = get_current_yekt_datetime()
+
+        # если сам паспорт ещё не подтверждён, подтверждаем
+        pass_obj.passport_status_id = db_sess.query(PassportStatus).filter_by(
+            name='Принят').first().id
 
         db_sess.commit()
 
@@ -50,6 +54,7 @@ def admin_golden_badge_decline(pass_id: int) -> Response:
 
         pass_obj.golden_badge_verdict = False
         pass_obj.golden_badge_verification_date = None
+        pass_obj.golden_badge_application_date = None
 
         db_sess.commit()
 

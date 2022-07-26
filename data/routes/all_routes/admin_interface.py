@@ -3,7 +3,7 @@ from flask import Blueprint, Response, render_template, redirect, abort, \
 from flask_login import login_required, current_user
 
 from ...db import db_sessionmaker
-from ...db.__all_models import User, Quiz, Field, Passport
+from ...db.__all_models import User, Quiz, Field, Passport, FieldType
 from ..flask_wtf_forms import AdminAddForm
 from .middleware import is_admin
 
@@ -18,16 +18,17 @@ def passports() -> Response:
     """Главная страница администратора. Управление паспортами"""
     user: User = current_user
 
-    user_passports = user.passports
+    with db_sessionmaker.create_session() as db_sess:
+        all_passports = db_sess.query(Passport).all()
 
-    passports_list = [None] * len(user_passports)
-    for index, pass_obj in enumerate(user_passports):
-        passports_list[index] = {
-            'id': pass_obj.id,
-            'organization_short_name': pass_obj.organization_short_name,
-            'date': pass_obj.date_of_application_editing,
-            'golden_mark': pass_obj.golden_badge_verdict,
-            'status': pass_obj.status.name}
+        passports_list = [None] * len(all_passports)
+        for index, pass_obj in enumerate(all_passports):
+            passports_list[index] = {
+                'id': pass_obj.id,
+                'organization_short_name': pass_obj.organization_short_name,
+                'date': pass_obj.date_of_application_editing,
+                'golden_mark': pass_obj.golden_badge_verdict,
+                'status': pass_obj.status.name}
 
     return render_template(
         'back/admin.html',
@@ -47,17 +48,20 @@ def admin_bids() -> Response:
 
         passports_list = [None] * len(all_passports)
         for index, pass_obj in enumerate(all_passports):
-            passports_list[index] = {
-                'id': pass_obj.id,
-                'organization_short_name': pass_obj.organization_short_name,
-                'date': pass_obj.golden_badge_application_date,
-                'status': pass_obj.golden_badge_verdict}
+            # только если подавали заявку
+            if pass_obj.golden_badge_application_date is not None:
+                passports_list[index] = {
+                    'id': pass_obj.id,
+                    'organization_short_name':
+                    pass_obj.organization_short_name,
+                    'date': pass_obj.golden_badge_application_date,
+                    'status': pass_obj.golden_badge_verdict}
 
     return render_template(
         'back/admin_bids.html',
         user=user,
         title='Сбор информации',
-        apples=passports_list)
+        apples=(appl for appl in passports_list if appl is not None))
 
 
 @blueprint.route('/admin_forms/', methods=['GET', 'POST'])
@@ -127,17 +131,28 @@ def admin_edit_quiz(quiz_id: int) -> Response:
         fields = quiz.fields
 
         if form.validate_on_submit():
-            field_type = request.form.get("type_field")
-            f = Field(title=form.name.data, type=field_type, quiz_id=quiz_id)
-            db_sess.add(f)
-            db_sess.commit()
+            field_type_id: str = request.form.get("type_field_id")
+
+            if db_sess.query(FieldType).get(field_type_id) is not None:
+                db_sess.add(
+                    Field(
+                        title=form.name.data,
+                        field_type_id=field_type_id,
+                        quiz_id=quiz_id))
+                db_sess.commit()
+
             return redirect(f'/admin_edit_form/{quiz_id}/')
+
+        field_types_list = [
+            (fldtype.id, fldtype.name)
+            for fldtype in db_sess.query(FieldType).all()]
 
     return render_template(
         'back/admin_edit_form.html',
         user=user,
         title='Страница редактирования',
         fields=fields,
+        field_types=field_types_list,
         qz_id=quiz_id,
         form=form)
 

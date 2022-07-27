@@ -1,0 +1,18 @@
+{% extends "back/base.html" %}
+
+{% block content %}
+
+<div class="row">
+
+    <h2>Ошибка {{ error_code }}</h2>
+    <h2>{{ error_name }}</h2>
+    
+    <div class="col">
+        <h4>{{ error_description }}</h4>
+    </div>
+
+
+</div>
+
+{% endblock %}
+

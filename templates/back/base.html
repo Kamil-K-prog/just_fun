@@ -26,16 +26,19 @@
 <body>
     <header role="banner">
         <h1><img src="/static/back/img/monitor_back.png" alt="">
-            Личный кабинет
-            {% if user.role_id == 1 %}
-            пользователя
-            {% else %}
-            администратора
+            {% if user and user.role_id == 1 %}
+            Личный кабинет пользователя
+            {% elif user and user.role_id == 2  %}
+            Личный кабинет администратора
+            {% elif not user %}
+            <a href="/">Перейти на главную страницу</a>
             {% endif %}
         </h1>
         <ul class="utilities">
+            {% if user %}
             <li class="users">{{ user.login }}</li>
             <li class="logout warn"><a  href="/logout">logout</a></li>
+            {% endif %}
         </ul>
     </header>
 
@@ -43,11 +46,11 @@
         <div class="col">
             <nav role="navigation">
                 <ul class="main">
-                    {% if user.role_id == 1 %}
+                    {% if user and user.role_id == 1 %}
                     <li class="dashboard"><a href="/account">Организации</a></li>
                     <li class="question"><a href="/information_collection">Сбор информации</a></li>
                     <li class="achievement"><a href="/golden_badge">Золотой знак</a></li>
-                    {% else %}
+                    {% elif user and user.role_id == 2  %}
                     <li class="dashboard"><a href="/admin">Паспорта</a></li>
                     <li class="question"><a href="/admin_forms">Сбор информации</a></li>
                     <li class="achievement"><a href="/admin_bids">Золотые знаки</a></li>

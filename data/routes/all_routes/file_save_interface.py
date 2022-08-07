@@ -114,6 +114,7 @@ def passport_upload(pass_id: int) -> Response:
                     'Неправильная ссылка на видео rutube')
 
             filename = secure_filename(file.filename)
+            os.makedirs(AppConfig.UPLOAD_FOLDER, exist_ok=True)
             file.save(os.path.join(AppConfig.UPLOAD_FOLDER, filename))
             db_sess.add(File(passport_id=pass_id, filename=filename))
             db_sess.add(Video(passport_id=pass_id, link=video_url))

@@ -16,6 +16,8 @@ class Passport(SqlAlchemyBase, SerializerMixin):
     __tablename__ = 'passport'
     __table_args__ = AppConfig.DB_TABLE_ARGS
 
+    CAN_BE_PAGINATED = True
+
     serialize_only = (
         'id', 'user_id', 'passport_status_id',
         'date_of_application_submission', 'date_of_application_editing',

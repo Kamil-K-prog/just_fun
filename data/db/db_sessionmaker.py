@@ -6,6 +6,7 @@ import sqlalchemy.orm
 from sqlalchemy.engine import Engine, URL as EngineURL
 
 from .sqlalchemy_base_maker import SqlAlchemyBase
+from .db_query import ActualQuery
 
 
 class DatabaseInitError(Exception):
@@ -143,7 +144,8 @@ class DatabaseGlobalInitializer(object):
         """Перезаписывает класс, реализующий "Фабричный метод". """
         global _factory
 
-        _factory = sqlalchemy.orm.sessionmaker(bind=self._engine)
+        _factory = sqlalchemy.orm.sessionmaker(
+            bind=self._engine, query_cls=ActualQuery)
 
     def _create_all_models(self) -> None:
         ("""Создаёт таблицы по ORM-моделям из модуля __all_models, при """

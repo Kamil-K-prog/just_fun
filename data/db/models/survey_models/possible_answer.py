@@ -4,12 +4,14 @@ from sqlalchemy_serializer import SerializerMixin
 
 from ...sqlalchemy_base_maker import SqlAlchemyBase
 from ...db_utils import versatile_represent, versatile_convert_to_str
+from config import AppConfig
 
 
 class PossibleAnswer(SqlAlchemyBase, SerializerMixin):
     ("""Возможный вариант ответа на определённое поле универсальной """
      """формы опроса""")
     __tablename__ = 'possible_answer'
+    __table_args__ = AppConfig.DB_TABLE_ARGS
 
     serialize_only = ('id', 'possible_answer', 'field_id')
 

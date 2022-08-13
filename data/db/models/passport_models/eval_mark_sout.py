@@ -4,11 +4,13 @@ from sqlalchemy_serializer import SerializerMixin
 
 from ...sqlalchemy_base_maker import SqlAlchemyBase
 from ...db_utils import versatile_represent, versatile_convert_to_str
+from config import AppConfig
 
 
 class EvalMarkSout(SqlAlchemyBase, SerializerMixin):
     """Метка качества и наличия специальной оценки условий труда (СОУТ)"""
     __tablename__ = 'eval_mark_sout'
+    __table_args__ = AppConfig.DB_TABLE_ARGS
 
     serialize_only = ('id', 'title')
 

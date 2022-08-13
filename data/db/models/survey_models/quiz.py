@@ -14,6 +14,7 @@ class Quiz(SqlAlchemyBase, SerializerMixin):
     ("""Сущность универсальной формы опросника """
      """для сбора информации об охране труда в организациях""")
     __tablename__ = 'quiz'
+    __table_args__ = AppConfig.DB_TABLE_ARGS
 
     serialize_only = ('id', 'title')
 

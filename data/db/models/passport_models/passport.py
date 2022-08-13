@@ -14,6 +14,7 @@ LAZY = AppConfig.ORM_MODEL_RELATIONSHIP_LAZY_PARAM
 class Passport(SqlAlchemyBase, SerializerMixin):
     """Сущность паспорта организации в системе мониторинга"""
     __tablename__ = 'passport'
+    __table_args__ = AppConfig.DB_TABLE_ARGS
 
     serialize_only = (
         'id', 'user_id', 'passport_status_id',

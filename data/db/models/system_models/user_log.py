@@ -14,6 +14,7 @@ LAZY = AppConfig.ORM_MODEL_RELATIONSHIP_LAZY_PARAM
 class UserLog(SqlAlchemyBase, SerializerMixin):
     """Сущность события, связанного с пользователем, в журнале приложения"""
     __tablename__ = 'user_log'
+    __table_args__ = AppConfig.DB_TABLE_ARGS
 
     serialize_only = ('id', 'user_id', 'info', 'date')
 

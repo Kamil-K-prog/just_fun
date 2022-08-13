@@ -4,12 +4,14 @@ from sqlalchemy_serializer import SerializerMixin
 
 from ...sqlalchemy_base_maker import SqlAlchemyBase
 from ...db_utils import versatile_represent, versatile_convert_to_str
+from config import AppConfig
 
 
 class File(SqlAlchemyBase, SerializerMixin):
     ("""Модель c информацией о файлах (в файловой системе сервера), """
      """прикрепляемых к паспорту. Прежде всего, для фотографий""")
     __tablename__ = 'file'
+    __table_args__ = AppConfig.DB_TABLE_ARGS
 
     serialize_only = ('id', 'passport_id', 'filename')
 

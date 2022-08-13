@@ -1,9 +1,9 @@
 from typing import Optional
+from sqlite3 import Connection as SqliteConnection
 
 import sqlalchemy
-import sqlalchemy.orm as orm
+import sqlalchemy.orm
 from sqlalchemy.engine import Engine, URL as EngineURL
-
 
 from .sqlalchemy_base_maker import SqlAlchemyBase
 
@@ -16,7 +16,7 @@ class DatabaseInitError(Exception):
 _factory: Optional[type] = None  # Для реализации "Фабричного метода"
 
 
-def create_session() -> orm.Session:
+def create_session() -> sqlalchemy.orm.Session:
     """Возвращает объект ORM-сессии SQLAlchemy"""
     global _factory
 
@@ -79,8 +79,14 @@ class DatabaseGlobalInitializer(object):
         # создаём объект движка SQLAlchemy
         self._create_engine()
 
-        # продолжаем в "приватной" функции принудит. инициализации
-        self._force_global_init()
+        # ставим указанные в конфиге PRAGMA, если СУБД - sqlite
+        self._sqlite_set_pragma_rules()
+
+        # ставим класс-фабрику ORM-сессий
+        self._set_sessionmaker()
+
+        # создаём таблицы в БД по ORM-моделям
+        self._create_all_models()
 
     def _create_engine_url_from_config(self) -> None:
         """Создает URL по конфигурации для начала работы движка SQLAlchemy"""
@@ -92,15 +98,6 @@ class DatabaseGlobalInitializer(object):
             port=self._AppConfigClass.DB_PORT,
             database=self._AppConfigClass.DB_NAME,
             query=self._AppConfigClass.DB_ARGS)
-
-    def _force_global_init(self) -> None:
-        ("""Принудительная глобальная инициализация соедидения с БД, то есть"""
-         """ даже если таковая уже проводилась""")
-
-        # ставим класс-фабрику ORM-сессий
-        self._set_sessionmaker()
-        # создаём таблицы по ORM-моделям, если ещё не созданы
-        self._create_all_models()
 
     def _create_engine(self) -> None:
         """Создаёт движок SQLAlchemy по URL и классу конфигурации приложения"""
@@ -119,19 +116,43 @@ class DatabaseGlobalInitializer(object):
                 'в классе конфигурации приложения'
             ) from sa_exc
 
+    def _sqlite_set_pragma_rules(self) -> None:
+        ("""Ставит обработчики подключений, производящие запросы с """
+         """оператором PRAGMA, если в качестве СУБД используется sqlite""")
+        if not (self._is_sqlite() and self._AppConfigClass.DB_PRAGMA_ARGS):
+            return None
+
+        SQLITE_PRAGMA_QUERIES = tuple(  # только доверенный ввод!
+            f'PRAGMA {pragma_key}={pragma_value}'
+            for pragma_key, pragma_value in (
+                self._AppConfigClass.DB_PRAGMA_ARGS.items()))
+
+        @sqlalchemy.event.listens_for(Engine, 'connect')
+        def engine_connection_handler_set_sqlite_pragma(
+                sqlite_dbapi_connection: SqliteConnection,
+                connection_record: sqlalchemy.pool._ConnectionRecord):
+            """Обработчик подключения к движку, ставящий PRAGMA по конфигу"""
+            cursor = sqlite_dbapi_connection.cursor()
+            try:  # контекстный менеджер здесь не поддерживается :(
+                for sqlite_pragma_query in SQLITE_PRAGMA_QUERIES:
+                    cursor.execute(sqlite_pragma_query)
+            finally:
+                cursor.close()
+
     def _set_sessionmaker(self) -> None:
         """Перезаписывает класс, реализующий "Фабричный метод". """
         global _factory
 
-        _factory = orm.sessionmaker(bind=self._engine)
+        _factory = sqlalchemy.orm.sessionmaker(bind=self._engine)
 
     def _create_all_models(self) -> None:
         ("""Создаёт таблицы по ORM-моделям из модуля __all_models, при """
          """возникновении ошибок делегирует поведение специальной для """
-         """определённого диалекта SQLAlchemy функции""")
+         """определённого диалекта SQLAlchemy функции. Ставит все триггеры""")
 
         # импортирем все ORM-модели, чтобы создать по ним таблицы в БД
-        __import__('data.db.__all_models')
+        # ставим, импортируя, все написанные триггеры
+        from . import _all_models
 
         try:
             SqlAlchemyBase.metadata.create_all(self._engine)
@@ -140,7 +161,7 @@ class DatabaseGlobalInitializer(object):
             # Если опция выполнения фичи включена и если мы используем MySQL
             if self._is_creating_db and self._is_mysql():
                 # и если проблема в том, что БД езё не создана
-                # то можно её создать и попробовать инициализацию снова
+                # то можно её создать и попробовать создать таблицы ещё раз
                 self._mysql_create_db_if_not_exists_and_retry_init(sa_exc)
                 return None
 
@@ -152,14 +173,22 @@ class DatabaseGlobalInitializer(object):
 
     def _is_mysql(self) -> bool:
         """Проверяет является ли MySQL диалектом данного движка SQLAlchemy"""
-        return self._engine.dialect.name == 'mysql'
+        return self._dialect_check('mysql')
+
+    def _is_sqlite(self) -> bool:
+        """Проверяет является ли sqlite диалектом данного движка SQLAlchemy"""
+        return self._dialect_check('sqlite')
+
+    def _dialect_check(self, dialect_name: str) -> bool:
+        """Проверяет проставлен ли данный диалект у нашего движка SQLAlchemy"""
+        return self._engine.dialect.name == dialect_name
 
     def _mysql_create_db_if_not_exists_and_retry_init(
             self, sa_exc: sqlalchemy.exc.SQLAlchemyError):
         ("""Проверяет по исключению - ошибка из-за отсутствия БД или нет. """
          """Если это так, и при этом в классе конфигурации приложения """
          """указано название БД, то создаёт движок для сервера и создаёт """
-         """новую БД после чего ещё раз проделывает инициализацию. """)
+         """новую БД после чего ещё раз создаёт таблицы по ORM-моделям. """)
         if self._mysql_1049_error_fixer_already_worked or \
                 not self._is_creating_db:
             # Эта функция изменяет внешние объекты только единожды,
@@ -197,8 +226,8 @@ class DatabaseGlobalInitializer(object):
         # ставим флаг, что отработали
         self._mysql_1049_error_fixer_already_worked = True
 
-        # теперь можно попробовать сделать ещё попытку продолжить инициализацию
-        self._force_global_init()
+        # теперь можно попробовать сделать ещё попытку создать таблицы
+        self._create_all_models()
 
     def _mysql_is_db_missing(
             self, sa_exc: sqlalchemy.exc.SQLAlchemyError) -> bool:

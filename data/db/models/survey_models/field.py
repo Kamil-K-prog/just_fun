@@ -13,6 +13,7 @@ LAZY = AppConfig.ORM_MODEL_RELATIONSHIP_LAZY_PARAM
 class Field(SqlAlchemyBase, SerializerMixin):
     """Поле универсальной формы для сбора информации"""
     __tablename__ = 'field'
+    __table_args__ = AppConfig.DB_TABLE_ARGS
 
     serialize_only = ('id', 'quiz_id', 'title', 'field_type_id')
 

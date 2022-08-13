@@ -1,5 +1,5 @@
 from . import db_sessionmaker
-from .__all_models import Role, PassportStatus, FieldType, EvalMarkProfrisks, \
+from ._all_models import Role, PassportStatus, FieldType, EvalMarkProfrisks, \
     EvalMarkSout, Location
 
 

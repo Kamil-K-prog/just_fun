@@ -15,6 +15,7 @@ LAZY = AppConfig.ORM_MODEL_RELATIONSHIP_LAZY_PARAM
 class User(SqlAlchemyBase, UserMixin, SerializerMixin):
     """Сущность пользователя системы"""
     __tablename__ = 'user'
+    __table_args__ = AppConfig.DB_TABLE_ARGS
 
     serialize_only = (
         'id', 'login', 'email', 'role_id')

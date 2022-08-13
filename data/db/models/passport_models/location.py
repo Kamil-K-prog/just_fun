@@ -3,6 +3,7 @@ from sqlalchemy_serializer import SerializerMixin
 
 from ...sqlalchemy_base_maker import SqlAlchemyBase
 from ...db_utils import versatile_represent, versatile_convert_to_str
+from config import AppConfig
 
 
 class Location(SqlAlchemyBase, SerializerMixin):
@@ -10,6 +11,7 @@ class Location(SqlAlchemyBase, SerializerMixin):
      """(скорее не столь конкретное название некого местоположения), """
      """нужен для поиска по паспортам и для отображения на тепловой карте""")
     __tablename__ = 'location'
+    __table_args__ = AppConfig.DB_TABLE_ARGS
 
     serialize_only = ('id', 'name')
 

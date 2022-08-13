@@ -15,6 +15,7 @@ class PassportLog(SqlAlchemyBase, SerializerMixin):
     ("""Сущность события, связанного с паспортом организации, """
      """в журнале приложения""")
     __tablename__ = 'passport_log'
+    __table_args__ = AppConfig.DB_TABLE_ARGS
 
     serialize_only = ('id', 'passport_id', 'info', 'date')
 

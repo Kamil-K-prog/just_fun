@@ -3,12 +3,14 @@ from sqlalchemy_serializer import SerializerMixin
 
 from ...sqlalchemy_base_maker import SqlAlchemyBase
 from ...db_utils import versatile_represent, versatile_convert_to_str
+from config import AppConfig
 
 
 class PassportStatus(SqlAlchemyBase, SerializerMixin):
     ("""Статус паспорта в рамках процесса его регистрации в системе. """
      """По типу: 1 - 'Принят', 2 - 'На рассмотрении', 3 - 'Отклонен'""")
     __tablename__ = 'passport_status'
+    __table_args__ = AppConfig.DB_TABLE_ARGS
 
     serialize_only = ('id', 'name')
 
